@@ -49,13 +49,21 @@ const AddressSelection: React.FC<AddressSelectionProps> = ({
   selectedAddress 
 }) => {
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newAddress, setNewAddress] = useState({
+  // Fix: Define the type properly as a union type
+  const [newAddress, setNewAddress] = useState<{
+    name: string;
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    type: 'home' | 'work' | 'other';
+  }>({
     name: '',
     street: '',
     city: '',
     state: '',
     zipCode: '',
-    type: 'home' as const
+    type: 'home'
   });
 
   const handleAddNewAddress = () => {
