@@ -257,9 +257,9 @@ const Navbar = () => {
             </button>
             <CartIcon />
             <UserAuthNav />
-            <button className="rounded-full bg-primary text-white px-4 py-2 font-medium transition-all hover:bg-primary/90 active:scale-95">
+            <Link to="/vendor/onboarding" className="rounded-full bg-primary text-white px-4 py-2 font-medium transition-all hover:bg-primary/90 active:scale-95">
               Become a Vendor
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -432,9 +432,13 @@ const Navbar = () => {
             </div>
             
             <div className="pt-4 border-t border-gray-200">
-              <button className="w-full rounded-full bg-primary text-white px-4 py-2 font-medium transition-all hover:bg-primary/90 active:scale-95">
+              <Link 
+                to="/vendor/onboarding"
+                className="w-full rounded-full bg-primary text-white px-4 py-2 font-medium transition-all hover:bg-primary/90 active:scale-95 block text-center"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 Become a Vendor
-              </button>
+              </Link>
             </div>
           </div>
         </div>
