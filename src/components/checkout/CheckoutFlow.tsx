@@ -11,71 +11,42 @@ import OrderSummary from './OrderSummary';
 import LastMinuteRecommendations from './LastMinuteRecommendations';
 import CheckoutSteps from './CheckoutSteps';
 import CartSection from './CartSection';
+import { useCart } from '@/contexts/CartContext';
+import { toast } from '@/hooks/use-toast';
 
-const initialCheckoutData = {
-  services: [
-    {
-      id: '1',
-      name: 'Wedding Photography',
-      price: 25000,
-      date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-      image: 'https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      quantity: 1,
-    },
-    {
-      id: '2',
-      name: 'Catering Service',
-      price: 35000,
-      date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-      image: 'https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      quantity: 1,
-    }
-  ],
-  totalPrice: 60000,
-  discountedPrice: 60000,
-  discountCode: '',
-  discountAmount: 0,
-};
+interface CheckoutFlowProps {
+  onOrderComplete?: () => void;
+}
 
-const CheckoutFlow = () => {
+const CheckoutFlow: React.FC<CheckoutFlowProps> = ({ onOrderComplete }) => {
+  const { items: cartItems, updateQuantity, removeFromCart, subtotal } = useCart();
   const [currentStep, setCurrentStep] = useState(1);
-  const [checkoutData, setCheckoutData] = useState(initialCheckoutData);
+  const [checkoutData, setCheckoutData] = useState({
+    services: cartItems,
+    totalPrice: subtotal,
+    discountedPrice: subtotal,
+    discountCode: '',
+    discountAmount: 0,
+  });
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
   const [agreedToPolicies, setAgreedToPolicies] = useState(false);
   
+  useEffect(() => {
+    setCheckoutData(prev => ({
+      ...prev,
+      services: cartItems,
+      totalPrice: subtotal,
+      discountedPrice: subtotal - prev.discountAmount,
+    }));
+  }, [cartItems, subtotal]);
+  
   const handleUpdateQuantity = (serviceId: string, newQuantity: number) => {
-    const updatedServices = checkoutData.services.map(service => 
-      service.id === serviceId ? { ...service, quantity: newQuantity } : service
-    );
-    
-    const newTotalPrice = updatedServices.reduce(
-      (total, service) => total + (service.price * service.quantity), 0
-    );
-    
-    setCheckoutData({
-      ...checkoutData,
-      services: updatedServices,
-      totalPrice: newTotalPrice,
-      discountedPrice: newTotalPrice - checkoutData.discountAmount
-    });
+    updateQuantity(serviceId, newQuantity);
   };
   
   const handleRemoveService = (serviceId: string) => {
-    const updatedServices = checkoutData.services.filter(service => 
-      service.id !== serviceId
-    );
-    
-    const newTotalPrice = updatedServices.reduce(
-      (total, service) => total + (service.price * service.quantity), 0
-    );
-    
-    setCheckoutData({
-      ...checkoutData,
-      services: updatedServices,
-      totalPrice: newTotalPrice,
-      discountedPrice: newTotalPrice - checkoutData.discountAmount
-    });
+    removeFromCart(serviceId);
   };
   
   const handleApplyDiscount = (code: string, amount: number) => {
@@ -84,6 +55,11 @@ const CheckoutFlow = () => {
       discountCode: code,
       discountAmount: amount,
       discountedPrice: checkoutData.totalPrice - amount
+    });
+    
+    toast({
+      title: "Discount Applied",
+      description: `Coupon ${code} has been applied to your order.`,
     });
   };
 
@@ -103,6 +79,10 @@ const CheckoutFlow = () => {
     if (currentStep < 5) {
       setCurrentStep(currentStep + 1);
       window.scrollTo(0, 0);
+    }
+    
+    if (currentStep === 4 && onOrderComplete) {
+      onOrderComplete();
     }
   };
 
