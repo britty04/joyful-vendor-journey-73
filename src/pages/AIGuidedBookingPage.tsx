@@ -1,12 +1,12 @@
 
-import Layout from '../components/Layout';
+import LayoutWithTerms from '../components/LayoutWithTerms';
 import AIGuidedBooking from '../components/AIGuidedBooking';
 
 const AIGuidedBookingPage = () => {
   return (
-    <Layout>
+    <LayoutWithTerms>
       <AIGuidedBooking />
-    </Layout>
+    </LayoutWithTerms>
   );
 };
 

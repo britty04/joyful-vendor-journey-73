@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Layout from '@/components/Layout';
+import LayoutWithTerms from '@/components/LayoutWithTerms';
 import CheckoutFlow from '@/components/checkout/CheckoutFlow';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
@@ -35,7 +35,7 @@ const Checkout = () => {
   }, [isOrderPlaced]);
 
   return (
-    <Layout>
+    <LayoutWithTerms>
       <div className="container mx-auto py-8 px-4">
         <h1 className="text-3xl font-bold mb-6">
           {isOrderPlaced ? 'Order Complete!' : 'Checkout'}
@@ -53,10 +53,10 @@ const Checkout = () => {
             </p>
             <Button 
               size="lg" 
-              onClick={() => navigate('/services')}
+              onClick={() => navigate('/guided-booking')}
               className="px-8"
             >
-              Browse Services
+              Try AI Guided Booking
             </Button>
           </div>
         ) : isOrderPlaced ? (
@@ -76,9 +76,9 @@ const Checkout = () => {
               </Button>
               <Button 
                 variant="outline" 
-                onClick={() => navigate('/services')}
+                onClick={() => navigate('/guided-booking')}
               >
-                Continue Shopping
+                Book Another Event
               </Button>
             </div>
           </div>
@@ -86,7 +86,7 @@ const Checkout = () => {
           <CheckoutFlow onOrderComplete={handleOrderComplete} />
         )}
       </div>
-    </Layout>
+    </LayoutWithTerms>
   );
 };
 

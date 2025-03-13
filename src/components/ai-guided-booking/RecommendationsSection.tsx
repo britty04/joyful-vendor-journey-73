@@ -1,7 +1,10 @@
 
 import { Button } from "@/components/ui/button";
-import { Bot, Check, ChevronRight } from "lucide-react";
+import { Bot, Check, ChevronRight, ShoppingCart } from "lucide-react";
 import RecommendationCard, { ServiceRecommendation } from "./RecommendationCard";
+import { useCart } from "@/contexts/CartContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
 
 interface RecommendationsSectionProps {
   isLoading: boolean;
@@ -24,6 +27,39 @@ const RecommendationsSection = ({
   onBack,
   onSubmit
 }: RecommendationsSectionProps) => {
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
+
+  const handleAddToCartAndCheckout = () => {
+    // First notify the parent component
+    onSubmit();
+    
+    // Get the selected recommendations
+    const selectedRecommendations = recommendations.filter(service => 
+      selectedServices.includes(service.id)
+    );
+    
+    // Add each selected service to the cart
+    selectedRecommendations.forEach(service => {
+      addToCart({
+        id: service.id,
+        name: service.name,
+        price: parseFloat(service.price.replace(/[₹,]/g, '')),
+        image: service.image,
+        date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // Event date a week from now
+      });
+    });
+    
+    // Show success toast
+    toast({
+      title: "Services added to cart!",
+      description: `${selectedRecommendations.length} services have been added to your cart.`,
+    });
+    
+    // Navigate to checkout
+    navigate('/checkout');
+  };
+
   return (
     <div className="animate-fade-in">
       <h2 className="text-xl font-semibold text-gray-800 mb-2 text-center">
@@ -66,11 +102,12 @@ const RecommendationsSection = ({
               Back
             </Button>
             <Button 
-              onClick={onSubmit}
+              onClick={handleAddToCartAndCheckout}
               className="gap-1"
+              disabled={selectedServices.length === 0}
             >
-              Continue to Booking
-              <ChevronRight size={16} />
+              <ShoppingCart className="w-4 h-4 mr-1" />
+              Add to Cart & Checkout
             </Button>
           </div>
         </>

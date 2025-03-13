@@ -4,11 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Shield, Users, CheckSquare, AlertTriangle, ImageIcon, MapPin } from 'lucide-react';
+import { Shield, Users, CheckSquare, AlertTriangle, ImageIcon, MapPin, BarChart3 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { AdminVendorList } from '@/components/admin/AdminVendorList';
 import { AdminPhotosReview } from '@/components/admin/AdminPhotosReview';
 import { AdminLocationManager } from '@/components/admin/AdminLocationManager';
+import AdminSalesAnalytics from '@/components/admin/AdminSalesAnalytics';
 
 const AdminDashboard = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -88,7 +89,7 @@ const AdminDashboard = () => {
         
         {/* Dashboard Tabs */}
         <Tabs defaultValue="vendors" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-3 lg:w-[600px]">
+          <TabsList className="grid w-full grid-cols-4 lg:w-[800px]">
             <TabsTrigger value="vendors" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               <span>Vendors</span>
@@ -107,6 +108,10 @@ const AdminDashboard = () => {
               <MapPin className="h-4 w-4" />
               <span>Locations</span>
             </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <BarChart3 className="h-4 w-4" />
+              <span>Analytics</span>
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="vendors" className="space-y-4">
@@ -119,6 +124,10 @@ const AdminDashboard = () => {
 
           <TabsContent value="locations" className="space-y-4">
             <AdminLocationManager />
+          </TabsContent>
+          
+          <TabsContent value="analytics" className="space-y-4">
+            <AdminSalesAnalytics />
           </TabsContent>
         </Tabs>
       </div>

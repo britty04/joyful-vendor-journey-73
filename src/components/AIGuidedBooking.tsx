@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
+import { useCart } from '@/contexts/CartContext';
 
 import { eventTypes, birthdayPrimaryServices } from './ai-guided-booking/data';
 import EventTypeSelector, { EventType } from './ai-guided-booking/EventTypeSelector';
@@ -13,6 +14,7 @@ import { ServiceRecommendation } from './ai-guided-booking/RecommendationCard';
 
 const AIGuidedBooking = () => {
   const navigate = useNavigate();
+  const { addToCart } = useCart();
   const [step, setStep] = useState(1);
   const [selectedEvent, setSelectedEvent] = useState<EventType | null>(null);
   const [primaryService, setPrimaryService] = useState<string | null>(null);
@@ -107,6 +109,24 @@ const AIGuidedBooking = () => {
 
   const handleSelectPrimaryService = (serviceId: string) => {
     setPrimaryService(serviceId);
+    
+    // Also add the primary service to cart
+    const service = birthdayPrimaryServices.find(s => s.id === serviceId);
+    if (service) {
+      addToCart({
+        id: service.id,
+        name: service.name,
+        price: parseFloat(service.price.replace(/[₹,]/g, '')),
+        image: service.image,
+        date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // Event date a week from now
+      });
+      
+      toast({
+        title: "Primary service added to cart",
+        description: `${service.name} has been added to your cart.`,
+      });
+    }
+    
     fetchRecommendations(selectedEvent?.id || '', serviceId);
     setStep(3);
   };
@@ -124,8 +144,7 @@ const AIGuidedBooking = () => {
       title: "Booking started!",
       description: "Your guided booking has been initiated.",
     });
-    // In a real app, this would save the selection and redirect to checkout
-    navigate('/vendors');
+    // The actual cart handling is now in RecommendationsSection
   };
 
   const handleBack = () => {
