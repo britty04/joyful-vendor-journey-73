@@ -10,13 +10,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { User, LogOut } from 'lucide-react';
+import { User, LogOut, LayoutDashboard } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 type UserData = {
   name: string;
   email: string;
   isLoggedIn: boolean;
+  isVendor?: boolean;
 };
 
 const UserAuthNav = () => {
@@ -65,6 +66,14 @@ const UserAuthNav = () => {
           <DropdownMenuItem asChild>
             <Link to="/bookings">My Bookings</Link>
           </DropdownMenuItem>
+          {user.isVendor && (
+            <DropdownMenuItem asChild>
+              <Link to="/vendor/dashboard" className="flex items-center">
+                <LayoutDashboard className="mr-2 h-4 w-4" />
+                <span>Vendor Dashboard</span>
+              </Link>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleLogout} className="text-red-500">
             <LogOut className="mr-2 h-4 w-4" />

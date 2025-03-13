@@ -1,298 +1,279 @@
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Layout from "../components/Layout";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "@/hooks/use-toast";
-import { useForm } from "react-hook-form";
-import { LockIcon, MailIcon, UserPlus } from "lucide-react";
+import { toast } from '@/hooks/use-toast';
+import Layout from '../components/Layout';
 
 const Auth = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Login form state
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  
+  // Register form state
+  const [registerName, setRegisterName] = useState('');
+  const [registerEmail, setRegisterEmail] = useState('');
+  const [registerPassword, setRegisterPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isVendor, setIsVendor] = useState(false);
 
-  const { register: registerLogin, handleSubmit: handleSubmitLogin } = useForm({
-    defaultValues: {
-      email: "",
-      password: "",
-      remember: false,
-    },
-  });
-
-  const { register: registerSignup, handleSubmit: handleSubmitSignup } = useForm({
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      terms: false,
-    },
-  });
-
-  const onLoginSubmit = async (data: any) => {
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
     setIsLoading(true);
-    try {
-      // In a real app, this would call an auth API
-      console.log("Login attempt with:", data);
-      
-      // Simulate successful login
-      setTimeout(() => {
-        setIsLoading(false);
-        toast({
-          title: "Success",
-          description: "You have successfully logged in",
-        });
-        // Store user info in localStorage
-        localStorage.setItem("user", JSON.stringify({
-          name: "Demo User",
-          email: data.email,
-          isLoggedIn: true
-        }));
-        navigate("/");
-      }, 1000);
-    } catch (error) {
-      setIsLoading(false);
+    
+    // Simple validation
+    if (!loginEmail || !loginPassword) {
       toast({
         title: "Error",
-        description: "Invalid credentials",
+        description: "Please fill in all fields",
         variant: "destructive",
       });
+      setIsLoading(false);
+      return;
     }
+    
+    // Simulate login process
+    setTimeout(() => {
+      // In a real app, you would validate credentials against a backend
+      const userData = {
+        name: "Test User",
+        email: loginEmail,
+        isLoggedIn: true,
+        isVendor: isVendor,
+      };
+      
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify(userData));
+      
+      toast({
+        title: "Login Successful",
+        description: "Welcome back!",
+      });
+      
+      setIsLoading(false);
+      
+      // Redirect to home page
+      if (isVendor) {
+        navigate('/vendor/dashboard');
+      } else {
+        navigate('/');
+      }
+    }, 1000);
   };
 
-  const onSignupSubmit = async (data: any) => {
+  const handleRegister = (e: React.FormEvent) => {
+    e.preventDefault();
     setIsLoading(true);
-    try {
-      // Password validation
-      if (data.password !== data.confirmPassword) {
-        setIsLoading(false);
-        return toast({
-          title: "Error",
-          description: "Passwords do not match",
-          variant: "destructive",
-        });
-      }
-
-      if (!data.terms) {
-        setIsLoading(false);
-        return toast({
-          title: "Error",
-          description: "You must agree to the terms and conditions",
-          variant: "destructive",
-        });
-      }
-
-      // In a real app, this would call an auth API
-      console.log("Signup attempt with:", data);
-      
-      // Simulate successful signup
-      setTimeout(() => {
-        setIsLoading(false);
-        toast({
-          title: "Success",
-          description: "Your account has been created",
-        });
-        // Store user info in localStorage
-        localStorage.setItem("user", JSON.stringify({
-          name: data.name,
-          email: data.email,
-          isLoggedIn: true
-        }));
-        navigate("/");
-      }, 1000);
-    } catch (error) {
-      setIsLoading(false);
+    
+    // Simple validation
+    if (!registerName || !registerEmail || !registerPassword || !confirmPassword) {
       toast({
         title: "Error",
-        description: "Failed to create account",
+        description: "Please fill in all fields",
         variant: "destructive",
       });
+      setIsLoading(false);
+      return;
     }
+    
+    if (registerPassword !== confirmPassword) {
+      toast({
+        title: "Error",
+        description: "Passwords do not match",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+    
+    // Simulate registration process
+    setTimeout(() => {
+      // In a real app, you would create a user account in your backend
+      const userData = {
+        name: registerName,
+        email: registerEmail,
+        isLoggedIn: true,
+        isVendor: isVendor,
+      };
+      
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify(userData));
+      
+      toast({
+        title: "Registration Successful",
+        description: isVendor ? "Your vendor account has been created!" : "Your account has been created!",
+      });
+      
+      setIsLoading(false);
+      
+      // Redirect to home page or vendor dashboard
+      if (isVendor) {
+        navigate('/vendor/dashboard');
+      } else {
+        navigate('/');
+      }
+    }, 1000);
   };
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-24 flex items-center justify-center min-h-[calc(100vh-220px)]">
-        <div className="w-full max-w-md">
-          <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8">
-              <TabsTrigger value="login">Login</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
-            </TabsList>
-            
-            {/* Login Tab */}
-            <TabsContent value="login">
-              <Card>
-                <CardHeader className="space-y-1">
-                  <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
-                  <CardDescription>
-                    Enter your credentials to access your account
-                  </CardDescription>
-                </CardHeader>
-                <form onSubmit={handleSubmitLogin(onLoginSubmit)}>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground">
-                          <MailIcon className="h-4 w-4" />
-                        </div>
-                        <Input 
-                          id="email" 
-                          type="email" 
-                          placeholder="name@example.com" 
-                          className="pl-10"
-                          {...registerLogin("email", { required: true })}
-                        />
-                      </div>
+      <div className="container mx-auto py-10 px-4 max-w-md">
+        <Tabs defaultValue="login" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="login">Login</TabsTrigger>
+            <TabsTrigger value="register">Register</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="login">
+            <Card>
+              <CardHeader>
+                <CardTitle>Account Login</CardTitle>
+                <CardDescription>
+                  Enter your credentials to access your account
+                </CardDescription>
+              </CardHeader>
+              <form onSubmit={handleLogin}>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="login-email">Email</Label>
+                    <Input 
+                      id="login-email" 
+                      type="email" 
+                      placeholder="you@example.com" 
+                      value={loginEmail}
+                      onChange={(e) => setLoginEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="login-password">Password</Label>
+                      <a href="#" className="text-sm text-primary hover:underline">
+                        Forgot password?
+                      </a>
                     </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="password">Password</Label>
-                        <a href="#" className="text-sm text-primary hover:underline">
-                          Forgot password?
-                        </a>
-                      </div>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground">
-                          <LockIcon className="h-4 w-4" />
-                        </div>
-                        <Input 
-                          id="password" 
-                          type="password" 
-                          className="pl-10"
-                          {...registerLogin("password", { required: true })}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="remember"
-                        {...registerLogin("remember")}
-                      />
-                      <label
-                        htmlFor="remember"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Remember me
-                      </label>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button className="w-full" type="submit" disabled={isLoading}>
-                      {isLoading ? "Logging in..." : "Login"}
-                    </Button>
-                  </CardFooter>
-                </form>
-              </Card>
-            </TabsContent>
-            
-            {/* Signup Tab */}
-            <TabsContent value="signup">
-              <Card>
-                <CardHeader className="space-y-1">
-                  <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
-                  <CardDescription>
-                    Enter your information to create an account
-                  </CardDescription>
-                </CardHeader>
-                <form onSubmit={handleSubmitSignup(onSignupSubmit)}>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground">
-                          <UserPlus className="h-4 w-4" />
-                        </div>
-                        <Input 
-                          id="name" 
-                          placeholder="John Doe" 
-                          className="pl-10"
-                          {...registerSignup("name", { required: true })}
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="signupEmail">Email</Label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground">
-                          <MailIcon className="h-4 w-4" />
-                        </div>
-                        <Input 
-                          id="signupEmail" 
-                          type="email" 
-                          placeholder="name@example.com" 
-                          className="pl-10"
-                          {...registerSignup("email", { required: true })}
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="signupPassword">Password</Label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground">
-                          <LockIcon className="h-4 w-4" />
-                        </div>
-                        <Input 
-                          id="signupPassword" 
-                          type="password" 
-                          className="pl-10"
-                          {...registerSignup("password", { required: true })}
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="confirmPassword">Confirm Password</Label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground">
-                          <LockIcon className="h-4 w-4" />
-                        </div>
-                        <Input 
-                          id="confirmPassword" 
-                          type="password" 
-                          className="pl-10"
-                          {...registerSignup("confirmPassword", { required: true })}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="terms" 
-                        {...registerSignup("terms")}
-                      />
-                      <label
-                        htmlFor="terms"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        I agree to the{" "}
-                        <a href="#" className="text-primary hover:underline">
-                          terms and conditions
-                        </a>
-                      </label>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button className="w-full" type="submit" disabled={isLoading}>
-                      {isLoading ? "Creating Account..." : "Create Account"}
-                    </Button>
-                  </CardFooter>
-                </form>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
+                    <Input 
+                      id="login-password" 
+                      type="password" 
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="vendor-login" 
+                      checked={isVendor}
+                      onCheckedChange={(checked) => setIsVendor(checked as boolean)}
+                    />
+                    <label
+                      htmlFor="vendor-login"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Login as Vendor
+                    </label>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? "Logging in..." : "Login"}
+                  </Button>
+                </CardFooter>
+              </form>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="register">
+            <Card>
+              <CardHeader>
+                <CardTitle>Create Account</CardTitle>
+                <CardDescription>
+                  Register to book vendors for your events
+                </CardDescription>
+              </CardHeader>
+              <form onSubmit={handleRegister}>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="register-name">Full Name</Label>
+                    <Input 
+                      id="register-name" 
+                      placeholder="John Doe" 
+                      value={registerName}
+                      onChange={(e) => setRegisterName(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="register-email">Email</Label>
+                    <Input 
+                      id="register-email" 
+                      type="email" 
+                      placeholder="you@example.com" 
+                      value={registerEmail}
+                      onChange={(e) => setRegisterEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="register-password">Password</Label>
+                    <Input 
+                      id="register-password" 
+                      type="password" 
+                      value={registerPassword}
+                      onChange={(e) => setRegisterPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="confirm-password">Confirm Password</Label>
+                    <Input 
+                      id="confirm-password" 
+                      type="password" 
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="vendor-register" 
+                      checked={isVendor}
+                      onCheckedChange={(checked) => setIsVendor(checked as boolean)}
+                    />
+                    <label
+                      htmlFor="vendor-register"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Register as Vendor
+                    </label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox id="terms" required />
+                    <label
+                      htmlFor="terms"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      I agree to the <a href="#" className="text-primary hover:underline">terms and conditions</a>
+                    </label>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? "Creating Account..." : "Create Account"}
+                  </Button>
+                </CardFooter>
+              </form>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </Layout>
   );
