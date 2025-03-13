@@ -10,6 +10,7 @@ interface Category {
   icon: string;
   color: string;
   emoji: string;
+  eventType?: string;
 }
 
 const categories: Category[] = [
@@ -18,14 +19,16 @@ const categories: Category[] = [
     name: 'Entertainers',
     icon: 'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     color: 'from-eventPurple-500 to-eventPink-500',
-    emoji: '🎭'
+    emoji: '🎭',
+    eventType: 'kids'
   },
   {
     id: 'decorators',
     name: 'Wedding Decor',
     icon: 'https://images.unsplash.com/photo-1546173159-315724a31696?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     color: 'from-eventGreen-500 to-eventBlue-500',
-    emoji: '💐'
+    emoji: '💐',
+    eventType: 'wedding'
   },
   {
     id: 'catering',
@@ -39,7 +42,8 @@ const categories: Category[] = [
     name: 'Photography',
     icon: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     color: 'from-eventYellow-400 to-eventYellow-600',
-    emoji: '📸'
+    emoji: '📸',
+    eventType: 'wedding'
   },
   {
     id: 'venues',
@@ -53,14 +57,16 @@ const categories: Category[] = [
     name: 'Bridal Makeup',
     icon: 'https://images.unsplash.com/photo-1487412840807-a91612003d50?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     color: 'from-eventPink-400 to-eventPink-600',
-    emoji: '💄'
+    emoji: '💄',
+    eventType: 'wedding'
   },
   {
     id: 'mehendi',
     name: 'Mehendi Artists',
     icon: 'https://images.unsplash.com/photo-1532886446204-2d0a3b0fa6e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     color: 'from-eventGreen-400 to-eventGreen-600',
-    emoji: '🌿'
+    emoji: '🌿',
+    eventType: 'wedding'
   },
   {
     id: 'tickets',
@@ -97,7 +103,8 @@ const CategorySelector = () => {
           {categories.map((category) => (
             <Link
               key={category.id}
-              to={category.id === 'tickets' ? '/ticketing-events' : `/vendors?category=${category.id}`}
+              to={category.id === 'tickets' ? '/ticketing-events' : 
+                 `/vendors?category=${category.id}${category.eventType ? `&event=${category.eventType}` : ''}`}
               className="group"
               onMouseEnter={() => setSelectedCategory(category.id)}
               onMouseLeave={() => setSelectedCategory(null)}

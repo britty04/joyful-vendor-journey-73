@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import VendorCard from './VendorCard';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -86,6 +87,20 @@ const FeaturedVendors = () => {
   // In a real app, you'd filter vendors based on activeTab
   const displayedVendors = vendors;
 
+  // Function to map vendor categories to URL parameters
+  const getCategoryParam = (category: string) => {
+    const categoryMap: Record<string, string> = {
+      'Magician': 'entertainers',
+      'Decorator': 'decorators',
+      'Catering': 'catering',
+      'Photographer': 'photographers',
+      'Venue': 'venues',
+      'Game Rental': 'entertainers',
+    };
+    
+    return categoryMap[category] || category.toLowerCase();
+  };
+
   return (
     <section className="py-16 md:py-24 bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -157,13 +172,13 @@ const FeaturedVendors = () => {
 
         {/* View All Button */}
         <div className="mt-12 text-center">
-          <a
-            href="/vendors"
+          <Link
+            to="/vendors"
             className="inline-flex items-center rounded-full bg-white px-6 py-3 text-base font-medium text-primary shadow-sm border border-gray-200 hover:bg-gray-50 transition-colors"
           >
             View All Vendors
             <ChevronRight className="ml-2 h-4 w-4" />
-          </a>
+          </Link>
         </div>
       </div>
     </section>
