@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Sparkles, Calendar, Clock, Users, DollarSign, BanknoteIcon, User } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 import Layout from '../components/Layout';
 import VendorProfile from '@/components/dashboard/VendorProfile';
 import BookingsList from '@/components/dashboard/BookingsList';

@@ -1,12 +1,12 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from '@/components/ui/card';
 import Layout from '../components/Layout';
 import AdminSalesAnalytics from '@/components/admin/AdminSalesAnalytics';
-import AdminVendorList from '@/components/admin/AdminVendorList';
-import AdminLocationManager from '@/components/admin/AdminLocationManager';
-import AdminPhotosReview from '@/components/admin/AdminPhotosReview';
+import { AdminVendorList } from '@/components/admin/AdminVendorList';
+import { AdminLocationManager } from '@/components/admin/AdminLocationManager';
+import { AdminPhotosReview } from '@/components/admin/AdminPhotosReview';
 import AdminVendorManager from '@/components/admin/AdminVendorManager';
 
 const AdminDashboard = () => {

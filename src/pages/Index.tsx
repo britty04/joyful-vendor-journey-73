@@ -1,41 +1,17 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 import Hero from '@/components/Hero';
 import CategorySelector from '@/components/CategorySelector';
 import Layout from '@/components/Layout';
 import FeaturedVendors from '@/components/FeaturedVendors';
 import AIRecommendation from '@/components/AIRecommendation';
 import TicketingEvents from '@/components/TicketingEvents';
+import PopularServices from '@/components/PopularServices';
 
 const Index = () => {
-  // Sample popular services
-  const services = [
-    {
-      id: "service1",
-      name: "Professional Photography",
-      price: 299,
-      image: "https://images.unsplash.com/photo-1493863641943-9a9eaaaef7bd?w=500&auto=format&fit=crop&q=60"
-    },
-    {
-      id: "service2",
-      name: "Live Music Band",
-      price: 799,
-      image: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=500&auto=format&fit=crop&q=60"
-    },
-    {
-      id: "service3",
-      name: "Gourmet Catering",
-      price: 1299,
-      image: "https://images.unsplash.com/photo-1555244162-803834f70033?w=500&auto=format&fit=crop&q=60"
-    },
-    {
-      id: "service4",
-      name: "Event Decoration",
-      price: 499,
-      image: "https://images.unsplash.com/photo-1478146059778-26028b07395a?w=500&auto=format&fit=crop&q=60"
-    },
-  ];
-
   return (
     <Layout>
       <Hero />

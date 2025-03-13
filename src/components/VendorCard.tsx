@@ -4,30 +4,43 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 interface VendorCardProps {
-  id: string;
-  name: string;
-  category: string;
-  rating: number;
-  reviewCount: number;
-  location: string;
-  image: string;
-  price: string;
+  vendor: {
+    id: string;
+    name: string;
+    category: string;
+    description: string;
+    image: string;
+    rating: number;
+    price: number;
+  };
+  id?: string;
+  name?: string;
+  category?: string;
+  rating?: number;
+  reviewCount?: number;
+  location?: string;
+  image?: string;
+  price?: string;
   badges?: string[];
 }
 
-const VendorCard = ({
-  id,
-  name,
-  category,
-  rating,
-  reviewCount,
-  location,
-  image,
-  price,
-  badges = []
-}: VendorCardProps) => {
+const VendorCard = (props: VendorCardProps) => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+  // Check if we're using the vendor prop or individual props
+  const isUsingVendorProp = !!props.vendor;
+  
+  // Set the values based on what's available
+  const id = isUsingVendorProp ? props.vendor.id : props.id || '';
+  const name = isUsingVendorProp ? props.vendor.name : props.name || '';
+  const category = isUsingVendorProp ? props.vendor.category : props.category || '';
+  const rating = isUsingVendorProp ? props.vendor.rating : props.rating || 0;
+  const reviewCount = props.reviewCount || 0;
+  const location = props.location || 'Local Area';
+  const image = isUsingVendorProp ? props.vendor.image : props.image || '';
+  const price = isUsingVendorProp ? `$${props.vendor.price}` : props.price || '';
+  const badges = props.badges || [];
 
   const getBadgeColor = (badge: string) => {
     const colors: Record<string, string> = {

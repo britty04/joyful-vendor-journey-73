@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import Layout from '@/components/Layout';
@@ -40,7 +41,13 @@ const VendorList = () => {
         <h1 className="text-3xl font-bold mb-8">Our Vendors</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {vendors.map((vendor) => (
-            <VendorCard key={vendor.id} vendor={vendor} />
+            <VendorCard 
+              key={vendor.id} 
+              vendor={vendor} 
+              reviewCount={Math.floor(Math.random() * 50) + 10}
+              location="Local Area"
+              badges={vendor.rating > 4.5 ? ['Top Rated'] : []}
+            />
           ))}
         </div>
         <div className="text-center mt-8">
