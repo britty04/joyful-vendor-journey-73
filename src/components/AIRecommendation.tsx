@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Bot, ArrowRight, Sparkles } from 'lucide-react';
+import { Bot, ArrowRight, Sparkles, Zap } from 'lucide-react';
 
 const AIRecommendation = () => {
   const [question, setQuestion] = useState('');
@@ -27,17 +27,29 @@ const AIRecommendation = () => {
   ];
 
   return (
-    <section className="py-16 md:py-24 relative overflow-hidden">
+    <section className="py-20 md:py-24 relative overflow-hidden">
       {/* Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-purple-50 to-transparent"></div>
-      <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-blue-100 rounded-full opacity-30 blur-3xl"></div>
-      <div className="absolute -top-10 -left-10 w-64 h-64 bg-purple-100 rounded-full opacity-30 blur-3xl"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-purple-50 to-white -z-10"></div>
+      <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-eventBlue-100 rounded-full opacity-30 blur-3xl -z-10"></div>
+      <div className="absolute -top-10 -left-10 w-64 h-64 bg-eventPink-100 rounded-full opacity-30 blur-3xl -z-10"></div>
+      
+      {/* Floating Elements */}
+      <div className="absolute top-20 left-[15%] w-8 h-8 opacity-70 animate-float -z-10">
+        <div className="w-full h-full bg-eventYellow-400 rounded-md rotate-12"></div>
+      </div>
+      <div className="absolute bottom-20 right-[10%] w-6 h-6 opacity-70 animate-float" style={{ animationDelay: '1s' }}>
+        <div className="w-full h-full bg-eventPink-400 rounded-full"></div>
+      </div>
+      <div className="absolute top-1/2 right-[20%] w-5 h-5 opacity-70 animate-float" style={{ animationDelay: '1.5s' }}>
+        <div className="w-full h-full bg-eventPurple-400 rounded-md rotate-45"></div>
+      </div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-center mb-6">
-            <div className="bg-primary/10 p-3 rounded-full">
-              <Bot size={28} className="text-primary" />
+            <div className="bg-primary/10 p-4 rounded-full relative">
+              <Bot size={32} className="text-primary" />
+              <div className="absolute top-0 right-0 w-4 h-4 bg-eventYellow-400 rounded-full animate-pulse"></div>
             </div>
           </div>
           
@@ -46,7 +58,7 @@ const AIRecommendation = () => {
               <Sparkles size={16} />
               <span>AI-Powered Recommendations</span>
             </div>
-            <h2 className="font-bold text-gray-900 mb-4">
+            <h2 className="font-bold text-2xl md:text-3xl lg:text-4xl text-gray-900 mb-4">
               Need Help Planning Your Event?
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
@@ -56,8 +68,9 @@ const AIRecommendation = () => {
           </div>
 
           {/* AI Query Input */}
-          <div className="glass-card rounded-2xl overflow-hidden shadow-lg mb-8">
+          <div className="playful-card playful-shadow mb-8 p-3">
             <form onSubmit={handleSubmit} className="flex items-center p-2">
+              <Bot size={20} className="text-gray-400 mx-3" />
               <input
                 type="text"
                 placeholder="Ask anything about planning your event..."
@@ -68,7 +81,7 @@ const AIRecommendation = () => {
               <button
                 type="submit"
                 disabled={isLoading || !question.trim()}
-                className={`ml-2 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium py-3 px-6 transition-all duration-300 active:scale-95 flex items-center ${
+                className={`ml-2 rounded-full bg-primary hover:bg-primary/90 text-white font-medium py-3 px-6 transition-all duration-300 active:scale-95 flex items-center ${
                   isLoading || !question.trim() ? 'opacity-70 cursor-not-allowed' : ''
                 }`}
               >
@@ -83,8 +96,8 @@ const AIRecommendation = () => {
                   </span>
                 ) : (
                   <span className="flex items-center">
-                    <span className="mr-2">Get Ideas</span>
-                    <ArrowRight size={16} />
+                    <Zap size={16} className="mr-2" />
+                    <span>Get Ideas</span>
                   </span>
                 )}
               </button>
@@ -98,7 +111,7 @@ const AIRecommendation = () => {
               {suggestions.map((suggestion, index) => (
                 <button
                   key={index}
-                  className="px-4 py-2 bg-white rounded-full text-sm text-gray-700 shadow-sm border border-gray-200 hover:border-primary/30 hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 bg-white rounded-full text-sm text-gray-700 shadow-sm border border-purple-100 hover:border-primary/30 hover:bg-purple-50 transition-colors"
                   onClick={() => setQuestion(suggestion)}
                 >
                   {suggestion}

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Star, Edit2, ThumbsUp, MessageSquare } from 'lucide-react';
+import { Star, Edit2, ThumbsUp, MessageSquare, Award } from 'lucide-react';
 
 interface Review {
   id: string;
@@ -62,56 +62,68 @@ const CustomerReviews = () => {
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Your Reviews</CardTitle>
-          <CardDescription>Reviews you've left for vendors</CardDescription>
+      <Card className="border-purple-100 playful-shadow">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-2xl font-bold">Your Reviews</CardTitle>
+              <CardDescription>Reviews you've left for vendors</CardDescription>
+            </div>
+            <Button className="rounded-full" variant="outline">
+              Browse Past Bookings
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           {reviews.length === 0 ? (
             <div className="text-center py-10">
-              <Star className="h-10 w-10 mx-auto text-muted-foreground mb-4" />
+              <div className="w-16 h-16 mx-auto bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                <Star className="h-8 w-8 text-primary" />
+              </div>
               <h3 className="text-lg font-medium">No Reviews Yet</h3>
               <p className="text-muted-foreground mt-1 mb-4">
                 You haven't left any reviews for vendors yet.
               </p>
-              <Button>
+              <Button className="rounded-full">
                 Browse Past Bookings
               </Button>
             </div>
           ) : (
             <div className="space-y-4">
               {reviews.map((review) => (
-                <Card key={review.id} className="overflow-hidden">
+                <Card key={review.id} className="overflow-hidden border-purple-100 hover:border-purple-200 transition-all">
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start">
                       <div>
-                        <h3 className="font-semibold">{review.vendorName}</h3>
-                        <p className="text-sm text-muted-foreground">{review.serviceType}</p>
+                        <h3 className="font-semibold text-lg">{review.vendorName}</h3>
+                        <p className="text-sm text-purple-500">{review.serviceType}</p>
                       </div>
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 bg-purple-50 px-3 py-1 rounded-full">
                         {[...Array(5)].map((_, i) => (
-                          <Star key={i} className={`h-4 w-4 ${i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
+                          <Star key={i} className={`h-4 w-4 ${i < review.rating ? 'text-eventYellow-500 fill-eventYellow-500' : 'text-gray-300'}`} />
                         ))}
                       </div>
                     </div>
                     
-                    <div className="mt-3">
-                      <p className="text-sm">{review.content}</p>
+                    <div className="mt-4 bg-purple-50 p-4 rounded-lg">
+                      <p className="text-sm text-gray-700 italic">"{review.content}"</p>
                     </div>
                     
                     <div className="mt-4 flex justify-between items-center text-sm text-muted-foreground">
                       <span>Posted on {review.date}</span>
                       <div className="flex gap-4">
-                        <button className="flex items-center hover:text-primary" onClick={() => markHelpful(review.id)}>
+                        <button 
+                          className="flex items-center hover:text-primary transition-colors" 
+                          onClick={() => markHelpful(review.id)}
+                        >
                           <ThumbsUp className="h-4 w-4 mr-1" />
                           <span>{review.helpfulCount} Helpful</span>
                         </button>
-                        <button className="flex items-center hover:text-primary">
+                        <button className="flex items-center hover:text-primary transition-colors">
                           <MessageSquare className="h-4 w-4 mr-1" />
                           <span>{review.replies} {review.replies === 1 ? 'Reply' : 'Replies'}</span>
                         </button>
-                        <button className="flex items-center hover:text-primary">
+                        <button className="flex items-center hover:text-primary transition-colors">
                           <Edit2 className="h-4 w-4 mr-1" />
                           <span>Edit</span>
                         </button>
