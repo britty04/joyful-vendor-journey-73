@@ -72,3 +72,27 @@ export const birthdayPrimaryServices: Service[] = [
   { id: 'games', name: 'Game Host', icon: '🎮' },
   { id: 'music', name: 'DJ / Music', icon: '🎵' }
 ];
+
+// Primary services for wedding events
+export const weddingPrimaryServices: Service[] = [
+  { id: 'venue', name: 'Venue', icon: '🏰' },
+  { id: 'catering', name: 'Catering', icon: '🍽️' },
+  { id: 'photographer', name: 'Photographer', icon: '📷' },
+  { id: 'florist', name: 'Florist', icon: '💐' },
+  { id: 'music', name: 'DJ / Band', icon: '🎵' },
+  { id: 'decor', name: 'Decorator', icon: '✨' },
+  { id: 'cake', name: 'Cake Designer', icon: '🍰' },
+  { id: 'transport', name: 'Transportation', icon: '🚗' }
+];
+
+// Primary services for corporate events
+export const corporatePrimaryServices: Service[] = [
+  { id: 'venue', name: 'Venue', icon: '🏢' },
+  { id: 'catering', name: 'Catering', icon: '🍽️' },
+  { id: 'av', name: 'AV Equipment', icon: '🎛️' },
+  { id: 'speaker', name: 'Speaker/Presenter', icon: '🎤' },
+  { id: 'decor', name: 'Decorator', icon: '✨' },
+  { id: 'photographer', name: 'Photographer', icon: '📷' },
+  { id: 'transport', name: 'Transportation', icon: '🚗' },
+  { id: 'staffing', name: 'Event Staff', icon: '👥' }
+];

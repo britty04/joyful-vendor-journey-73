@@ -1,11 +1,32 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Calendar, MapPin, ArrowRight, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
+  // Get location from Navbar state or localStorage if available
   const [searchQuery, setSearchQuery] = useState('');
-  const [location, setLocation] = useState('');
+  const [location, setLocation] = useState(() => {
+    return localStorage.getItem('userLocation') || 'New York';
+  });
   const [eventDate, setEventDate] = useState('');
+  const [eventType, setEventType] = useState('');
+  const navigate = useNavigate();
+
+  // Save location to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('userLocation', location);
+  }, [location]);
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    if (searchQuery) params.append('q', searchQuery);
+    if (location) params.append('location', location);
+    if (eventDate) params.append('date', eventDate);
+    if (eventType) params.append('event', eventType);
+    
+    navigate(`/vendors?${params.toString()}`);
+  };
 
   return (
     <section className="relative overflow-hidden py-20 md:py-24 lg:py-28">
@@ -30,7 +51,7 @@ const Hero = () => {
             </div>
             <h1 className="font-bold text-gray-900 mb-6">
               <span className="block">Discover Perfect Vendors</span>
-              <span className="block mt-2 gradient-text">For Unforgettable Kids' Events</span>
+              <span className="block mt-2 gradient-text">For Unforgettable Events</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
               Find, compare, and book amazing event vendors – all in one place. 
@@ -57,13 +78,17 @@ const Hero = () => {
                 <div className="flex-1 border-b md:border-b-0 md:border-r border-gray-100">
                   <div className="flex items-center p-4">
                     <MapPin className="h-5 w-5 text-gray-400 mr-3" />
-                    <input
-                      type="text"
-                      placeholder="Location"
-                      className="w-full bg-transparent border-none outline-none text-gray-700 placeholder-gray-400"
+                    <select
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
-                    />
+                      className="w-full bg-transparent border-none outline-none text-gray-700 appearance-none cursor-pointer"
+                    >
+                      <option value="New York">New York</option>
+                      <option value="Los Angeles">Los Angeles</option>
+                      <option value="Chicago">Chicago</option>
+                      <option value="Miami">Miami</option>
+                      <option value="Dallas">Dallas</option>
+                    </select>
                   </div>
                 </div>
                 <div className="flex-1 border-b md:border-b-0 md:border-r border-gray-100">
@@ -79,7 +104,10 @@ const Hero = () => {
                   </div>
                 </div>
                 <div className="p-2">
-                  <button className="w-full playful-button">
+                  <button 
+                    className="w-full playful-button"
+                    onClick={handleSearch}
+                  >
                     <span>Search</span>
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </button>
@@ -87,17 +115,35 @@ const Hero = () => {
               </div>
             </div>
             
-            {/* Popular Searches */}
+            {/* Event Type Shortcuts */}
             <div className="mt-4 flex items-center justify-center flex-wrap gap-2 text-sm text-gray-600">
-              <span>Popular:</span>
-              <button className="px-3 py-1 bg-white hover:bg-purple-50 rounded-full border border-purple-100 transition-colors">
-                Birthday Magicians
+              <span>Quick search:</span>
+              <button 
+                onClick={() => {
+                  setEventType('kids');
+                  handleSearch();
+                }}
+                className="px-3 py-1 bg-white hover:bg-purple-50 rounded-full border border-purple-100 transition-colors"
+              >
+                Kids Events
               </button>
-              <button className="px-3 py-1 bg-white hover:bg-purple-50 rounded-full border border-purple-100 transition-colors">
-                Balloon Decorators
+              <button 
+                onClick={() => {
+                  setEventType('corporate');
+                  handleSearch();
+                }}
+                className="px-3 py-1 bg-white hover:bg-purple-50 rounded-full border border-purple-100 transition-colors"
+              >
+                Corporate Events
               </button>
-              <button className="px-3 py-1 bg-white hover:bg-purple-50 rounded-full border border-purple-100 transition-colors">
-                Kids Catering
+              <button 
+                onClick={() => {
+                  setEventType('wedding');
+                  handleSearch();
+                }}
+                className="px-3 py-1 bg-white hover:bg-purple-50 rounded-full border border-purple-100 transition-colors"
+              >
+                Weddings
               </button>
             </div>
           </div>
