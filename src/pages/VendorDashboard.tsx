@@ -1,15 +1,11 @@
-
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Layout from '../components/Layout';
+import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, DollarSign, Users, Clock, Bell, User, BanknoteIcon, Sparkles } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import Layout from '../components/Layout';
+import VendorProfile from '@/components/dashboard/VendorProfile';
 import BookingsList from '@/components/dashboard/BookingsList';
 import EarningsOverview from '@/components/dashboard/EarningsOverview';
-import { toast } from '@/hooks/use-toast';
 import TransferEarnings from '@/components/dashboard/TransferEarnings';
-import VendorProfile from '@/components/dashboard/VendorProfile';
 
 const VendorDashboard = () => {
   const [isVendor, setIsVendor] = useState(false);
@@ -17,14 +13,11 @@ const VendorDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if the user is logged in and is a vendor
     const userData = localStorage.getItem('user');
     if (userData) {
       try {
         const user = JSON.parse(userData);
         if (user.isLoggedIn) {
-          // TODO: In a real app, you would check if the user is a vendor
-          // For now, we'll just set isVendor to true if the user is logged in
           setIsVendor(true);
         } else {
           redirectToLogin();
@@ -56,7 +49,6 @@ const VendorDashboard = () => {
   return (
     <Layout>
       <div className="container mx-auto py-8 px-4 relative">
-        {/* Background Elements for Elegance & Playfulness */}
         <div className="absolute top-20 right-0 w-64 h-64 bg-purple-100 rounded-full opacity-30 blur-3xl -z-10"></div>
         <div className="absolute bottom-20 left-0 w-64 h-64 bg-blue-100 rounded-full opacity-30 blur-3xl -z-10"></div>
         
@@ -67,7 +59,6 @@ const VendorDashboard = () => {
           </div>
         </div>
         
-        {/* Dashboard Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
           <DashboardCard 
             title="New Bookings" 
@@ -103,7 +94,6 @@ const VendorDashboard = () => {
           />
         </div>
         
-        {/* Dashboard Tabs */}
         <div className="bg-gradient-to-r from-white to-purple-50 p-6 rounded-xl shadow-sm">
           <Tabs defaultValue="bookings" className="space-y-6">
             <TabsList className="grid w-full grid-cols-4 lg:w-[600px] bg-white/60 backdrop-blur-sm">

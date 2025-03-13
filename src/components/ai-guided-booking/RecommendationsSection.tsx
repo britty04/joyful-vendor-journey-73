@@ -41,10 +41,13 @@ const RecommendationsSection = ({
     
     // Add each selected service to the cart
     selectedRecommendations.forEach(service => {
+      // Convert price string (₹X,XXX) to number
+      const priceValue = parseFloat(service.price.replace(/[₹,]/g, ''));
+      
       addToCart({
         id: service.id,
         name: service.name,
-        price: parseFloat(service.price.replace(/[₹,]/g, '')),
+        price: priceValue,
         image: service.image,
         date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // Event date a week from now
       });

@@ -1,16 +1,13 @@
-
 import React from 'react';
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import Layout from "@/components/Layout";
-import Hero from "@/components/Hero";
-import CategorySelector from "@/components/CategorySelector";
-import FeaturedVendors from "@/components/FeaturedVendors";
-import QuickAddToCart from "@/components/cart/QuickAddToCart";
-import { Card, CardContent } from "@/components/ui/card";
-import { motion } from "framer-motion";
+import { cn } from '@/lib/utils';
+import Hero from '@/components/Hero';
+import CategorySelector from '@/components/CategorySelector';
+import Layout from '@/components/Layout';
+import FeaturedVendors from '@/components/FeaturedVendors';
+import AIRecommendation from '@/components/AIRecommendation';
+import TicketingEvents from '@/components/TicketingEvents';
 
-const PopularServices = () => {
+const Index = () => {
   // Sample popular services
   const services = [
     {
@@ -39,48 +36,6 @@ const PopularServices = () => {
     },
   ];
 
-  return (
-    <div className="py-12">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-2xl font-bold">Popular Services</h2>
-        <Button asChild variant="outline">
-          <Link to="/services">View All</Link>
-        </Button>
-      </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {services.map((service) => (
-          <motion.div 
-            key={service.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            whileHover={{ y: -5 }}
-          >
-            <Card className="overflow-hidden h-full flex flex-col">
-              <div
-                className="h-48 bg-cover bg-center"
-                style={{ backgroundImage: `url(${service.image})` }}
-              />
-              <CardContent className="flex flex-col flex-grow p-5">
-                <h3 className="font-semibold text-lg mb-1">{service.name}</h3>
-                <p className="text-xl font-bold text-primary mt-auto mb-4">${service.price}</p>
-                <QuickAddToCart
-                  id={service.id}
-                  name={service.name}
-                  price={service.price}
-                  image={service.image}
-                />
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const Index = () => {
   return (
     <Layout>
       <Hero />

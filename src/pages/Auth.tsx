@@ -1,334 +1,205 @@
-
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from '@/hooks/use-toast';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "@/hooks/use-toast";
 import Layout from '../components/Layout';
-import { UserCog, Shield, User } from 'lucide-react';
 
 const Auth = () => {
+  const [authType, setAuthType] = useState("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [role, setRole] = useState("customer");
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  
-  // Login form state
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-  
-  // Register form state
-  const [registerName, setRegisterName] = useState('');
-  const [registerEmail, setRegisterEmail] = useState('');
-  const [registerPassword, setRegisterPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  
-  // Account type state
-  const [accountType, setAccountType] = useState('customer');
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    
-    // Simple validation
-    if (!loginEmail || !loginPassword) {
-      toast({
-        title: "Error",
-        description: "Please fill in all fields",
-        variant: "destructive",
-      });
-      setIsLoading(false);
-      return;
-    }
-    
-    // Admin credentials check (in a real app, this would be server-side)
-    const isAdmin = accountType === 'admin' && loginEmail === 'admin@example.com' && loginPassword === 'admin123';
-    const isVendor = accountType === 'vendor';
-    const isCustomer = accountType === 'customer';
-    
-    // Simulate login process
-    setTimeout(() => {
-      // In a real app, you would validate credentials against a backend
-      const userData = {
-        name: isAdmin ? "Admin User" : "Test User",
-        email: loginEmail,
-        isLoggedIn: true,
-        isAdmin: isAdmin,
-        isVendor: isVendor && !isAdmin,
-      };
-      
-      // Store user data in localStorage
-      localStorage.setItem('user', JSON.stringify(userData));
-      
-      toast({
-        title: "Login Successful",
-        description: `Welcome back${isAdmin ? ', Administrator' : ''}!`,
-      });
-      
-      setIsLoading(false);
-      
-      // Redirect based on account type
-      if (isAdmin) {
-        navigate('/admin/dashboard');
-      } else if (isVendor) {
-        navigate('/vendor/dashboard');
-      } else if (isCustomer) {
-        navigate('/customer/profile');
-      } else {
-        navigate('/');
-      }
-    }, 1000);
-  };
 
-  const handleRegister = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    // Simple validation
-    if (!registerName || !registerEmail || !registerPassword || !confirmPassword) {
+    if (!email || !password) {
       toast({
-        title: "Error",
-        description: "Please fill in all fields",
+        title: "Missing fields",
+        description: "Please fill in all required fields.",
         variant: "destructive",
       });
-      setIsLoading(false);
       return;
     }
-    
-    if (registerPassword !== confirmPassword) {
+
+    // Basic email validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       toast({
-        title: "Error",
-        description: "Passwords do not match",
+        title: "Invalid email",
+        description: "Please enter a valid email address.",
         variant: "destructive",
       });
-      setIsLoading(false);
       return;
     }
-    
-    // Simulate registration process
-    setTimeout(() => {
-      // In a real app, you would create a user account in your backend
-      const userData = {
-        name: registerName,
-        email: registerEmail,
-        isLoggedIn: true,
-        isVendor: accountType === 'vendor',
-        isAdmin: false,
-      };
-      
-      // Store user data in localStorage
-      localStorage.setItem('user', JSON.stringify(userData));
-      
-      toast({
-        title: "Registration Successful",
-        description: accountType === 'vendor' 
-          ? "Your vendor account has been created! Let's complete your profile." 
-          : "Your account has been created!",
-      });
-      
-      setIsLoading(false);
-      
-      // Redirect based on account type
-      if (accountType === 'vendor') {
-        navigate('/vendor/onboarding');
+
+    // Simulate authentication delay
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Mock authentication logic
+    if (authType === "login") {
+      // For simplicity, just check if the email and password are not empty
+      if (email && password) {
+        toast({
+          title: "Login successful",
+          description: `Welcome back, ${email}!`,
+        });
+        // Redirect based on role (replace with actual role-based routing)
+        if (role === "admin") {
+          navigate("/admin");
+        } else if (role === "vendor") {
+          navigate("/vendor-dashboard");
+        } else {
+          navigate("/");
+        }
       } else {
-        navigate('/customer/profile');
+        toast({
+          title: "Invalid credentials",
+          description: "Please check your email and password.",
+          variant: "destructive",
+        });
       }
-    }, 1000);
+    } else {
+      // Registration logic
+      if (!name) {
+        toast({
+          title: "Missing name",
+          description: "Please enter your name.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // For simplicity, assume registration is always successful
+      toast({
+        title: "Registration successful",
+        description: `Welcome, ${name}! Please log in.`,
+      });
+      setAuthType("login"); // Switch to login tab after successful registration
+    }
   };
 
   return (
     <Layout>
-      <div className="container mx-auto py-10 px-4 max-w-md">
-        <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="login">Login</TabsTrigger>
-            <TabsTrigger value="register">Register</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="login">
-            <Card>
-              <CardHeader>
-                <CardTitle>Account Login</CardTitle>
-                <CardDescription>
-                  Enter your credentials to access your account
-                </CardDescription>
-              </CardHeader>
-              <form onSubmit={handleLogin}>
-                <CardContent className="space-y-4">
+      <div className="container mx-auto py-20 px-4 flex items-center justify-center min-h-[calc(100vh-200px)]">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-2xl text-center">Authentication</CardTitle>
+            <CardDescription className="text-muted-foreground text-center">
+              {authType === "login"
+                ? "Log in to your account"
+                : "Create a new account"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Tabs defaultValue={authType} className="w-full">
+              <TabsList>
+                <TabsTrigger value="login" onClick={() => setAuthType("login")}>
+                  Login
+                </TabsTrigger>
+                <TabsTrigger value="register" onClick={() => setAuthType("register")}>
+                  Register
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="login">
+                <form onSubmit={handleAuth} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="login-email">Email</Label>
-                    <Input 
-                      id="login-email" 
-                      type="email" 
-                      placeholder="you@example.com" 
-                      value={loginEmail}
-                      onChange={(e) => setLoginEmail(e.target.value)}
-                      required
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="login-password">Password</Label>
-                      <a href="#" className="text-sm text-primary hover:underline">
-                        Forgot password?
-                      </a>
-                    </div>
-                    <Input 
-                      id="login-password" 
-                      type="password" 
-                      value={loginPassword}
-                      onChange={(e) => setLoginPassword(e.target.value)}
-                      required
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
-                  
-                  <div className="space-y-2">
-                    <Label>Account Type</Label>
-                    <div className="grid grid-cols-3 gap-2">
-                      <div 
-                        className={`flex flex-col items-center gap-1 p-2 border rounded-md cursor-pointer transition-all ${
-                          accountType === 'customer' ? 'border-primary bg-primary/5' : 'border-gray-200'
-                        }`}
-                        onClick={() => setAccountType('customer')}
-                      >
-                        <User className={`h-5 w-5 ${accountType === 'customer' ? 'text-primary' : 'text-gray-500'}`} />
-                        <span className="text-xs font-medium">Customer</span>
-                      </div>
-                      <div 
-                        className={`flex flex-col items-center gap-1 p-2 border rounded-md cursor-pointer transition-all ${
-                          accountType === 'vendor' ? 'border-primary bg-primary/5' : 'border-gray-200'
-                        }`}
-                        onClick={() => setAccountType('vendor')}
-                      >
-                        <UserCog className={`h-5 w-5 ${accountType === 'vendor' ? 'text-primary' : 'text-gray-500'}`} />
-                        <span className="text-xs font-medium">Vendor</span>
-                      </div>
-                      <div 
-                        className={`flex flex-col items-center gap-1 p-2 border rounded-md cursor-pointer transition-all ${
-                          accountType === 'admin' ? 'border-primary bg-primary/5' : 'border-gray-200'
-                        }`}
-                        onClick={() => setAccountType('admin')}
-                      >
-                        <Shield className={`h-5 w-5 ${accountType === 'admin' ? 'text-primary' : 'text-gray-500'}`} />
-                        <span className="text-xs font-medium">Admin</span>
-                      </div>
-                    </div>
-                    {accountType === 'admin' && (
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Admin demo credentials: admin@example.com / admin123
-                      </p>
-                    )}
+                  <div className="flex justify-end">
+                    <Button type="submit">Log In</Button>
                   </div>
-                </CardContent>
-                <CardFooter>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Logging in..." : "Login"}
-                  </Button>
-                </CardFooter>
-              </form>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="register">
-            <Card>
-              <CardHeader>
-                <CardTitle>Create Account</CardTitle>
-                <CardDescription>
-                  Register to book vendors for your events
-                </CardDescription>
-              </CardHeader>
-              <form onSubmit={handleRegister}>
-                <CardContent className="space-y-4">
+                </form>
+              </TabsContent>
+              <TabsContent value="register">
+                <form onSubmit={handleAuth} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="register-name">Full Name</Label>
-                    <Input 
-                      id="register-name" 
-                      placeholder="John Doe" 
-                      value={registerName}
-                      onChange={(e) => setRegisterName(e.target.value)}
-                      required
+                    <Label htmlFor="name">Name</Label>
+                    <Input
+                      id="name"
+                      type="text"
+                      placeholder="Enter your name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="register-email">Email</Label>
-                    <Input 
-                      id="register-email" 
-                      type="email" 
-                      placeholder="you@example.com" 
-                      value={registerEmail}
-                      onChange={(e) => setRegisterEmail(e.target.value)}
-                      required
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="register-password">Password</Label>
-                    <Input 
-                      id="register-password" 
-                      type="password" 
-                      value={registerPassword}
-                      onChange={(e) => setRegisterPassword(e.target.value)}
-                      required
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="confirm-password">Confirm Password</Label>
-                    <Input 
-                      id="confirm-password" 
-                      type="password" 
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                    />
+                    <Label htmlFor="role">Role</Label>
+                    <Select onValueChange={setRole} defaultValue={role}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Role</SelectLabel>
+                          <SelectItem value="customer">Customer</SelectItem>
+                          <SelectItem value="vendor">Vendor</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </div>
-                  
-                  <div className="space-y-2">
-                    <Label>Account Type</Label>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div 
-                        className={`flex flex-col items-center gap-1 p-3 border rounded-md cursor-pointer transition-all ${
-                          accountType === 'customer' ? 'border-primary bg-primary/5' : 'border-gray-200'
-                        }`}
-                        onClick={() => setAccountType('customer')}
-                      >
-                        <User className={`h-5 w-5 ${accountType === 'customer' ? 'text-primary' : 'text-gray-500'}`} />
-                        <span className="text-sm font-medium">Customer</span>
-                        <span className="text-xs text-muted-foreground text-center">Book services for events</span>
-                      </div>
-                      <div 
-                        className={`flex flex-col items-center gap-1 p-3 border rounded-md cursor-pointer transition-all ${
-                          accountType === 'vendor' ? 'border-primary bg-primary/5' : 'border-gray-200'
-                        }`}
-                        onClick={() => setAccountType('vendor')}
-                      >
-                        <UserCog className={`h-5 w-5 ${accountType === 'vendor' ? 'text-primary' : 'text-gray-500'}`} />
-                        <span className="text-sm font-medium">Vendor</span>
-                        <span className="text-xs text-muted-foreground text-center">Offer services to customers</span>
-                      </div>
-                    </div>
+                  <div className="flex justify-end">
+                    <Button type="submit">Register</Button>
                   </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="terms" required />
-                    <label
-                      htmlFor="terms"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      I agree to the <a href="#" className="text-primary hover:underline">terms and conditions</a>
-                    </label>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Creating Account..." : "Create Account"}
-                  </Button>
-                </CardFooter>
-              </form>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                </form>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+          <CardFooter className="text-sm text-muted-foreground text-center">
+            By continuing, you agree to our{" "}
+            <a href="/terms" className="text-primary">
+              Terms of Service
+            </a>{" "}
+            and{" "}
+            <a href="/privacy" className="text-primary">
+              Privacy Policy
+            </a>
+            .
+          </CardFooter>
+        </Card>
       </div>
     </Layout>
   );
