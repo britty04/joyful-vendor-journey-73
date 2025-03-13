@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import Layout from '@/components/Layout';
-import VendorCard from '@/components/VendorCard';
-import { Filter, AlertCircle } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import VendorAvailabilityBadge from '@/components/VendorAvailabilityBadge';
-import VendorTrustSignals from '@/components/VendorTrustSignals';
+import VendorFilters from '@/components/vendor-list/VendorFilters';
+import EmptyVendorList from '@/components/vendor-list/EmptyVendorList';
+import VendorListGrid from '@/components/vendor-list/VendorListGrid';
 
 // Define a type for the vendor availability to match the expected values
-type VendorAvailability = 'available' | 'limited' | 'booked';
+export type VendorAvailability = 'available' | 'limited' | 'booked';
 
 // Define a type for a vendor
 export interface Vendor {
@@ -45,7 +42,7 @@ const VendorList = () => {
       verified: true,
       responseTime: '1 hour',
       successRate: 98,
-      availability: 'available' as VendorAvailability
+      availability: 'available'
     },
     {
       id: '2',
@@ -59,7 +56,7 @@ const VendorList = () => {
       verified: true,
       responseTime: '2 hours',
       successRate: 95,
-      availability: 'limited' as VendorAvailability
+      availability: 'limited'
     },
     {
       id: '3',
@@ -73,7 +70,7 @@ const VendorList = () => {
       verified: true,
       responseTime: '45 minutes',
       successRate: 99,
-      availability: 'limited' as VendorAvailability
+      availability: 'limited'
     },
     {
       id: '4',
@@ -87,7 +84,7 @@ const VendorList = () => {
       verified: false,
       responseTime: '3 hours',
       successRate: 92,
-      availability: 'available' as VendorAvailability
+      availability: 'available'
     },
     {
       id: '5',
@@ -101,7 +98,7 @@ const VendorList = () => {
       verified: true,
       responseTime: '1 hour',
       successRate: 97,
-      availability: 'booked' as VendorAvailability
+      availability: 'booked'
     },
     {
       id: '6',
@@ -115,7 +112,7 @@ const VendorList = () => {
       verified: false,
       responseTime: '2 hours',
       successRate: 90,
-      availability: 'available' as VendorAvailability
+      availability: 'available'
     },
     {
       id: '7',
@@ -129,7 +126,7 @@ const VendorList = () => {
       verified: true,
       responseTime: '30 minutes',
       successRate: 98,
-      availability: 'limited' as VendorAvailability
+      availability: 'limited'
     },
     {
       id: '8',
@@ -143,7 +140,7 @@ const VendorList = () => {
       verified: false,
       responseTime: '2 hours',
       successRate: 94,
-      availability: 'available' as VendorAvailability
+      availability: 'available'
     },
   ]);
 
@@ -203,57 +200,20 @@ const VendorList = () => {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-12">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">{getPageTitle()}</h1>
-            <div className="flex items-center">
-              <p className="text-gray-600">{filteredVendors.length} vendors available</p>
-              {eventParam && (
-                <Badge variant="outline" className="ml-2 bg-gray-100">
-                  {eventParam.charAt(0).toUpperCase() + eventParam.slice(1)}
-                </Badge>
-              )}
-              {categoryParam && (
-                <Badge variant="outline" className="ml-2 bg-gray-100">
-                  {categoryParam}
-                </Badge>
-              )}
-            </div>
-          </div>
-          <Button variant="outline" size="sm" className="flex items-center gap-2">
-            <Filter size={16} />
-            Filter
-          </Button>
-        </div>
+        <VendorFilters 
+          categoryParam={categoryParam} 
+          eventParam={eventParam} 
+          vendorCount={filteredVendors.length}
+          pageTitle={getPageTitle()}
+        />
 
         {filteredVendors.length === 0 ? (
-          <div className="text-center py-20 bg-gray-50 rounded-lg">
-            <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-semibold text-gray-700 mb-4">No vendors found</h2>
-            <p className="text-gray-500 mb-8">Try adjusting your filters or browse all vendors</p>
-            <Button asChild>
-              <a href="/vendors">View All Vendors</a>
-            </Button>
-          </div>
+          <EmptyVendorList />
         ) : (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredVendors.map((vendor) => (
-                <VendorCard 
-                  key={vendor.id} 
-                  vendor={vendor} 
-                  reviewCount={Math.floor(Math.random() * 50) + 10}
-                  location="Local Area"
-                  badges={getVendorBadges(vendor)}
-                />
-              ))}
-            </div>
-            {filteredVendors.length > 6 && (
-              <div className="text-center mt-8">
-                <Button>Load More</Button>
-              </div>
-            )}
-          </>
+          <VendorListGrid 
+            vendors={filteredVendors} 
+            getVendorBadges={getVendorBadges}
+          />
         )}
       </div>
     </Layout>
