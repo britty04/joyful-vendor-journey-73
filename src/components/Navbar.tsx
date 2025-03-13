@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, Search, User, ShoppingBag } from 'lucide-react';
+import { Menu, X, Search } from 'lucide-react';
+import UserAuthNav from './UserAuthNav';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -57,9 +58,7 @@ const Navbar = () => {
             <button className="rounded-full p-2 text-gray-500 hover:text-primary hover:bg-gray-100 transition-colors">
               <Search size={20} />
             </button>
-            <button className="rounded-full p-2 text-gray-500 hover:text-primary hover:bg-gray-100 transition-colors">
-              <User size={20} />
-            </button>
+            <UserAuthNav />
             <button className="rounded-full bg-primary text-white px-4 py-2 font-medium transition-all hover:bg-primary/90 active:scale-95">
               Become a Vendor
             </button>
@@ -106,6 +105,13 @@ const Navbar = () => {
               onClick={() => setIsMobileMenuOpen(false)}
             >
               About
+            </Link>
+            <Link 
+              to="/auth" 
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Login / Sign Up
             </Link>
             <div className="pt-4 border-t border-gray-200">
               <button className="w-full rounded-full bg-primary text-white px-4 py-2 font-medium transition-all hover:bg-primary/90 active:scale-95">
