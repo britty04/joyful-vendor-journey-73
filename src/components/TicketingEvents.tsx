@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { toast } from '@/hooks/use-toast';
+import { Link } from 'react-router-dom';
 
 interface Event {
   id: string;
@@ -179,8 +180,10 @@ const TicketingEvents = () => {
       <div className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex justify-between items-center">
           <h2 className="text-2xl font-bold">Upcoming Events</h2>
-          <Button variant="outline" size="sm" as="a" href="/events">
-            View All <ChevronRight className="ml-1 h-4 w-4" />
+          <Button variant="outline" size="sm" asChild>
+            <Link to="/events">
+              View All <ChevronRight className="ml-1 h-4 w-4" />
+            </Link>
           </Button>
         </div>
         
@@ -275,8 +278,10 @@ const TicketingEvents = () => {
       <div className="mb-12">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900">Featured Events</h2>
-          <Button variant="outline" size="sm">
-            View All <ChevronRight className="ml-1 h-4 w-4" />
+          <Button variant="outline" size="sm" asChild>
+            <Link to="#featured">
+              View All <ChevronRight className="ml-1 h-4 w-4" />
+            </Link>
           </Button>
         </div>
         
