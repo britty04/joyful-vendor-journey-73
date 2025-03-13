@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { CreditCard, WalletCards, IndianRupee, Plus, Lock } from 'lucide-react';
+import PaymentForm, { PaymentDetails } from './PaymentForm';
 
 interface PaymentOption {
   id: string;
@@ -40,12 +41,18 @@ const paymentOptions: PaymentOption[] = [
 
 interface PaymentMethodProps {
   onSelectPaymentMethod: (methodId: string) => void;
+  onProcessPayment: (paymentDetails: PaymentDetails) => void;
   selectedMethod: string | null;
+  amount: number;
+  isProcessingPayment: boolean;
 }
 
 const PaymentMethod: React.FC<PaymentMethodProps> = ({ 
   onSelectPaymentMethod,
-  selectedMethod 
+  onProcessPayment,
+  selectedMethod,
+  amount,
+  isProcessingPayment
 }) => {
   const [showAddCard, setShowAddCard] = useState(false);
   const [newCard, setNewCard] = useState({
@@ -69,120 +76,62 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({
         <span>All transactions are secure and encrypted</span>
       </div>
       
-      <RadioGroup 
-        value={selectedMethod || undefined} 
-        onValueChange={onSelectPaymentMethod}
-      >
-        <div className="space-y-3">
-          {paymentOptions.map((option) => (
-            <div key={option.id} className="flex items-center space-x-3 p-4 border rounded-lg hover:border-primary transition-colors">
-              <RadioGroupItem 
-                value={option.id} 
-                id={`payment-${option.id}`} 
-              />
-              <div className="flex-grow">
-                <div className="flex items-center">
-                  <div className="mr-2 text-gray-600">
-                    {option.icon}
+      {selectedMethod === 'card-form' ? (
+        <PaymentForm 
+          onPaymentComplete={onProcessPayment}
+          amount={amount}
+          isProcessing={isProcessingPayment}
+        />
+      ) : (
+        <RadioGroup 
+          value={selectedMethod || undefined} 
+          onValueChange={onSelectPaymentMethod}
+        >
+          <div className="space-y-3">
+            {paymentOptions.map((option) => (
+              <div key={option.id} className="flex items-center space-x-3 p-4 border rounded-lg hover:border-primary transition-colors">
+                <RadioGroupItem 
+                  value={option.id} 
+                  id={`payment-${option.id}`} 
+                />
+                <div className="flex-grow">
+                  <div className="flex items-center">
+                    <div className="mr-2 text-gray-600">
+                      {option.icon}
+                    </div>
+                    <Label 
+                      htmlFor={`payment-${option.id}`}
+                      className="font-medium cursor-pointer"
+                    >
+                      {option.name}
+                    </Label>
                   </div>
-                  <Label 
-                    htmlFor={`payment-${option.id}`}
-                    className="font-medium cursor-pointer"
-                  >
-                    {option.name}
-                  </Label>
+                  
+                  {option.details && (
+                    <p className="text-gray-600 text-sm ml-7 mt-1">{option.details}</p>
+                  )}
+                  
+                  {option.type === 'cash' && (
+                    <p className="text-gray-600 text-sm ml-7 mt-1">Pay when your service is delivered</p>
+                  )}
                 </div>
-                
-                {option.details && (
-                  <p className="text-gray-600 text-sm ml-7 mt-1">{option.details}</p>
-                )}
-                
-                {option.type === 'cash' && (
-                  <p className="text-gray-600 text-sm ml-7 mt-1">Pay when your service is delivered</p>
-                )}
+              </div>
+            ))}
+            
+            <div 
+              className="flex items-center p-4 border border-dashed rounded-lg hover:border-primary transition-colors cursor-pointer"
+              onClick={() => onSelectPaymentMethod('card-form')}
+            >
+              <div className="mr-3 w-5 h-5 flex items-center justify-center">
+                <Plus className="w-4 h-4 text-primary" />
+              </div>
+              <div>
+                <p className="font-medium">Add a new card</p>
+                <p className="text-gray-600 text-sm">Pay with a new credit or debit card</p>
               </div>
             </div>
-          ))}
-          
-          {/* Add new card option */}
-          <div 
-            className={`p-4 border border-dashed rounded-lg hover:border-primary transition-colors cursor-pointer ${showAddCard ? 'border-primary bg-primary/5' : ''}`}
-            onClick={() => setShowAddCard(true)}
-          >
-            <div className="flex items-center">
-              <Plus className="w-5 h-5 mr-2 text-gray-500" />
-              <span className="font-medium">Add a new payment method</span>
-            </div>
           </div>
-        </div>
-      </RadioGroup>
-      
-      {/* New card form */}
-      {showAddCard && (
-        <div className="mt-6 border rounded-lg p-4 bg-gray-50">
-          <h3 className="font-medium mb-4 flex items-center">
-            <CreditCard className="w-4 h-4 mr-2" />
-            Add New Card
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="col-span-full">
-              <Label htmlFor="card-number">Card Number</Label>
-              <Input 
-                id="card-number" 
-                placeholder="1234 5678 9012 3456"
-                value={newCard.cardNumber}
-                onChange={(e) => setNewCard({...newCard, cardNumber: e.target.value})}
-              />
-            </div>
-            
-            <div className="col-span-full">
-              <Label htmlFor="card-name">Name on Card</Label>
-              <Input 
-                id="card-name" 
-                placeholder="John Doe"
-                value={newCard.name}
-                onChange={(e) => setNewCard({...newCard, name: e.target.value})}
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="expiry">Expiry Date</Label>
-              <Input 
-                id="expiry" 
-                placeholder="MM/YY"
-                value={newCard.expiry}
-                onChange={(e) => setNewCard({...newCard, expiry: e.target.value})}
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="cvv">CVV</Label>
-              <Input 
-                id="cvv" 
-                placeholder="123"
-                type="password"
-                value={newCard.cvv}
-                onChange={(e) => setNewCard({...newCard, cvv: e.target.value})}
-              />
-            </div>
-          </div>
-          
-          <div className="flex justify-end space-x-2 mt-6">
-            <Button 
-              variant="outline" 
-              onClick={() => setShowAddCard(false)}
-            >
-              Cancel
-            </Button>
-            <Button 
-              onClick={handleAddNewCard}
-              disabled={!newCard.cardNumber || !newCard.name || !newCard.expiry || !newCard.cvv}
-            >
-              Save Card
-            </Button>
-          </div>
-        </div>
+        </RadioGroup>
       )}
     </div>
   );

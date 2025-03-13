@@ -1,6 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { useNavigate } from 'react-router-dom';
 import ServiceSummary from './ServiceSummary';
 import DateReview from './DateReview';
 import AddressSelection from './AddressSelection';
@@ -13,13 +15,15 @@ import CheckoutSteps from './CheckoutSteps';
 import CartSection from './CartSection';
 import { useCart } from '@/contexts/CartContext';
 import { toast } from '@/hooks/use-toast';
+import { PaymentDetails } from './PaymentForm';
 
 interface CheckoutFlowProps {
   onOrderComplete?: () => void;
 }
 
 const CheckoutFlow: React.FC<CheckoutFlowProps> = ({ onOrderComplete }) => {
-  const { items: cartItems, updateQuantity, removeFromCart, subtotal } = useCart();
+  const navigate = useNavigate();
+  const { items: cartItems, updateQuantity, removeFromCart, subtotal, clearCart } = useCart();
   const [currentStep, setCurrentStep] = useState(1);
   const [checkoutData, setCheckoutData] = useState({
     services: cartItems,
@@ -30,6 +34,8 @@ const CheckoutFlow: React.FC<CheckoutFlowProps> = ({ onOrderComplete }) => {
   });
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
+  const [paymentDetails, setPaymentDetails] = useState<PaymentDetails | null>(null);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [agreedToPolicies, setAgreedToPolicies] = useState(false);
   
   useEffect(() => {
@@ -75,14 +81,61 @@ const CheckoutFlow: React.FC<CheckoutFlowProps> = ({ onOrderComplete }) => {
     setAgreedToPolicies(agreed);
   };
 
+  const handleProcessPayment = (details: PaymentDetails) => {
+    setIsProcessingPayment(true);
+    setPaymentDetails(details);
+    
+    // Simulate payment processing
+    setTimeout(() => {
+      setIsProcessingPayment(false);
+      nextStep(); // Move to confirmation step after payment
+    }, 1500);
+  };
+
+  const handleCompleteBooking = () => {
+    // Create booking data
+    const paymentMethodName = paymentDetails 
+      ? `Card ending in ${paymentDetails.lastFour}`
+      : selectedPaymentMethod === 'upi1'
+        ? 'UPI Payment'
+        : selectedPaymentMethod === 'cash1'
+          ? 'Cash on Delivery'
+          : 'Credit/Debit Card';
+    
+    const bookingDetails = {
+      orderNumber: `ORD-${Date.now().toString().slice(-6)}`,
+      bookingDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Event date a week from now
+      services: cartItems.map(item => ({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity
+      })),
+      venue: "Customer's Selected Address",
+      paymentMethod: paymentMethodName,
+      totalAmount: checkoutData.discountedPrice
+    };
+    
+    // Save to localStorage for persistence
+    localStorage.setItem('lastBooking', JSON.stringify(bookingDetails));
+    
+    // Clear cart
+    if (onOrderComplete) {
+      onOrderComplete();
+    }
+    clearCart();
+    
+    // Navigate to success page
+    navigate('/booking/success', { state: { bookingDetails } });
+  };
+
   const nextStep = () => {
     if (currentStep < 5) {
       setCurrentStep(currentStep + 1);
       window.scrollTo(0, 0);
     }
     
-    if (currentStep === 4 && onOrderComplete) {
-      onOrderComplete();
+    if (currentStep === 4) {
+      handleCompleteBooking();
     }
   };
 
@@ -97,7 +150,12 @@ const CheckoutFlow: React.FC<CheckoutFlowProps> = ({ onOrderComplete }) => {
     if (currentStep === 1) return checkoutData.services.length > 0;
     if (currentStep === 2) return !!selectedAddress;
     if (currentStep === 3) return true;
-    if (currentStep === 4) return !!selectedPaymentMethod && agreedToPolicies;
+    if (currentStep === 4) {
+      if (selectedPaymentMethod === 'card-form') {
+        return !!paymentDetails && agreedToPolicies;
+      }
+      return !!selectedPaymentMethod && agreedToPolicies;
+    }
     return true;
   };
 
@@ -149,33 +207,13 @@ const CheckoutFlow: React.FC<CheckoutFlowProps> = ({ onOrderComplete }) => {
                 <h2 className="text-xl font-semibold">Payment & Policies</h2>
                 <PaymentMethod 
                   onSelectPaymentMethod={handleSelectPaymentMethod} 
+                  onProcessPayment={handleProcessPayment}
                   selectedMethod={selectedPaymentMethod} 
+                  amount={checkoutData.discountedPrice}
+                  isProcessingPayment={isProcessingPayment}
                 />
                 <Separator className="my-6" />
                 <Policies onAgreementChange={handlePolicyAgreement} isAgreed={agreedToPolicies} />
-              </div>
-            )}
-            
-            {currentStep === 5 && (
-              <div className="space-y-6">
-                <h2 className="text-xl font-semibold">Order Confirmation</h2>
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
-                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="font-medium text-green-800">Order Placed Successfully!</p>
-                    <p className="text-sm text-green-700">Your order has been confirmed. You'll receive an email confirmation shortly.</p>
-                  </div>
-                </div>
-                <ServiceSummary services={checkoutData.services} />
-                
-                <div className="mt-8">
-                  <h3 className="text-lg font-medium mb-4">You might also be interested in:</h3>
-                  <LastMinuteRecommendations eventType={checkoutData.services[0].name.includes('Wedding') ? 'wedding' : 'birthday'} />
-                </div>
               </div>
             )}
             
@@ -193,19 +231,18 @@ const CheckoutFlow: React.FC<CheckoutFlowProps> = ({ onOrderComplete }) => {
                 )}
                 <button 
                   onClick={nextStep}
-                  disabled={!canProceedToNext()}
-                  className={`px-6 py-2 rounded-md ${canProceedToNext() ? 'bg-primary text-white hover:bg-primary/90' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+                  disabled={!canProceedToNext() || isProcessingPayment}
+                  className={`px-6 py-2 rounded-md ${canProceedToNext() && !isProcessingPayment ? 'bg-primary text-white hover:bg-primary/90' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
                 >
-                  {currentStep === 4 ? 'Place Order' : 'Continue'}
+                  {isProcessingPayment ? (
+                    <>
+                      <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
+                      Processing...
+                    </>
+                  ) : currentStep === 4 ? 'Place Order' : 'Continue'}
                 </button>
               </div>
-            ) : (
-              <div className="flex justify-center mt-8">
-                <a href="/" className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90">
-                  Back to Home
-                </a>
-              </div>
-            )}
+            ) : null}
           </CardContent>
         </Card>
       </div>

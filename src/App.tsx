@@ -16,6 +16,7 @@ import CustomerProfile from "./pages/CustomerProfile";
 import AIGuidedBookingPage from "./pages/AIGuidedBookingPage";
 import TicketingEventsPage from "./pages/TicketingEventsPage";
 import Checkout from "./pages/Checkout";
+import BookingSuccess from "./pages/BookingSuccess";
 import ServicesDemo from "./pages/ServicesDemo";
 import ChatBot from "./components/chatbot/ChatBot";
 
@@ -79,6 +80,7 @@ const App = () => (
               <Route path="/guided-booking" element={<AIGuidedBookingPage />} />
               <Route path="/events" element={<TicketingEventsPage />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/booking/success" element={<BookingSuccess />} />
               <Route path="/services" element={<ServicesDemo />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
