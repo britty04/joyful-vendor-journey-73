@@ -35,14 +35,21 @@ const App = () => (
         {/* Custom background pattern for the app */}
         <div className="min-h-screen relative overflow-hidden">
           <div className="absolute inset-0 -z-10">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-eventPurple-200 rounded-full opacity-20 blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-eventPink-200 rounded-full opacity-20 blur-3xl"></div>
-            <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-eventYellow-200 rounded-full opacity-15 blur-3xl"></div>
-            <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-eventBlue-200 rounded-full opacity-15 blur-3xl"></div>
+            {/* Main background gradients */}
+            <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-b from-white via-purple-50/30 to-white opacity-60"></div>
+            
+            {/* Animated background blobs */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-eventPurple-200 rounded-full opacity-20 blur-3xl animate-float" style={{animationDuration: '15s'}}></div>
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-eventPink-200 rounded-full opacity-20 blur-3xl animate-float" style={{animationDuration: '20s', animationDelay: '2s'}}></div>
+            <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-eventYellow-200 rounded-full opacity-15 blur-3xl animate-float" style={{animationDuration: '18s', animationDelay: '5s'}}></div>
+            <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-eventBlue-200 rounded-full opacity-15 blur-3xl animate-float" style={{animationDuration: '25s', animationDelay: '3s'}}></div>
+            <div className="absolute top-2/3 right-1/4 w-64 h-64 bg-green-200 rounded-full opacity-10 blur-3xl animate-float" style={{animationDuration: '22s', animationDelay: '8s'}}></div>
             
             {/* Additional subtle patterns */}
             <div className="absolute inset-0 bg-dots-pattern opacity-5"></div>
-            <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50 to-white opacity-80"></div>
+            
+            {/* Light overlay to improve contrast */}
+            <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white opacity-80"></div>
           </div>
           
           <Toaster />

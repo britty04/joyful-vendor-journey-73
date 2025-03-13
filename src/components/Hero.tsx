@@ -1,163 +1,196 @@
 
-import { useState, useEffect } from 'react';
-import { Search, Calendar, MapPin, ArrowRight, Sparkles } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Search, Sparkles, Calendar, Zap, Star, ChevronRight } from 'lucide-react';
 
 const Hero = () => {
-  // Get location from Navbar state or localStorage if available
-  const [searchQuery, setSearchQuery] = useState('');
-  const [location, setLocation] = useState(() => {
-    return localStorage.getItem('userLocation') || 'New York';
-  });
-  const [eventDate, setEventDate] = useState('');
-  const [eventType, setEventType] = useState('');
-  const navigate = useNavigate();
-
-  // Save location to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('userLocation', location);
-  }, [location]);
-
-  const handleSearch = () => {
-    const params = new URLSearchParams();
-    if (searchQuery) params.append('q', searchQuery);
-    if (location) params.append('location', location);
-    if (eventDate) params.append('date', eventDate);
-    if (eventType) params.append('event', eventType);
-    
-    navigate(`/vendors?${params.toString()}`);
+  // Animation variants for staggered children
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        delayChildren: 0.3,
+        staggerChildren: 0.2
+      }
+    }
   };
 
-  return (
-    <section className="relative overflow-hidden py-20 md:py-24 lg:py-28">
-      {/* Background Elements */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-eventPurple-100 to-transparent"></div>
-        <div className="absolute -top-20 -right-20 w-64 h-64 bg-eventPink-200 rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute -bottom-32 -left-20 w-80 h-80 bg-eventPurple-200 rounded-full opacity-20 blur-3xl"></div>
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: 'spring', stiffness: 300, damping: 24 }
+    }
+  };
+
+  // For the search bar animation
+  const [searchPlaceholder, setSearchPlaceholder] = useState('');
+  const placeholders = [
+    "Find a birthday magician...",
+    "Search for wedding photographers...",
+    "Looking for a cake baker...",
+    "Need a DJ for your party..."
+  ];
+  const [currentPlaceholderIndex, setCurrentPlaceholderIndex] = useState(0);
+  const [currentCharIndex, setCurrentCharIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Create the typewriter effect
+  useEffect(() => {
+    const currentText = placeholders[currentPlaceholderIndex];
+    
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        setSearchPlaceholder(currentText.substring(0, currentCharIndex + 1));
+        setCurrentCharIndex(currentCharIndex + 1);
         
-        {/* Animated shapes */}
-        <div className="absolute top-1/4 left-10 w-6 h-6 bg-eventYellow-400 rounded-full opacity-40 animate-float"></div>
-        <div className="absolute top-1/3 right-10 w-4 h-4 bg-eventPink-400 rounded-full opacity-30 animate-bounce-gentle"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-5 h-5 bg-eventPurple-400 rounded-full opacity-40 animate-float" style={{ animationDelay: '1s' }}></div>
+        if (currentCharIndex === currentText.length) {
+          // Wait a bit at the end of the text before deleting
+          setTimeout(() => setIsDeleting(true), 2000);
+        }
+      } else {
+        setSearchPlaceholder(currentText.substring(0, currentCharIndex - 1));
+        setCurrentCharIndex(currentCharIndex - 1);
+        
+        if (currentCharIndex === 0) {
+          setIsDeleting(false);
+          setCurrentPlaceholderIndex((currentPlaceholderIndex + 1) % placeholders.length);
+        }
+      }
+    }, isDeleting ? 50 : 100);
+    
+    return () => clearTimeout(timeout);
+  }, [currentCharIndex, currentPlaceholderIndex, isDeleting, placeholders]);
+
+  return (
+    <section className="relative overflow-hidden pt-20 pb-32">
+      {/* Decorative Backgrounds */}
+      <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-eventPurple-50 to-transparent -z-10"></div>
+      <div className="absolute -top-20 -right-20 w-72 h-72 bg-eventPink-100 rounded-full opacity-20 blur-3xl -z-10"></div>
+      <div className="absolute top-40 -left-20 w-72 h-72 bg-eventYellow-100 rounded-full opacity-20 blur-3xl -z-10"></div>
+      
+      {/* Animated Elements */}
+      <div className="absolute top-1/4 left-10 w-8 h-8 animate-float" style={{ animationDuration: '6s' }}>
+        <div className="w-full h-full bg-eventPink-300 opacity-70 rounded-full"></div>
       </div>
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-12 relative z-10">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12 md:mb-16 animate-slide-down">
-            <div className="inline-flex items-center px-4 py-2 mb-6 bg-purple-100 rounded-full text-purple-700">
-              <Sparkles size={18} className="mr-2 text-eventPurple-500" />
-              <span className="text-sm font-medium">Magic moments for your little ones</span>
+      <div className="absolute top-1/3 right-16 w-6 h-6 animate-float" style={{ animationDuration: '8s', animationDelay: '1s' }}>
+        <div className="w-full h-full bg-eventYellow-300 opacity-70 rounded-md rotate-45"></div>
+      </div>
+      <div className="absolute bottom-1/4 left-1/4 w-10 h-10 animate-float" style={{ animationDuration: '7s', animationDelay: '0.5s' }}>
+        <div className="w-full h-full bg-eventBlue-300 opacity-70 rounded-full"></div>
+      </div>
+      
+      {/* Hero Content */}
+      <div className="container mx-auto px-4 relative z-10">
+        <motion.div 
+          className="max-w-5xl mx-auto text-center"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.div 
+            variants={itemVariants}
+            className="inline-flex items-center px-4 py-2 mb-6 bg-white rounded-full shadow-md text-eventPurple-600 border border-eventPurple-100"
+          >
+            <Sparkles className="w-4 h-4 mr-2 text-eventPurple-500" />
+            <span className="text-sm font-medium">The best event planning platform</span>
+          </motion.div>
+          
+          <motion.h1 
+            variants={itemVariants}
+            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
+          >
+            Make your next event 
+            <span className="block gradient-text">Magical & Memorable</span>
+          </motion.h1>
+          
+          <motion.p 
+            variants={itemVariants}
+            className="text-xl text-gray-600 mb-10 max-w-3xl mx-auto"
+          >
+            Find the perfect vendors, entertainers, and services for your special occasion. 
+            From birthdays and weddings to corporate events - we've got you covered!
+          </motion.p>
+          
+          <motion.div 
+            variants={itemVariants}
+            className="bg-white rounded-xl shadow-lg p-2 mb-8 max-w-3xl mx-auto flex items-center playful-shadow"
+          >
+            <div className="bg-eventPurple-100 p-3 rounded-lg text-eventPurple-600 mx-2">
+              <Search className="w-5 h-5" />
             </div>
-            <h1 className="font-bold text-gray-900 mb-6">
-              <span className="block">Discover Perfect Vendors</span>
-              <span className="block mt-2 gradient-text">For Unforgettable Events</span>
-            </h1>
-            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-              Find, compare, and book amazing event vendors – all in one place. 
-              AI-powered recommendations tailored to your event's needs.
-            </p>
-          </div>
-
-          {/* Search Box */}
-          <div className="relative max-w-4xl mx-auto animate-slide-up" style={{ animationDelay: '0.3s' }}>
-            <div className="playful-card playful-shadow p-2 transition-all">
-              <div className="flex flex-col md:flex-row">
-                <div className="flex-1 border-b md:border-b-0 md:border-r border-gray-100">
-                  <div className="flex items-center p-4">
-                    <Search className="h-5 w-5 text-gray-400 mr-3" />
-                    <input
-                      type="text"
-                      placeholder="What are you looking for?"
-                      className="w-full bg-transparent border-none outline-none text-gray-700 placeholder-gray-400"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="flex-1 border-b md:border-b-0 md:border-r border-gray-100">
-                  <div className="flex items-center p-4">
-                    <MapPin className="h-5 w-5 text-gray-400 mr-3" />
-                    <select
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      className="w-full bg-transparent border-none outline-none text-gray-700 appearance-none cursor-pointer"
-                    >
-                      <option value="New York">New York</option>
-                      <option value="Los Angeles">Los Angeles</option>
-                      <option value="Chicago">Chicago</option>
-                      <option value="Miami">Miami</option>
-                      <option value="Dallas">Dallas</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="flex-1 border-b md:border-b-0 md:border-r border-gray-100">
-                  <div className="flex items-center p-4">
-                    <Calendar className="h-5 w-5 text-gray-400 mr-3" />
-                    <input
-                      type="text"
-                      placeholder="Event Date"
-                      className="w-full bg-transparent border-none outline-none text-gray-700 placeholder-gray-400"
-                      value={eventDate}
-                      onChange={(e) => setEventDate(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="p-2">
-                  <button 
-                    className="w-full playful-button"
-                    onClick={handleSearch}
-                  >
-                    <span>Search</span>
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </button>
-                </div>
-              </div>
+            <input 
+              type="text" 
+              placeholder={searchPlaceholder} 
+              className="flex-1 py-3 px-4 bg-transparent border-none focus:outline-none text-gray-700"
+            />
+            <Button size="lg" className="bg-eventPurple-600 hover:bg-eventPurple-700 text-white rounded-lg shadow-md ml-2">
+              Search
+            </Button>
+          </motion.div>
+          
+          <motion.div 
+            variants={itemVariants}
+            className="flex flex-wrap justify-center gap-3 md:gap-5 mb-12"
+          >
+            <Link to="/guided-booking" className="flex items-center px-4 py-3 bg-white rounded-full shadow-sm border border-gray-100 text-gray-700 hover:shadow-md hover:border-eventPurple-200 transition-all">
+              <Zap className="w-4 h-4 mr-2 text-eventPurple-500" />
+              <span>AI Guided Booking</span>
+            </Link>
+            <Link to="/vendors?category=entertainers&event=kids" className="flex items-center px-4 py-3 bg-white rounded-full shadow-sm border border-gray-100 text-gray-700 hover:shadow-md hover:border-eventPink-200 transition-all">
+              <Star className="w-4 h-4 mr-2 text-eventPink-500" />
+              <span>Kids Entertainment</span>
+            </Link>
+            <Link to="/vendors?category=photography" className="flex items-center px-4 py-3 bg-white rounded-full shadow-sm border border-gray-100 text-gray-700 hover:shadow-md hover:border-eventBlue-200 transition-all">
+              <Calendar className="w-4 h-4 mr-2 text-eventBlue-500" />
+              <span>Event Photography</span>
+            </Link>
+          </motion.div>
+          
+          <motion.div 
+            variants={itemVariants}
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto text-center"
+          >
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-50">
+              <div className="text-2xl font-bold gradient-text-purple">500+</div>
+              <div className="text-gray-600 text-sm">Verified Vendors</div>
             </div>
-            
-            {/* Event Type Shortcuts */}
-            <div className="mt-4 flex items-center justify-center flex-wrap gap-2 text-sm text-gray-600">
-              <span>Quick search:</span>
-              <button 
-                onClick={() => {
-                  setEventType('kids');
-                  handleSearch();
-                }}
-                className="px-3 py-1 bg-white hover:bg-purple-50 rounded-full border border-purple-100 transition-colors"
-              >
-                Kids Events
-              </button>
-              <button 
-                onClick={() => {
-                  setEventType('corporate');
-                  handleSearch();
-                }}
-                className="px-3 py-1 bg-white hover:bg-purple-50 rounded-full border border-purple-100 transition-colors"
-              >
-                Corporate Events
-              </button>
-              <button 
-                onClick={() => {
-                  setEventType('wedding');
-                  handleSearch();
-                }}
-                className="px-3 py-1 bg-white hover:bg-purple-50 rounded-full border border-purple-100 transition-colors"
-              >
-                Weddings
-              </button>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-50">
+              <div className="text-2xl font-bold gradient-text-pink">5,000+</div>
+              <div className="text-gray-600 text-sm">Happy Customers</div>
             </div>
-          </div>
-
-          {/* Scroll Indicator */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-gentle">
-            <div className="flex flex-col items-center">
-              <span className="text-xs text-gray-500 mb-2">Scroll to explore</span>
-              <div className="w-6 h-10 border-2 border-purple-200 rounded-full flex justify-center p-1">
-                <div className="w-1 h-2 bg-primary rounded-full animate-[slide-down_1.5s_ease-in-out_infinite]"></div>
-              </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-50">
+              <div className="text-2xl font-bold gradient-text-blue">20+</div>
+              <div className="text-gray-600 text-sm">Service Categories</div>
             </div>
-          </div>
-        </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-50">
+              <div className="text-2xl font-bold gradient-text">4.8/5</div>
+              <div className="text-gray-600 text-sm">Customer Rating</div>
+            </div>
+          </motion.div>
+          
+          <motion.div 
+            variants={itemVariants}
+            className="mt-12"
+          >
+            <Button 
+              asChild
+              size="lg" 
+              className="bg-gradient-to-r from-eventPurple-500 to-eventPink-500 hover:from-eventPurple-600 hover:to-eventPink-600 text-white px-8 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all"
+            >
+              <Link to="/vendor/onboarding">
+                <Sparkles className="w-5 h-5 mr-2" />
+                <span>Become a Vendor</span>
+                <ChevronRight className="w-5 h-5 ml-2" />
+              </Link>
+            </Button>
+            <p className="text-gray-500 text-sm mt-3">No sign-up fee. Commissions only on bookings.</p>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
