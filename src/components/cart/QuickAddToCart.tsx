@@ -1,9 +1,10 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, Plus, Check } from 'lucide-react';
+import { ShoppingBag, Plus, Check } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { toast } from '@/hooks/use-toast';
+import { motion } from 'framer-motion';
 
 interface QuickAddToCartProps {
   id: string;
@@ -33,25 +34,28 @@ const QuickAddToCart: React.FC<QuickAddToCartProps> = ({ id, name, price, image,
   };
 
   return (
-    <Button
-      onClick={handleAddToCart}
-      className={`transition-all duration-300 ${
-        isInCart ? 'bg-green-500 hover:bg-green-600' : 'bg-eventPurple-500 hover:bg-eventPurple-600'
-      }`}
-      disabled={isInCart}
-    >
-      {isInCart ? (
-        <>
-          <Check className="mr-2 h-4 w-4" />
-          Added
-        </>
-      ) : (
-        <>
-          <ShoppingCart className="mr-2 h-4 w-4" />
-          Add to Cart
-        </>
-      )}
-    </Button>
+    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+      <Button
+        onClick={handleAddToCart}
+        className={`transition-all duration-300 shadow-lg ${
+          isInCart ? 'bg-green-500 hover:bg-green-600' : 'bg-eventPurple-500 hover:bg-eventPurple-600'
+        } w-full`}
+        disabled={isInCart}
+        size="lg"
+      >
+        {isInCart ? (
+          <>
+            <Check className="mr-2 h-4 w-4" />
+            Added to Cart
+          </>
+        ) : (
+          <>
+            <ShoppingBag className="mr-2 h-4 w-4" />
+            Add to Cart
+          </>
+        )}
+      </Button>
+    </motion.div>
   );
 };
 
