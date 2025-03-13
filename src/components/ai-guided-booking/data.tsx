@@ -1,11 +1,6 @@
 
-// Define the event type interface
-export interface EventType {
-  id: string;
-  name: string;
-  description: string;
-  icon: React.ReactNode;
-}
+import React from 'react';
+import { EventType } from './EventTypeSelector';
 
 // Define the service interface
 export interface Service {
@@ -15,59 +10,59 @@ export interface Service {
 }
 
 // Event types
-export const eventTypes = [
+export const eventTypes: EventType[] = [
   { 
     id: 'birthday',
     name: 'Birthday Party', 
     description: 'Celebrate another trip around the sun!',
-    icon: <span className="text-3xl">🎂</span>
+    icon: React.createElement('span', { className: "text-3xl" }, '🎂')
   },
   { 
     id: 'wedding',
     name: 'Wedding', 
     description: 'Make your special day unforgettable',
-    icon: <span className="text-3xl">💍</span>
+    icon: React.createElement('span', { className: "text-3xl" }, '💍')
   },
   { 
     id: 'corporate',
     name: 'Corporate Event', 
     description: 'Impress your colleagues and clients',
-    icon: <span className="text-3xl">👔</span>
+    icon: React.createElement('span', { className: "text-3xl" }, '👔')
   },
   { 
     id: 'baby-shower',
     name: 'Baby Shower', 
     description: 'Welcome the little one with love',
-    icon: <span className="text-3xl">👶</span>
+    icon: React.createElement('span', { className: "text-3xl" }, '👶')
   },
   { 
     id: 'anniversary',
     name: 'Anniversary', 
     description: 'Celebrate years of togetherness',
-    icon: <span className="text-3xl">❤️</span>
+    icon: React.createElement('span', { className: "text-3xl" }, '❤️')
   },
   { 
     id: 'graduation',
     name: 'Graduation', 
     description: 'Celebrate academic achievements',
-    icon: <span className="text-3xl">🎓</span>
+    icon: React.createElement('span', { className: "text-3xl" }, '🎓')
   },
   { 
     id: 'religious',
     name: 'Religious Ceremony', 
     description: 'Honor faith and traditions',
-    icon: <span className="text-3xl">✨</span>
+    icon: React.createElement('span', { className: "text-3xl" }, '✨')
   },
   { 
     id: 'other',
     name: 'Other Event', 
     description: 'Create a custom event experience',
-    icon: <span className="text-3xl">🎪</span>
+    icon: React.createElement('span', { className: "text-3xl" }, '🎪')
   }
 ];
 
 // Primary services for birthday events
-export const birthdayPrimaryServices = [
+export const birthdayPrimaryServices: Service[] = [
   { id: 'magician', name: 'Magician', icon: '🎩' },
   { id: 'clown', name: 'Clown', icon: '🤡' },
   { id: 'catering', name: 'Catering', icon: '🍰' },
