@@ -1,7 +1,9 @@
 
 import { cn } from "@/lib/utils";
-import { Check, Star } from "lucide-react";
+import { Check, Star, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/contexts/CartContext";
+import { toast } from "@/hooks/use-toast";
 
 export interface ServiceRecommendation {
   id: string;
@@ -25,6 +27,29 @@ const RecommendationCard = ({
   isSelected, 
   onToggleSelection 
 }: RecommendationCardProps) => {
+  const { addToCart } = useCart();
+  
+  // Convert price string to a number for the cart
+  const getNumericPrice = () => {
+    // Remove the rupee symbol and commas, then parse as float
+    return parseFloat(recommendation.price.replace('₹', '').replace(/,/g, ''));
+  };
+  
+  const handleAddToCart = () => {
+    addToCart({
+      id: recommendation.id,
+      name: recommendation.name,
+      price: getNumericPrice(),
+      image: recommendation.image,
+      date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Schedule for 7 days later
+    });
+    
+    toast({
+      title: "Added to cart",
+      description: `${recommendation.name} has been added to your cart.`,
+    });
+  };
+  
   return (
     <div className={cn(
       "border rounded-lg overflow-hidden transition-all duration-300 relative",
@@ -75,13 +100,24 @@ const RecommendationCard = ({
         
         <div className="flex items-center justify-between">
           <span className="font-bold text-gray-900">{recommendation.price}</span>
-          <Button 
-            variant={isSelected ? "outline" : "default"}
-            size="sm"
-            onClick={() => onToggleSelection(recommendation.id)}
-          >
-            {isSelected ? "Remove" : "Add"}
-          </Button>
+          <div className="flex space-x-2">
+            <Button 
+              variant="outline"
+              size="sm"
+              onClick={handleAddToCart}
+              className="flex items-center"
+            >
+              <ShoppingBag className="w-3 h-3 mr-1" />
+              Cart
+            </Button>
+            <Button 
+              variant={isSelected ? "outline" : "default"}
+              size="sm"
+              onClick={() => onToggleSelection(recommendation.id)}
+            >
+              {isSelected ? "Remove" : "Add"}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

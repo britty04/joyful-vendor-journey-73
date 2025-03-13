@@ -1,58 +1,54 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import LayoutWithTerms from '@/components/LayoutWithTerms';
 import BookingConfirmation from '@/components/checkout/BookingConfirmation';
-import { Button } from '@/components/ui/button';
-import { ShoppingBag } from 'lucide-react';
 
 const BookingSuccess = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [bookingDetails, setBookingDetails] = useState<any>(null);
-  
+  const bookingDetails = location.state?.bookingDetails || null;
+
+  // If there's no booking details (e.g., direct navigation to /booking/success),
+  // redirect to homepage
   useEffect(() => {
-    // Check if we have booking details in location state
-    if (location.state?.bookingDetails) {
-      setBookingDetails(location.state.bookingDetails);
-    } else {
-      // If no booking details, check local storage
-      const savedBooking = localStorage.getItem('lastBooking');
-      if (savedBooking) {
+    if (!bookingDetails) {
+      navigate('/');
+    }
+  }, [bookingDetails, navigate]);
+
+  // Use local storage as fallback if state is lost
+  useEffect(() => {
+    if (!bookingDetails) {
+      const lastBooking = localStorage.getItem('lastBooking');
+      if (lastBooking) {
         try {
-          const parsedBooking = JSON.parse(savedBooking);
-          // Convert date string back to Date object
-          parsedBooking.bookingDate = new Date(parsedBooking.bookingDate);
-          setBookingDetails(parsedBooking);
+          const parsedBooking = JSON.parse(lastBooking);
+          // Ensure dates are properly converted back to Date objects
+          if (parsedBooking.bookingDate) {
+            parsedBooking.bookingDate = new Date(parsedBooking.bookingDate);
+          }
+          return parsedBooking;
         } catch (error) {
-          console.error('Failed to parse booking from localStorage', error);
+          console.error('Error parsing booking from localStorage', error);
         }
       }
     }
-  }, [location]);
+    return null;
+  }, [bookingDetails]);
 
-  // If no booking details are found, show a fallback UI
   if (!bookingDetails) {
     return (
       <LayoutWithTerms>
-        <div className="container mx-auto py-12 px-4">
-          <div className="text-center max-w-md mx-auto">
-            <div className="bg-gray-100 p-8 rounded-full inline-block mb-6">
-              <ShoppingBag className="w-12 h-12 text-gray-400" />
-            </div>
-            <h1 className="text-2xl font-bold mb-4">Booking Information Not Found</h1>
-            <p className="text-gray-600 mb-8">
-              We couldn't locate your booking details. This could happen if you've refreshed the page or accessed it directly.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button onClick={() => navigate('/')}>
-                Return to Home
-              </Button>
-              <Button variant="outline" onClick={() => navigate('/customer/profile')}>
-                View Your Bookings
-              </Button>
-            </div>
-          </div>
+        <div className="container mx-auto py-8 px-4 text-center">
+          <h1 className="text-3xl font-bold mb-6">Booking Information Not Found</h1>
+          <p className="mb-6">We couldn't find details for your booking.</p>
+          <button 
+            onClick={() => navigate('/')}
+            className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
+          >
+            Return to Home
+          </button>
         </div>
       </LayoutWithTerms>
     );
@@ -60,14 +56,16 @@ const BookingSuccess = () => {
 
   return (
     <LayoutWithTerms>
-      <BookingConfirmation 
-        orderNumber={bookingDetails.orderNumber}
-        bookingDate={bookingDetails.bookingDate}
-        services={bookingDetails.services}
-        venue={bookingDetails.venue}
-        paymentMethod={bookingDetails.paymentMethod}
-        totalAmount={bookingDetails.totalAmount}
-      />
+      <div className="container mx-auto">
+        <BookingConfirmation 
+          orderNumber={bookingDetails.orderNumber}
+          bookingDate={new Date(bookingDetails.bookingDate)}
+          services={bookingDetails.services}
+          venue={bookingDetails.venue}
+          paymentMethod={bookingDetails.paymentMethod}
+          totalAmount={bookingDetails.totalAmount}
+        />
+      </div>
     </LayoutWithTerms>
   );
 };

@@ -52,7 +52,7 @@ const TransferEarnings = () => {
       setTransferStatus('success');
       toast({
         title: "Transfer Initiated",
-        description: `$${values.amount} has been sent to your ${selectedPaymentMethod}. It may take 1-3 business days to appear in your account.`,
+        description: `₹${values.amount} has been sent to your ${selectedPaymentMethod}. It may take 1-3 business days to appear in your account.`,
       });
     }, 2000);
   };
@@ -111,12 +111,12 @@ const TransferEarnings = () => {
                         <FormLabel>Amount to Transfer</FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2">$</span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2">₹</span>
                             <Input placeholder="0.00" className="pl-8" {...field} />
                           </div>
                         </FormControl>
                         <FormDescription>
-                          Available balance: $3,240.50
+                          Available balance: ₹3,240.50
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -229,7 +229,7 @@ const TransferEarnings = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-3xl font-bold">$3,240.50</span>
+              <span className="text-3xl font-bold">₹3,240.50</span>
               <PiggyBankIcon className="h-8 w-8 text-primary" />
             </div>
             <p className="text-sm text-muted-foreground">Available for withdrawal</p>
@@ -245,7 +245,7 @@ const TransferEarnings = () => {
             <div className="space-y-4 w-full">
               <div className="flex justify-between items-center text-sm">
                 <div>
-                  <div className="font-medium">$1,500.00</div>
+                  <div className="font-medium">₹1,500.00</div>
                   <div className="text-muted-foreground">Oct 15, 2023</div>
                 </div>
                 <span className="text-green-600 flex items-center">
@@ -255,7 +255,7 @@ const TransferEarnings = () => {
               
               <div className="flex justify-between items-center text-sm">
                 <div>
-                  <div className="font-medium">$2,200.00</div>
+                  <div className="font-medium">₹2,200.00</div>
                   <div className="text-muted-foreground">Sep 28, 2023</div>
                 </div>
                 <span className="text-green-600 flex items-center">
