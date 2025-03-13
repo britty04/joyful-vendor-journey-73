@@ -7,6 +7,8 @@ export interface Service {
   id: string;
   name: string;
   icon: string;
+  price?: string; // Add price property
+  image?: string; // Add image property
 }
 
 // Event types
@@ -63,14 +65,14 @@ export const eventTypes: EventType[] = [
 
 // Primary services for birthday events
 export const birthdayPrimaryServices: Service[] = [
-  { id: 'magician', name: 'Magician', icon: '🎩' },
-  { id: 'clown', name: 'Clown', icon: '🤡' },
-  { id: 'catering', name: 'Catering', icon: '🍰' },
-  { id: 'venue', name: 'Venue', icon: '🏰' },
-  { id: 'photographer', name: 'Photographer', icon: '📷' },
-  { id: 'decorator', name: 'Decorator', icon: '🎈' },
-  { id: 'games', name: 'Game Host', icon: '🎮' },
-  { id: 'music', name: 'DJ / Music', icon: '🎵' }
+  { id: 'magician', name: 'Magician', icon: '🎩', price: '₹6,000', image: 'https://images.unsplash.com/photo-1589123053646-9fa2a86a6e8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
+  { id: 'clown', name: 'Clown', icon: '🤡', price: '₹4,500', image: 'https://images.unsplash.com/photo-1573747806413-2aef4c8542fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
+  { id: 'catering', name: 'Catering', icon: '🍰', price: '₹12,000', image: 'https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
+  { id: 'venue', name: 'Venue', icon: '🏰', price: '₹25,000', image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
+  { id: 'photographer', name: 'Photographer', icon: '📷', price: '₹8,000', image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
+  { id: 'decorator', name: 'Decorator', icon: '🎈', price: '₹10,000', image: 'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
+  { id: 'games', name: 'Game Host', icon: '🎮', price: '₹5,000', image: 'https://images.unsplash.com/photo-1559181567-c3190ca9959b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
+  { id: 'music', name: 'DJ / Music', icon: '🎵', price: '₹7,500', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' }
 ];
 
 // Primary services for wedding events (expanded with WedMeGood inspiration)
