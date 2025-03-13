@@ -3,6 +3,9 @@ import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import LayoutWithTerms from '@/components/LayoutWithTerms';
 import BookingConfirmation from '@/components/checkout/BookingConfirmation';
+import ManageBookingButton from '@/components/customer/ManageBookingButton';
+import { Button } from '@/components/ui/button';
+import { Home } from 'lucide-react';
 
 const BookingSuccess = () => {
   const location = useLocation();
@@ -13,42 +16,48 @@ const BookingSuccess = () => {
   // redirect to homepage
   useEffect(() => {
     if (!bookingDetails) {
-      navigate('/');
+      // Try to get from localStorage before redirecting
+      const lastBooking = localStorage.getItem('lastBooking');
+      if (!lastBooking) {
+        navigate('/');
+      }
     }
   }, [bookingDetails, navigate]);
 
   // Use local storage as fallback if state is lost
-  useEffect(() => {
-    if (!bookingDetails) {
-      const lastBooking = localStorage.getItem('lastBooking');
-      if (lastBooking) {
-        try {
-          const parsedBooking = JSON.parse(lastBooking);
-          // Ensure dates are properly converted back to Date objects
-          if (parsedBooking.bookingDate) {
-            parsedBooking.bookingDate = new Date(parsedBooking.bookingDate);
-          }
-          return parsedBooking;
-        } catch (error) {
-          console.error('Error parsing booking from localStorage', error);
+  const getBookingDetails = () => {
+    if (bookingDetails) return bookingDetails;
+
+    const lastBooking = localStorage.getItem('lastBooking');
+    if (lastBooking) {
+      try {
+        const parsedBooking = JSON.parse(lastBooking);
+        // Ensure dates are properly converted back to Date objects
+        if (parsedBooking.bookingDate) {
+          parsedBooking.bookingDate = new Date(parsedBooking.bookingDate);
         }
+        return parsedBooking;
+      } catch (error) {
+        console.error('Error parsing booking from localStorage', error);
       }
     }
     return null;
-  }, [bookingDetails]);
+  };
 
-  if (!bookingDetails) {
+  const currentBookingDetails = getBookingDetails();
+
+  if (!currentBookingDetails) {
     return (
       <LayoutWithTerms>
         <div className="container mx-auto py-8 px-4 text-center">
           <h1 className="text-3xl font-bold mb-6">Booking Information Not Found</h1>
           <p className="mb-6">We couldn't find details for your booking.</p>
-          <button 
+          <Button 
             onClick={() => navigate('/')}
-            className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
           >
+            <Home className="w-4 h-4 mr-2" />
             Return to Home
-          </button>
+          </Button>
         </div>
       </LayoutWithTerms>
     );
@@ -58,13 +67,18 @@ const BookingSuccess = () => {
     <LayoutWithTerms>
       <div className="container mx-auto">
         <BookingConfirmation 
-          orderNumber={bookingDetails.orderNumber}
-          bookingDate={new Date(bookingDetails.bookingDate)}
-          services={bookingDetails.services}
-          venue={bookingDetails.venue}
-          paymentMethod={bookingDetails.paymentMethod}
-          totalAmount={bookingDetails.totalAmount}
+          orderNumber={currentBookingDetails.orderNumber}
+          bookingDate={new Date(currentBookingDetails.bookingDate)}
+          services={currentBookingDetails.services}
+          venue={currentBookingDetails.venue}
+          paymentMethod={currentBookingDetails.paymentMethod}
+          totalAmount={currentBookingDetails.totalAmount}
         />
+        
+        <div className="text-center mt-6 mb-12">
+          <p className="text-gray-600 mb-4">You can view and manage all your bookings in your profile</p>
+          <ManageBookingButton />
+        </div>
       </div>
     </LayoutWithTerms>
   );

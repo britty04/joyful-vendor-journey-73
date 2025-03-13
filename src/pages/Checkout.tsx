@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LayoutWithTerms from '@/components/LayoutWithTerms';
 import CheckoutFlow from '@/components/checkout/CheckoutFlow';
+import QuickCheckout from '@/components/checkout/QuickCheckout';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { ShoppingBag } from 'lucide-react';
@@ -37,7 +38,7 @@ const Checkout = () => {
   return (
     <LayoutWithTerms>
       <div className="container mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-6">
+        <h1 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent">
           {isOrderPlaced ? 'Order Complete!' : 'Checkout'}
         </h1>
         
@@ -83,7 +84,22 @@ const Checkout = () => {
             </div>
           </div>
         ) : (
-          <CheckoutFlow onOrderComplete={handleOrderComplete} />
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
+              <div className="lg:col-span-1">
+                <QuickCheckout onComplete={handleOrderComplete} />
+              </div>
+              <div className="lg:col-span-3">
+                <div className="p-4 bg-gray-50 rounded-lg mb-6">
+                  <h2 className="text-lg font-medium mb-2">Standard Checkout</h2>
+                  <p className="text-sm text-gray-600">
+                    Complete all details for a customized checkout experience.
+                  </p>
+                </div>
+                <CheckoutFlow onOrderComplete={handleOrderComplete} />
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </LayoutWithTerms>

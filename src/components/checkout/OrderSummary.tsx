@@ -10,7 +10,7 @@ interface Service {
   price: number;
   date: Date;
   image: string;
-  quantity?: number; // Added quantity as optional
+  quantity?: number;
 }
 
 interface OrderSummaryProps {
@@ -34,8 +34,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   const finalTotal = discountedPrice + taxAmount;
   
   return (
-    <Card className="border-0 shadow-lg rounded-2xl overflow-hidden">
-      <div className="bg-gradient-to-r from-eventPurple-500 to-eventPink-500 py-4 px-6">
+    <Card className="border-0 shadow-lg rounded-2xl overflow-hidden sticky top-6">
+      <div className="bg-gradient-to-r from-primary to-purple-600 py-4 px-6">
         <h3 className="font-bold text-xl text-white">Order Summary</h3>
       </div>
       <CardContent className="p-6 space-y-6">
@@ -89,8 +89,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           </div>
         </div>
         
-        <div className="bg-eventPurple-50 rounded-xl p-4 mt-4">
-          <div className="flex justify-between font-bold text-xl text-eventPurple-700">
+        <div className="bg-primary/10 rounded-xl p-4 mt-4">
+          <div className="flex justify-between font-bold text-xl text-primary">
             <span>Total</span>
             <span>₹{finalTotal.toLocaleString()}</span>
           </div>

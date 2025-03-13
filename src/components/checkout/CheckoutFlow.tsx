@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -174,11 +173,11 @@ const CheckoutFlow: React.FC<CheckoutFlowProps> = ({ onOrderComplete }) => {
           />
         )}
         
-        <Card>
+        <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
           <CardContent className="pt-6">
             {currentStep === 1 && (
               <div className="space-y-6">
-                <h2 className="text-xl font-semibold">Review Services</h2>
+                <h2 className="text-xl font-semibold text-gray-800">Review Services</h2>
                 <ServiceSummary services={checkoutData.services} />
                 <DiscountCode 
                   onApplyDiscount={handleApplyDiscount} 
@@ -190,21 +189,21 @@ const CheckoutFlow: React.FC<CheckoutFlowProps> = ({ onOrderComplete }) => {
             
             {currentStep === 2 && (
               <div className="space-y-6">
-                <h2 className="text-xl font-semibold">Select Delivery Address</h2>
+                <h2 className="text-xl font-semibold text-gray-800">Select Delivery Address</h2>
                 <AddressSelection onSelectAddress={handleSelectAddress} selectedAddress={selectedAddress} />
               </div>
             )}
             
             {currentStep === 3 && (
               <div className="space-y-6">
-                <h2 className="text-xl font-semibold">Review Event Dates</h2>
+                <h2 className="text-xl font-semibold text-gray-800">Review Event Dates</h2>
                 <DateReview services={checkoutData.services} />
               </div>
             )}
             
             {currentStep === 4 && (
               <div className="space-y-6">
-                <h2 className="text-xl font-semibold">Payment & Policies</h2>
+                <h2 className="text-xl font-semibold text-gray-800">Payment & Policies</h2>
                 <PaymentMethod 
                   onSelectPaymentMethod={handleSelectPaymentMethod} 
                   onProcessPayment={handleProcessPayment}
@@ -222,7 +221,7 @@ const CheckoutFlow: React.FC<CheckoutFlowProps> = ({ onOrderComplete }) => {
                 {currentStep > 1 ? (
                   <button 
                     onClick={prevStep}
-                    className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                    className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
                   >
                     Back
                   </button>
@@ -232,7 +231,7 @@ const CheckoutFlow: React.FC<CheckoutFlowProps> = ({ onOrderComplete }) => {
                 <button 
                   onClick={nextStep}
                   disabled={!canProceedToNext() || isProcessingPayment}
-                  className={`px-6 py-2 rounded-md ${canProceedToNext() && !isProcessingPayment ? 'bg-primary text-white hover:bg-primary/90' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+                  className={`px-6 py-2 rounded-md transition-all duration-300 ${canProceedToNext() && !isProcessingPayment ? 'bg-primary text-white hover:bg-primary/90 shadow-md hover:shadow-lg' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
                 >
                   {isProcessingPayment ? (
                     <>
