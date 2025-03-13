@@ -7,6 +7,9 @@ import VendorCard from '@/components/VendorCard';
 import { Filter, AlertCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
+// Define a type for the vendor availability to match the expected values
+type VendorAvailability = 'available' | 'limited' | 'booked';
+
 const VendorList = () => {
   const [searchParams] = useSearchParams();
   const categoryParam = searchParams.get('category');
@@ -25,7 +28,7 @@ const VendorList = () => {
       verified: true,
       responseTime: '1 hour',
       successRate: 98,
-      availability: 'available'
+      availability: 'available' as VendorAvailability
     },
     {
       id: '2',
@@ -39,7 +42,7 @@ const VendorList = () => {
       verified: true,
       responseTime: '2 hours',
       successRate: 95,
-      availability: 'limited'
+      availability: 'limited' as VendorAvailability
     },
     {
       id: '3',
@@ -53,7 +56,7 @@ const VendorList = () => {
       verified: true,
       responseTime: '45 minutes',
       successRate: 99,
-      availability: 'limited'
+      availability: 'limited' as VendorAvailability
     },
     {
       id: '4',
@@ -67,7 +70,7 @@ const VendorList = () => {
       verified: false,
       responseTime: '3 hours',
       successRate: 92,
-      availability: 'available'
+      availability: 'available' as VendorAvailability
     },
     {
       id: '5',
@@ -81,7 +84,7 @@ const VendorList = () => {
       verified: true,
       responseTime: '1 hour',
       successRate: 97,
-      availability: 'booked'
+      availability: 'booked' as VendorAvailability
     },
     {
       id: '6',
@@ -95,7 +98,7 @@ const VendorList = () => {
       verified: false,
       responseTime: '2 hours',
       successRate: 90,
-      availability: 'available'
+      availability: 'available' as VendorAvailability
     },
     {
       id: '7',
@@ -109,7 +112,7 @@ const VendorList = () => {
       verified: true,
       responseTime: '30 minutes',
       successRate: 98,
-      availability: 'limited'
+      availability: 'limited' as VendorAvailability
     },
     {
       id: '8',
@@ -123,7 +126,7 @@ const VendorList = () => {
       verified: false,
       responseTime: '2 hours',
       successRate: 94,
-      availability: 'available'
+      availability: 'available' as VendorAvailability
     },
   ]);
 
