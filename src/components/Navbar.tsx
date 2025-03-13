@@ -15,7 +15,9 @@ import {
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [location, setLocation] = useState('New York');
+  const [location, setLocation] = useState(() => {
+    return localStorage.getItem('selectedCity') || 'Mumbai';
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,6 +27,10 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('selectedCity', location);
+  }, [location]);
 
   return (
     <header 
@@ -96,6 +102,51 @@ const Navbar = () => {
                 
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className="text-sm font-medium text-gray-700 hover:text-primary">
+                    Wedding Events
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent className="bg-white p-4 rounded-lg shadow-lg border w-[300px]">
+                    <div className="grid gap-3">
+                      <Link 
+                        to="/vendors?category=venues&event=wedding" 
+                        className="block p-2 hover:bg-gray-50 rounded-md"
+                      >
+                        <div className="font-medium">Venues</div>
+                        <div className="text-sm text-gray-500">Banquet Halls, Farmhouses, Destination</div>
+                      </Link>
+                      <Link 
+                        to="/vendors?category=photographers&event=wedding" 
+                        className="block p-2 hover:bg-gray-50 rounded-md"
+                      >
+                        <div className="font-medium">Photography</div>
+                        <div className="text-sm text-gray-500">Photographers, Videographers, Drone</div>
+                      </Link>
+                      <Link 
+                        to="/vendors?category=decorators&event=wedding" 
+                        className="block p-2 hover:bg-gray-50 rounded-md"
+                      >
+                        <div className="font-medium">Decoration</div>
+                        <div className="text-sm text-gray-500">Floral, Lighting, Mandap Design</div>
+                      </Link>
+                      <Link 
+                        to="/vendors?category=makeup&event=wedding" 
+                        className="block p-2 hover:bg-gray-50 rounded-md"
+                      >
+                        <div className="font-medium">Bridal Makeup</div>
+                        <div className="text-sm text-gray-500">Makeup Artists, Mehndi, Hair Styling</div>
+                      </Link>
+                      <Link 
+                        to="/guided-booking?event=wedding" 
+                        className="block p-2 text-primary hover:bg-primary/10 rounded-md"
+                      >
+                        <div className="font-medium">Start AI-Guided Booking</div>
+                        <div className="text-sm">Let us recommend the perfect vendors</div>
+                      </Link>
+                    </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+                
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="text-sm font-medium text-gray-700 hover:text-primary">
                     Corporate Events
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="bg-white p-4 rounded-lg shadow-lg border w-[300px]">
@@ -105,14 +156,14 @@ const Navbar = () => {
                         className="block p-2 hover:bg-gray-50 rounded-md"
                       >
                         <div className="font-medium">Venues</div>
-                        <div className="text-sm text-gray-500">Conference Centers, Meeting Rooms</div>
+                        <div className="text-sm text-gray-500">Conference Centers, Hotel Ballrooms</div>
                       </Link>
                       <Link 
                         to="/vendors?category=catering&event=corporate" 
                         className="block p-2 hover:bg-gray-50 rounded-md"
                       >
                         <div className="font-medium">Catering</div>
-                        <div className="text-sm text-gray-500">Business Lunches, Cocktail Hours</div>
+                        <div className="text-sm text-gray-500">Corporate Lunches, Cocktail Hours</div>
                       </Link>
                       <Link 
                         to="/vendors?category=technology&event=corporate" 
@@ -134,37 +185,37 @@ const Navbar = () => {
                 
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className="text-sm font-medium text-gray-700 hover:text-primary">
-                    Weddings
+                    Ticketed Events
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="bg-white p-4 rounded-lg shadow-lg border w-[300px]">
                     <div className="grid gap-3">
                       <Link 
-                        to="/vendors?category=venues&event=wedding" 
+                        to="/tickets?category=concerts" 
                         className="block p-2 hover:bg-gray-50 rounded-md"
                       >
-                        <div className="font-medium">Venues</div>
-                        <div className="text-sm text-gray-500">Banquet Halls, Gardens, Beaches</div>
+                        <div className="font-medium">Concerts</div>
+                        <div className="text-sm text-gray-500">Live Music, Bands, Festivals</div>
                       </Link>
                       <Link 
-                        to="/vendors?category=photographers&event=wedding" 
+                        to="/tickets?category=shows" 
                         className="block p-2 hover:bg-gray-50 rounded-md"
                       >
-                        <div className="font-medium">Photography</div>
-                        <div className="text-sm text-gray-500">Photographers, Videographers</div>
+                        <div className="font-medium">Shows & Performances</div>
+                        <div className="text-sm text-gray-500">Standup Comedy, Theatre</div>
                       </Link>
                       <Link 
-                        to="/vendors?category=decorators&event=wedding" 
+                        to="/tickets?category=workshops" 
                         className="block p-2 hover:bg-gray-50 rounded-md"
                       >
-                        <div className="font-medium">Decoration</div>
-                        <div className="text-sm text-gray-500">Floral Arrangements, Lighting</div>
+                        <div className="font-medium">Workshops</div>
+                        <div className="text-sm text-gray-500">Culinary, Art, Professional</div>
                       </Link>
                       <Link 
-                        to="/guided-booking?event=wedding" 
+                        to="/ticketing-events" 
                         className="block p-2 text-primary hover:bg-primary/10 rounded-md"
                       >
-                        <div className="font-medium">Start AI-Guided Booking</div>
-                        <div className="text-sm">Let us recommend the perfect vendors</div>
+                        <div className="font-medium">All Ticketed Events</div>
+                        <div className="text-sm">Browse all upcoming events</div>
                       </Link>
                     </div>
                   </NavigationMenuContent>
@@ -187,11 +238,14 @@ const Navbar = () => {
               onChange={(e) => setLocation(e.target.value)}
               className="text-sm font-medium text-gray-700 bg-transparent border-none focus:outline-none focus:ring-0 cursor-pointer"
             >
-              <option value="New York">New York</option>
-              <option value="Los Angeles">Los Angeles</option>
-              <option value="Chicago">Chicago</option>
-              <option value="Miami">Miami</option>
-              <option value="Dallas">Dallas</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Delhi">Delhi NCR</option>
+              <option value="Bangalore">Bangalore</option>
+              <option value="Chennai">Chennai</option>
+              <option value="Hyderabad">Hyderabad</option>
+              <option value="Kolkata">Kolkata</option>
+              <option value="Pune">Pune</option>
+              <option value="Jaipur">Jaipur</option>
             </select>
           </div>
 
@@ -236,11 +290,14 @@ const Navbar = () => {
                 onChange={(e) => setLocation(e.target.value)}
                 className="text-sm font-medium text-gray-700 bg-transparent border-none focus:outline-none focus:ring-0 w-full"
               >
-                <option value="New York">New York</option>
-                <option value="Los Angeles">Los Angeles</option>
-                <option value="Chicago">Chicago</option>
-                <option value="Miami">Miami</option>
-                <option value="Dallas">Dallas</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Delhi">Delhi NCR</option>
+                <option value="Bangalore">Bangalore</option>
+                <option value="Chennai">Chennai</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Kolkata">Kolkata</option>
+                <option value="Pune">Pune</option>
+                <option value="Jaipur">Jaipur</option>
               </select>
             </div>
             
@@ -271,6 +328,31 @@ const Navbar = () => {
             </div>
             
             <div className="border-t border-gray-100 pt-2 mt-2">
+              <div className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase">Wedding Events</div>
+              <Link 
+                to="/vendors?category=venues&event=wedding" 
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors pl-6"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Venues
+              </Link>
+              <Link 
+                to="/vendors?category=photographers&event=wedding" 
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors pl-6"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Photography
+              </Link>
+              <Link 
+                to="/vendors?category=makeup&event=wedding" 
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors pl-6"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Bridal Makeup
+              </Link>
+            </div>
+            
+            <div className="border-t border-gray-100 pt-2 mt-2">
               <div className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase">Corporate Events</div>
               <Link 
                 to="/vendors?category=venues&event=corporate" 
@@ -296,27 +378,27 @@ const Navbar = () => {
             </div>
             
             <div className="border-t border-gray-100 pt-2 mt-2">
-              <div className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase">Weddings</div>
+              <div className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase">Ticketed Events</div>
               <Link 
-                to="/vendors?category=venues&event=wedding" 
+                to="/tickets?category=concerts" 
                 className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors pl-6"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Venues
+                Concerts
               </Link>
               <Link 
-                to="/vendors?category=photographers&event=wedding" 
+                to="/tickets?category=shows" 
                 className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors pl-6"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Photography
+                Shows
               </Link>
               <Link 
-                to="/vendors?category=decorators&event=wedding" 
+                to="/tickets?category=workshops" 
                 className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors pl-6"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Decoration
+                Workshops
               </Link>
             </div>
             

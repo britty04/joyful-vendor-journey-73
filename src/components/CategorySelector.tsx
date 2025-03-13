@@ -22,10 +22,10 @@ const categories: Category[] = [
   },
   {
     id: 'decorators',
-    name: 'Decorators',
+    name: 'Wedding Decor',
     icon: 'https://images.unsplash.com/photo-1546173159-315724a31696?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     color: 'from-eventGreen-500 to-eventBlue-500',
-    emoji: '🎈'
+    emoji: '💐'
   },
   {
     id: 'catering',
@@ -36,7 +36,7 @@ const categories: Category[] = [
   },
   {
     id: 'photographers',
-    name: 'Photographers',
+    name: 'Photography',
     icon: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     color: 'from-eventYellow-400 to-eventYellow-600',
     emoji: '📸'
@@ -49,11 +49,25 @@ const categories: Category[] = [
     emoji: '🏰'
   },
   {
-    id: 'game-rentals',
-    name: 'Game Rentals',
-    icon: 'https://images.unsplash.com/photo-1559181567-c3190ca9959b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    id: 'makeup',
+    name: 'Bridal Makeup',
+    icon: 'https://images.unsplash.com/photo-1487412840807-a91612003d50?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    color: 'from-eventPink-400 to-eventPink-600',
+    emoji: '💄'
+  },
+  {
+    id: 'mehendi',
+    name: 'Mehendi Artists',
+    icon: 'https://images.unsplash.com/photo-1532886446204-2d0a3b0fa6e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    color: 'from-eventGreen-400 to-eventGreen-600',
+    emoji: '🌿'
+  },
+  {
+    id: 'tickets',
+    name: 'Ticketed Events',
+    icon: 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     color: 'from-eventPurple-600 to-eventPurple-700',
-    emoji: '🎮'
+    emoji: '🎟️'
   }
 ];
 
@@ -75,15 +89,15 @@ const CategorySelector = () => {
           </div>
           <h2 className="font-bold text-gray-900 mb-4">Browse By Category</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Find the perfect vendor for your child's special day. We've curated the best vendors across all categories.
+            Find the perfect vendor for your next special event. We've curated the best vendors across all categories.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
           {categories.map((category) => (
             <Link
               key={category.id}
-              to={`/vendors?category=${category.id}`}
+              to={category.id === 'tickets' ? '/ticketing-events' : `/vendors?category=${category.id}`}
               className="group"
               onMouseEnter={() => setSelectedCategory(category.id)}
               onMouseLeave={() => setSelectedCategory(null)}
@@ -123,7 +137,7 @@ const CategorySelector = () => {
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ duration: 0.3, delay: 0.1 }}
                     >
-                      View Vendors
+                      View {category.id === 'tickets' ? 'Events' : 'Vendors'}
                     </motion.span>
                   </motion.div>
                 )}

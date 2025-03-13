@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import Layout from '../components/Layout';
@@ -118,7 +117,9 @@ const categories = [
   { id: 'game-rental', name: 'Game Rentals' },
   { id: 'planner', name: 'Event Planners' },
   { id: 'bakery', name: 'Bakeries' },
-  { id: 'entertainer', name: 'Entertainers' }
+  { id: 'entertainer', name: 'Entertainers' },
+  { id: 'makeup', name: 'Makeup Artists' },
+  { id: 'mehendi', name: 'Mehendi Artists' }
 ];
 
 const locations = [
@@ -130,7 +131,8 @@ const locations = [
   { id: 'hyderabad', name: 'Hyderabad' },
   { id: 'pune', name: 'Pune' },
   { id: 'kolkata', name: 'Kolkata' },
-  { id: 'jaipur', name: 'Jaipur' }
+  { id: 'jaipur', name: 'Jaipur' },
+  { id: 'ahmedabad', name: 'Ahmedabad' }
 ];
 
 const VendorList = () => {
@@ -146,7 +148,6 @@ const VendorList = () => {
   const [priceRange, setPriceRange] = useState([0, 50000]);
   const [sortBy, setSortBy] = useState('recommended');
   
-  // Initialize filters from URL params
   useEffect(() => {
     const category = searchParams.get('category') || 'all';
     const locationParam = searchParams.get('location') || 'all';
@@ -160,28 +161,24 @@ const VendorList = () => {
     setSelectedRating(rating);
     setSortBy(sort);
     
-    // Apply filters
     filterVendors(category, locationParam, search, rating, sort);
   }, [location.search]);
   
   const filterVendors = (category: string, location: string, search: string, rating: number, sort: string) => {
     let filtered = [...allVendors];
     
-    // Apply category filter
     if (category && category !== 'all') {
       filtered = filtered.filter(vendor => 
         vendor.category.toLowerCase().includes(category.toLowerCase())
       );
     }
     
-    // Apply location filter
     if (location && location !== 'all') {
       filtered = filtered.filter(vendor => 
         vendor.location.toLowerCase().includes(location.toLowerCase())
       );
     }
     
-    // Apply search filter
     if (search) {
       filtered = filtered.filter(vendor => 
         vendor.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -190,12 +187,10 @@ const VendorList = () => {
       );
     }
     
-    // Apply rating filter
     if (rating > 0) {
       filtered = filtered.filter(vendor => vendor.rating >= rating);
     }
     
-    // Apply sorting
     if (sort === 'price-low') {
       filtered = filtered.sort((a, b) => 
         parseInt(a.price.replace(/[^0-9]/g, '')) - parseInt(b.price.replace(/[^0-9]/g, ''))
@@ -212,7 +207,6 @@ const VendorList = () => {
   };
   
   const applyFilters = () => {
-    // Update URL params
     const params = new URLSearchParams();
     if (selectedCategory !== 'all') params.set('category', selectedCategory);
     if (selectedLocation !== 'all') params.set('location', selectedLocation);
@@ -222,10 +216,8 @@ const VendorList = () => {
     
     setSearchParams(params);
     
-    // Apply filters
     filterVendors(selectedCategory, selectedLocation, searchQuery, selectedRating, sortBy);
     
-    // Close mobile filter panel
     setIsFilterOpen(false);
   };
   
@@ -285,9 +277,7 @@ const VendorList = () => {
               </div>
             </div>
             
-            {/* Desktop Filters */}
             <div className="hidden md:flex items-center space-x-4 mt-6">
-              {/* Category Filter */}
               <div className="relative">
                 <select
                   className="appearance-none bg-white border border-gray-200 rounded-lg pl-4 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
@@ -305,7 +295,6 @@ const VendorList = () => {
                 </div>
               </div>
               
-              {/* Location Filter */}
               <div className="relative">
                 <select
                   className="appearance-none bg-white border border-gray-200 rounded-lg pl-4 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
@@ -323,7 +312,6 @@ const VendorList = () => {
                 </div>
               </div>
               
-              {/* Rating Filter */}
               <div className="relative">
                 <select
                   className="appearance-none bg-white border border-gray-200 rounded-lg pl-4 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
@@ -340,7 +328,6 @@ const VendorList = () => {
                 </div>
               </div>
               
-              {/* Sort By */}
               <div className="relative ml-auto">
                 <select
                   className="appearance-none bg-white border border-gray-200 rounded-lg pl-4 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
@@ -357,7 +344,6 @@ const VendorList = () => {
                 </div>
               </div>
               
-              {/* Apply Filters */}
               <button
                 className="bg-primary text-white rounded-lg px-4 py-2 font-medium hover:bg-primary/90 transition-colors"
                 onClick={applyFilters}
@@ -365,7 +351,6 @@ const VendorList = () => {
                 Apply Filters
               </button>
               
-              {/* Reset Filters */}
               <button
                 className="bg-white text-gray-700 rounded-lg px-4 py-2 border border-gray-200 font-medium hover:bg-gray-50 transition-colors"
                 onClick={resetFilters}
@@ -374,7 +359,6 @@ const VendorList = () => {
               </button>
             </div>
             
-            {/* Active Filters */}
             {(selectedCategory !== 'all' || selectedLocation !== 'all' || selectedRating > 0 || searchQuery) && (
               <div className="flex flex-wrap items-center gap-2 mt-4">
                 <span className="text-sm text-gray-500">Active filters:</span>
@@ -450,7 +434,6 @@ const VendorList = () => {
           </div>
         </div>
         
-        {/* Mobile Filters Panel */}
         {isFilterOpen && (
           <div className="md:hidden bg-white border-b shadow-sm animate-slide-down">
             <div className="p-4">
@@ -531,7 +514,6 @@ const VendorList = () => {
           </div>
         )}
         
-        {/* Vendor Results */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {vendors.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

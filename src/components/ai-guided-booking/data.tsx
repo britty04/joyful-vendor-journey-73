@@ -73,7 +73,7 @@ export const birthdayPrimaryServices: Service[] = [
   { id: 'music', name: 'DJ / Music', icon: '🎵' }
 ];
 
-// Primary services for wedding events
+// Primary services for wedding events (expanded with WedMeGood inspiration)
 export const weddingPrimaryServices: Service[] = [
   { id: 'venue', name: 'Venue', icon: '🏰' },
   { id: 'catering', name: 'Catering', icon: '🍽️' },
@@ -82,7 +82,13 @@ export const weddingPrimaryServices: Service[] = [
   { id: 'music', name: 'DJ / Band', icon: '🎵' },
   { id: 'decor', name: 'Decorator', icon: '✨' },
   { id: 'cake', name: 'Cake Designer', icon: '🍰' },
-  { id: 'transport', name: 'Transportation', icon: '🚗' }
+  { id: 'transport', name: 'Transportation', icon: '🚗' },
+  { id: 'makeup', name: 'Bridal Makeup', icon: '💄' },
+  { id: 'mehendi', name: 'Mehendi Artist', icon: '🌿' },
+  { id: 'jewelry', name: 'Jewelry', icon: '💎' },
+  { id: 'choreographer', name: 'Choreographer', icon: '💃' },
+  { id: 'invitation', name: 'Invitations', icon: '✉️' },
+  { id: 'priest', name: 'Priest/Officiant', icon: '🙏' }
 ];
 
 // Primary services for corporate events
@@ -94,5 +100,21 @@ export const corporatePrimaryServices: Service[] = [
   { id: 'decor', name: 'Decorator', icon: '✨' },
   { id: 'photographer', name: 'Photographer', icon: '📷' },
   { id: 'transport', name: 'Transportation', icon: '🚗' },
-  { id: 'staffing', name: 'Event Staff', icon: '👥' }
+  { id: 'staffing', name: 'Event Staff', icon: '👥' },
+  { id: 'gifts', name: 'Corporate Gifts', icon: '🎁' },
+  { id: 'stalls', name: 'Exhibition Stalls', icon: '🏠' },
+  { id: 'app', name: 'Event App', icon: '📱' },
+  { id: 'security', name: 'Security Services', icon: '🔒' }
+];
+
+// Primary services for ticketed events
+export const ticketedEventsPrimaryServices: Service[] = [
+  { id: 'venue', name: 'Event Venue', icon: '🏟️' },
+  { id: 'artist', name: 'Artists/Performers', icon: '🎭' },
+  { id: 'sound', name: 'Sound & Lighting', icon: '🔊' },
+  { id: 'ticketing', name: 'Ticketing Platform', icon: '🎟️' },
+  { id: 'security', name: 'Security', icon: '💂' },
+  { id: 'catering', name: 'Food & Beverage', icon: '🍔' },
+  { id: 'marketing', name: 'Event Marketing', icon: '📣' },
+  { id: 'sponsor', name: 'Sponsorships', icon: '🤝' }
 ];
