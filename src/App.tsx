@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -20,6 +21,8 @@ import ServicesDemo from "./pages/ServicesDemo";
 import SearchPage from "./pages/SearchPage";
 import MonetizationDemo from "./pages/MonetizationDemo";
 import ScalabilityDemo from "./pages/ScalabilityDemo";
+import CustomerSupport from "./pages/CustomerSupport";
+import SupportTickets from "./pages/SupportTickets";
 import ChatBot from "./components/chatbot/ChatBot";
 
 const queryClient = new QueryClient({
@@ -78,6 +81,8 @@ const App = () => (
               <Route path="/services" element={<ServicesDemo />} />
               <Route path="/monetization" element={<MonetizationDemo />} />
               <Route path="/scalability" element={<ScalabilityDemo />} />
+              <Route path="/support" element={<CustomerSupport />} />
+              <Route path="/support/tickets" element={<SupportTickets />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             
