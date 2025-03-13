@@ -1,8 +1,11 @@
 
 import { useState } from 'react';
 import { Bot, ArrowRight, Sparkles, Zap } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from './ui/button';
 
 const AIRecommendation = () => {
+  const navigate = useNavigate();
   const [question, setQuestion] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -15,8 +18,13 @@ const AIRecommendation = () => {
     setTimeout(() => {
       setIsLoading(false);
       setQuestion('');
-      // Show a toast or redirect to results
+      // Navigate to AI guided booking page 
+      navigate('/guided-booking');
     }, 1500);
+  };
+
+  const handleGuidedBooking = () => {
+    navigate('/guided-booking');
   };
 
   const suggestions = [
@@ -102,6 +110,20 @@ const AIRecommendation = () => {
                 )}
               </button>
             </form>
+          </div>
+
+          {/* Guided Booking Button */}
+          <div className="text-center mb-6">
+            <Button 
+              onClick={handleGuidedBooking}
+              className="bg-gradient-to-r from-eventPurple-500 to-eventPink-500 hover:from-eventPurple-600 hover:to-eventPink-600 text-white px-6 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <Sparkles className="mr-2 h-5 w-5" />
+              Try Our AI-Guided Booking Experience
+            </Button>
+            <p className="text-sm text-gray-500 mt-3">
+              Let our AI assistant guide you step-by-step through planning your perfect event
+            </p>
           </div>
 
           {/* Suggested Queries */}
