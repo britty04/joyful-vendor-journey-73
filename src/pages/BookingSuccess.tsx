@@ -5,7 +5,7 @@ import LayoutWithTerms from '@/components/LayoutWithTerms';
 import BookingConfirmation from '@/components/checkout/BookingConfirmation';
 import ManageBookingButton from '@/components/customer/ManageBookingButton';
 import { Button } from '@/components/ui/button';
-import { Home } from 'lucide-react';
+import { Home, MapPin } from 'lucide-react';
 
 const BookingSuccess = () => {
   const location = useLocation();
@@ -77,7 +77,13 @@ const BookingSuccess = () => {
         
         <div className="text-center mt-6 mb-12">
           <p className="text-gray-600 mb-4">You can view and manage all your bookings in your profile</p>
-          <ManageBookingButton />
+          <div className="flex flex-wrap justify-center gap-3">
+            <ManageBookingButton />
+            <ManageBookingButton 
+              variant="outline" 
+              tab="address" 
+            />
+          </div>
         </div>
       </div>
     </LayoutWithTerms>

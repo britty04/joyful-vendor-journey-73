@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Home, Plus, MapPin, Edit2, Trash2 } from 'lucide-react';
+import { Home, Plus, MapPin, Edit2, Trash2, Check, X } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 interface Address {
@@ -19,6 +19,7 @@ interface Address {
 
 const CustomerAddressManager = () => {
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
   const [newAddress, setNewAddress] = useState({
     name: '',
     street: '',
@@ -93,6 +94,61 @@ const CustomerAddressManager = () => {
     toast({
       title: "Address Added",
       description: "Your new address has been added successfully.",
+    });
+  };
+
+  const startEditingAddress = (address: Address) => {
+    setEditingAddressId(address.id);
+    setNewAddress({
+      name: address.name,
+      street: address.street,
+      city: address.city,
+      state: address.state,
+      zipCode: address.zipCode,
+      country: address.country,
+    });
+    setShowAddForm(false);
+  };
+
+  const saveEditedAddress = (id: string) => {
+    // Basic validation
+    if (!newAddress.name || !newAddress.street || !newAddress.city || !newAddress.state || !newAddress.zipCode) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setAddresses(addresses.map(addr => 
+      addr.id === id ? { ...addr, ...newAddress } : addr
+    ));
+    setEditingAddressId(null);
+    setNewAddress({
+      name: '',
+      street: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      country: 'United States',
+    });
+    
+    toast({
+      title: "Address Updated",
+      description: "Your address has been updated successfully.",
+    });
+  };
+
+  const cancelEditing = () => {
+    setEditingAddressId(null);
+    setNewAddress({
+      name: '',
+      street: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      country: 'United States',
     });
   };
 
@@ -220,31 +276,103 @@ const CustomerAddressManager = () => {
                       Default
                     </div>
                   )}
-                  <div className="flex items-center mb-2">
-                    <Home className="h-5 w-5 mr-2 text-muted-foreground" /> 
-                    <h3 className="font-semibold">{address.name}</h3>
-                  </div>
-                  <div className="space-y-1 text-sm">
-                    <p>{address.street}</p>
-                    <p>{address.city}, {address.state} {address.zipCode}</p>
-                    <p>{address.country}</p>
-                  </div>
-                  <div className="flex justify-end gap-2 mt-4">
-                    {!address.isDefault && (
-                      <Button size="sm" variant="outline" onClick={() => setDefaultAddress(address.id)}>
-                        <MapPin className="h-4 w-4 mr-1" />
-                        Set as Default
-                      </Button>
-                    )}
-                    <Button size="sm" variant="outline">
-                      <Edit2 className="h-4 w-4 mr-1" />
-                      Edit
-                    </Button>
-                    <Button size="sm" variant="outline" className="text-destructive" onClick={() => removeAddress(address.id)}>
-                      <Trash2 className="h-4 w-4 mr-1" />
-                      Delete
-                    </Button>
-                  </div>
+                  
+                  {editingAddressId === address.id ? (
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 gap-3">
+                        <div>
+                          <label className="block text-sm font-medium mb-1">Address Name</label>
+                          <Input 
+                            placeholder="e.g., Home, Work, etc." 
+                            value={newAddress.name}
+                            onChange={(e) => setNewAddress({ ...newAddress, name: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-1">Street Address</label>
+                          <Input 
+                            placeholder="Street address" 
+                            value={newAddress.street}
+                            onChange={(e) => setNewAddress({ ...newAddress, street: e.target.value })}
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="block text-sm font-medium mb-1">City</label>
+                            <Input 
+                              placeholder="City" 
+                              value={newAddress.city}
+                              onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-1">State</label>
+                            <Input 
+                              placeholder="State" 
+                              value={newAddress.state}
+                              onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })}
+                            />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="block text-sm font-medium mb-1">ZIP/Postal Code</label>
+                            <Input 
+                              placeholder="ZIP Code" 
+                              value={newAddress.zipCode}
+                              onChange={(e) => setNewAddress({ ...newAddress, zipCode: e.target.value })}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-1">Country</label>
+                            <Input 
+                              placeholder="Country" 
+                              value={newAddress.country}
+                              onChange={(e) => setNewAddress({ ...newAddress, country: e.target.value })}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex justify-end gap-2 mt-2">
+                        <Button size="sm" variant="outline" onClick={cancelEditing}>
+                          <X className="h-4 w-4 mr-1" />
+                          Cancel
+                        </Button>
+                        <Button size="sm" onClick={() => saveEditedAddress(address.id)}>
+                          <Check className="h-4 w-4 mr-1" />
+                          Save Changes
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center mb-2">
+                        <Home className="h-5 w-5 mr-2 text-muted-foreground" /> 
+                        <h3 className="font-semibold">{address.name}</h3>
+                      </div>
+                      <div className="space-y-1 text-sm">
+                        <p>{address.street}</p>
+                        <p>{address.city}, {address.state} {address.zipCode}</p>
+                        <p>{address.country}</p>
+                      </div>
+                      <div className="flex justify-end gap-2 mt-4">
+                        {!address.isDefault && (
+                          <Button size="sm" variant="outline" onClick={() => setDefaultAddress(address.id)}>
+                            <MapPin className="h-4 w-4 mr-1" />
+                            Set as Default
+                          </Button>
+                        )}
+                        <Button size="sm" variant="outline" onClick={() => startEditingAddress(address)}>
+                          <Edit2 className="h-4 w-4 mr-1" />
+                          Edit
+                        </Button>
+                        <Button size="sm" variant="outline" className="text-destructive" onClick={() => removeAddress(address.id)}>
+                          <Trash2 className="h-4 w-4 mr-1" />
+                          Delete
+                        </Button>
+                      </div>
+                    </>
+                  )}
                 </div>
               </Card>
             ))}
