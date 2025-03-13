@@ -137,7 +137,21 @@ const FeaturedVendors = () => {
         {/* Vendor Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayedVendors.map((vendor) => (
-            <VendorCard key={vendor.id} {...vendor} />
+            <VendorCard 
+              key={vendor.id}
+              vendor={{
+                id: vendor.id,
+                name: vendor.name,
+                category: vendor.category,
+                description: `${vendor.name} provides excellent ${vendor.category.toLowerCase()} services`,
+                image: vendor.image,
+                rating: vendor.rating,
+                price: parseFloat(vendor.price.replace(/[^\d.]/g, '')),
+              }}
+              reviewCount={vendor.reviewCount}
+              location={vendor.location}
+              badges={vendor.badges}
+            />
           ))}
         </div>
 
