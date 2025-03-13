@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, Plus, Check } from 'lucide-react';
+import { ShoppingCart, Plus, Check } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { toast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
@@ -34,7 +34,13 @@ const QuickAddToCart: React.FC<QuickAddToCartProps> = ({ id, name, price, image,
   };
 
   return (
-    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+    <motion.div 
+      whileHover={{ scale: 1.05 }} 
+      whileTap={{ scale: 0.95 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
       <Button
         onClick={handleAddToCart}
         className={`transition-all duration-300 shadow-lg ${
@@ -44,15 +50,22 @@ const QuickAddToCart: React.FC<QuickAddToCartProps> = ({ id, name, price, image,
         size="lg"
       >
         {isInCart ? (
-          <>
+          <motion.div 
+            className="flex items-center"
+            initial={{ x: 10 }}
+            animate={{ x: 0 }}
+          >
             <Check className="mr-2 h-4 w-4" />
             Added to Cart
-          </>
+          </motion.div>
         ) : (
-          <>
-            <ShoppingBag className="mr-2 h-4 w-4" />
+          <motion.div 
+            className="flex items-center"
+            whileHover={{ x: 5 }}
+          >
+            <ShoppingCart className="mr-2 h-4 w-4" />
             Add to Cart
-          </>
+          </motion.div>
         )}
       </Button>
     </motion.div>

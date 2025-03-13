@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, Search, MapPin } from 'lucide-react';
 import UserAuthNav from './UserAuthNav';
+import CartIcon from './cart/CartIcon';
 import { 
   NavigationMenu,
   NavigationMenuList,
@@ -254,6 +255,7 @@ const Navbar = () => {
             <button className="rounded-full p-2 text-gray-500 hover:text-primary hover:bg-gray-100 transition-colors">
               <Search size={20} />
             </button>
+            <CartIcon />
             <UserAuthNav />
             <button className="rounded-full bg-primary text-white px-4 py-2 font-medium transition-all hover:bg-primary/90 active:scale-95">
               Become a Vendor
@@ -261,12 +263,15 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden rounded-full p-2 text-gray-500 hover:text-primary hover:bg-gray-100 transition-colors"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="md:hidden flex items-center space-x-2">
+            <CartIcon />
+            <button 
+              className="rounded-full p-2 text-gray-500 hover:text-primary hover:bg-gray-100 transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
 
