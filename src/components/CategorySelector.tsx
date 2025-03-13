@@ -93,7 +93,9 @@ const CategorySelector = () => {
             <Sparkles size={16} className="mr-2 text-eventPurple-500" />
             <span className="text-sm font-medium">Find what you need</span>
           </div>
-          <h2 className="font-bold text-gray-900 mb-4">Browse By Category</h2>
+          <h2 className="font-bold text-gray-900 mb-4 text-3xl md:text-4xl">
+            <span className="gradient-text-purple">Browse By Category</span>
+          </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Find the perfect vendor for your next special event. We've curated the best vendors across all categories.
           </p>

@@ -15,9 +15,8 @@ const Index = () => {
   return (
     <Layout>
       <Hero />
-      <div className="container mx-auto px-4 py-12">
-        <CategorySelector />
-      </div>
+      
+      <CategorySelector />
       
       <div className="container mx-auto px-4">
         <PopularServices />
@@ -25,7 +24,9 @@ const Index = () => {
       
       <div className="bg-gradient-to-r from-eventPurple-50 to-eventPink-50 py-16 mt-12">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6">Try Our New Shopping Experience</h2>
+          <h2 className="text-3xl font-bold mb-6">
+            <span className="gradient-text">Try Our New Shopping Experience</span>
+          </h2>
           <p className="text-lg text-gray-700 mb-8 max-w-3xl mx-auto">
             Browse our curated collection of services, add them to your cart, and complete your booking in minutes!
           </p>
@@ -52,6 +53,8 @@ const Index = () => {
       <div className="container mx-auto px-4 py-12">
         <FeaturedVendors />
       </div>
+      
+      <AIRecommendation />
     </Layout>
   );
 };

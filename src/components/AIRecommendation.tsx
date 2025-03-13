@@ -67,7 +67,7 @@ const AIRecommendation = () => {
               <span>AI-Powered Recommendations</span>
             </div>
             <h2 className="font-bold text-2xl md:text-3xl lg:text-4xl text-gray-900 mb-4">
-              Need Help Planning Your Event?
+              <span className="gradient-text-pink">Need Help Planning Your Event?</span>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Our AI assistant can recommend the perfect vendors based on your specific requirements. 
