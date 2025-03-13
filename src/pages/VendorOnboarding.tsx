@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, ChevronRight, Upload, Building, Mail, Phone, MapPin, FileText, Sparkles, Camera, CreditCard, FileImage, Shield, BookOpen, Award, CheckSquare } from 'lucide-react';
+import { CheckCircle2, ChevronRight, Upload, Building, Mail, Phone, MapPin, FileText, Sparkles, Camera, CreditCard, FileImage, Shield, BookOpen, Award, CheckSquare, Calendar as CalendarIcon } from 'lucide-react';
 import Layout from "@/components/Layout";
 import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
@@ -22,7 +21,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-// Schema for form validation
 const businessInfoSchema = z.object({
   businessName: z.string().min(1, "Business name is required"),
   businessType: z.string().min(1, "Business type is required"),
@@ -73,7 +71,6 @@ const VendorOnboarding = () => {
     sunday: { selected: false, start: "09:00", end: "17:00" },
   });
 
-  // Forms for multi-step process
   const businessInfoForm = useForm<z.infer<typeof businessInfoSchema>>({
     resolver: zodResolver(businessInfoSchema),
     defaultValues: {
@@ -138,7 +135,6 @@ const VendorOnboarding = () => {
         : [...prev, category]
     );
     
-    // Update the form value
     const updatedCategories = selectedServiceCategories.includes(category)
       ? selectedServiceCategories.filter(c => c !== category)
       : [...selectedServiceCategories, category];
@@ -170,7 +166,6 @@ const VendorOnboarding = () => {
     }));
   };
 
-  // Service categories for kids' events
   const serviceCategories = [
     { id: 'magicians', name: 'Magicians' },
     { id: 'clowns', name: 'Clowns' },
@@ -186,13 +181,12 @@ const VendorOnboarding = () => {
     { id: 'decorators', name: 'Decorators' },
   ];
 
-  // Onboarding steps
   const steps = [
     { id: 1, name: "Business Info", icon: <Building className="w-5 h-5" /> },
     { id: 2, name: "Contact Details", icon: <Mail className="w-5 h-5" /> },
     { id: 3, name: "KYC Verification", icon: <Shield className="w-5 h-5" /> },
     { id: 4, name: "Services", icon: <BookOpen className="w-5 h-5" /> },
-    { id: 5, name: "Availability", icon: <Calendar className="w-5 h-5" /> },
+    { id: 5, name: "Availability", icon: <CalendarIcon className="w-5 h-5" /> },
     { id: 6, name: "Review & Submit", icon: <CheckSquare className="w-5 h-5" /> }
   ];
 
@@ -209,7 +203,6 @@ const VendorOnboarding = () => {
         canProceed = contactInfoValid;
         break;
       case 3:
-        // KYC step validation
         canProceed = !!idDocFile && !!businessDocFile;
         if (!canProceed) {
           toast({
@@ -225,7 +218,6 @@ const VendorOnboarding = () => {
         canProceed = serviceInfoValid && selectedServiceCategories.length > 0;
         break;
       case 5:
-        // Availability step validation - always valid as we have defaults
         canProceed = true;
         break;
       default:
@@ -248,7 +240,6 @@ const VendorOnboarding = () => {
   };
 
   const handleSubmit = () => {
-    // Combine all form data for submission
     const formData = {
       ...businessInfoForm.getValues(),
       ...contactInfoForm.getValues(),
@@ -264,14 +255,12 @@ const VendorOnboarding = () => {
     
     console.log("Submitting vendor application:", formData);
     
-    // Simulate API call
     setTimeout(() => {
       toast({
         title: "Application submitted successfully! 🎉",
         description: "Your application has been received. We'll review it and get back to you soon.",
       });
       
-      // Redirect to vendor dashboard or homepage
       setTimeout(() => {
         window.location.href = "/vendor/dashboard";
       }, 2000);
@@ -281,7 +270,6 @@ const VendorOnboarding = () => {
   return (
     <Layout>
       <div className="container mx-auto py-8 px-4 md:px-6 relative">
-        {/* Background decorative elements */}
         <div className="absolute top-40 right-10 w-64 h-64 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
         <div className="absolute bottom-40 left-10 w-64 h-64 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" style={{animationDelay: "1s"}}></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-yellow-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style={{animationDelay: "1.5s"}}></div>
@@ -297,7 +285,6 @@ const VendorOnboarding = () => {
           </p>
         </div>
         
-        {/* Progress indicator */}
         <div className="max-w-3xl mx-auto mb-8">
           <div className="flex flex-wrap justify-between items-center gap-2 mb-3">
             {steps.map((step) => (
@@ -334,7 +321,6 @@ const VendorOnboarding = () => {
         <div className="max-w-3xl mx-auto">
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-purple-100 playful-shadow">
             <div className="p-6 md:p-8">
-              {/* Step 1: Business Information */}
               {currentStep === 1 && (
                 <div className="space-y-6 animate-fade-in">
                   <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
@@ -509,7 +495,6 @@ const VendorOnboarding = () => {
                 </div>
               )}
               
-              {/* Step 2: Contact Information */}
               {currentStep === 2 && (
                 <div className="space-y-6 animate-fade-in">
                   <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
@@ -674,7 +659,6 @@ const VendorOnboarding = () => {
                 </div>
               )}
               
-              {/* Step 3: KYC Verification */}
               {currentStep === 3 && (
                 <div className="space-y-6 animate-fade-in">
                   <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
@@ -776,7 +760,6 @@ const VendorOnboarding = () => {
                 </div>
               )}
               
-              {/* Step 4: Service Information */}
               {currentStep === 4 && (
                 <div className="space-y-6 animate-fade-in">
                   <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
@@ -900,11 +883,10 @@ const VendorOnboarding = () => {
                 </div>
               )}
               
-              {/* Step 5: Availability */}
               {currentStep === 5 && (
                 <div className="space-y-6 animate-fade-in">
                   <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                    <Calendar className="w-5 h-5 mr-2 text-purple-500" />
+                    <CalendarIcon className="w-5 h-5 mr-2 text-purple-500" />
                     Availability Settings
                   </h2>
                   
@@ -974,7 +956,6 @@ const VendorOnboarding = () => {
                 </div>
               )}
               
-              {/* Step 6: Review & Submit */}
               {currentStep === 6 && (
                 <div className="space-y-6 animate-fade-in">
                   <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
