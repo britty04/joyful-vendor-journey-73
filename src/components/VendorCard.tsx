@@ -1,140 +1,150 @@
 
-import { Heart, Star, MapPin, Award } from 'lucide-react';
-import { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Star, Award, Clock, MapPin, CheckCircle, ShieldCheck, ThumbsUp } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-interface VendorCardProps {
-  vendor: {
-    id: string;
-    name: string;
-    category: string;
-    description: string;
-    image: string;
-    rating: number;
-    price: number;
-  };
-  id?: string;
-  name?: string;
-  category?: string;
-  rating?: number;
-  reviewCount?: number;
-  location?: string;
-  image?: string;
-  price?: string;
-  badges?: string[];
+interface Vendor {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  image: string;
+  rating: number;
+  price: number;
+  verified?: boolean;
+  responseTime?: string;
+  successRate?: number;
+  availability?: 'available' | 'limited' | 'booked';
 }
 
-const VendorCard = (props: VendorCardProps) => {
-  const [isFavorited, setIsFavorited] = useState(false);
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
+interface VendorCardProps {
+  vendor: Vendor;
+  reviewCount: number;
+  location: string;
+  badges?: string[];
+  className?: string;
+}
 
-  // Check if we're using the vendor prop or individual props
-  const isUsingVendorProp = !!props.vendor;
+const VendorCard = ({ vendor, reviewCount, location, badges = [], className }: VendorCardProps) => {
+  // Trust signal indicators
+  const showVerifiedBadge = vendor.verified || vendor.rating > 4.5;
+  const availabilityText = vendor.availability === 'available' 
+    ? 'Available Now' 
+    : vendor.availability === 'limited' 
+      ? 'Few Slots Left' 
+      : vendor.availability === 'booked' 
+        ? 'Fully Booked' 
+        : null;
   
-  // Set the values based on what's available
-  const id = isUsingVendorProp ? props.vendor.id : props.id || '';
-  const name = isUsingVendorProp ? props.vendor.name : props.name || '';
-  const category = isUsingVendorProp ? props.vendor.category : props.category || '';
-  const rating = isUsingVendorProp ? props.vendor.rating : props.rating || 0;
-  const reviewCount = props.reviewCount || 0;
-  const location = props.location || 'Local Area';
-  const image = isUsingVendorProp ? props.vendor.image : props.image || '';
-  const price = isUsingVendorProp ? `$${props.vendor.price}` : props.price || '';
-  const badges = props.badges || [];
-
-  const getBadgeColor = (badge: string) => {
-    const colors: Record<string, string> = {
-      'Featured': 'bg-gradient-to-r from-eventPurple-500 to-eventPink-500 text-white',
-      'Top Rated': 'bg-gradient-to-r from-eventYellow-500 to-eventYellow-600 text-white',
-      'Popular': 'bg-gradient-to-r from-eventPink-500 to-eventPink-600 text-white',
-      'Kids Favorite': 'bg-gradient-to-r from-eventBlue-500 to-eventBlue-600 text-white',
-      'Verified': 'bg-gradient-to-r from-eventGreen-500 to-eventGreen-600 text-white',
-      'Best Value': 'bg-gradient-to-r from-eventBlue-500 to-eventPurple-500 text-white',
-    };
-    
-    return colors[badge] || 'bg-white/90 text-gray-800';
-  };
+  const availabilityColor = vendor.availability === 'available' 
+    ? 'text-green-600 bg-green-100' 
+    : vendor.availability === 'limited' 
+      ? 'text-amber-600 bg-amber-100' 
+      : 'text-red-600 bg-red-100';
 
   return (
-    <div className="group playful-card overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:playful-shadow">
-      {/* Vendor Image */}
-      <div className="relative aspect-[4/3] overflow-hidden">
-        <div className={`absolute inset-0 bg-purple-100 ${isImageLoaded ? 'hidden' : 'flex'} items-center justify-center`}>
-          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-        </div>
-        <img
-          src={image}
-          alt={name}
-          className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${isImageLoaded ? 'block' : 'opacity-0'}`}
-          onLoad={() => setIsImageLoaded(true)}
-          loading="lazy"
+    <Card className={cn("overflow-hidden transition-all duration-300 hover:shadow-lg group", className)}>
+      <div className="relative">
+        <img 
+          src={vendor.image} 
+          alt={vendor.name} 
+          className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105"
         />
+        <div className="absolute top-2 left-2 flex flex-col gap-2">
+          {badges.includes('Top Rated') && (
+            <Badge variant="secondary" className="flex items-center gap-1 bg-gradient-to-r from-amber-400 to-yellow-500 text-white border-none">
+              <Award size={12} className="mr-1" />
+              Top Rated
+            </Badge>
+          )}
+          
+          {showVerifiedBadge && (
+            <Badge variant="secondary" className="flex items-center gap-1 bg-blue-600 text-white border-none">
+              <ShieldCheck size={12} className="mr-1" />
+              Verified
+            </Badge>
+          )}
+          
+          {availabilityText && (
+            <Badge variant="outline" className={cn("flex items-center gap-1", availabilityColor)}>
+              <Clock size={12} className="mr-1" />
+              {availabilityText}
+            </Badge>
+          )}
+        </div>
         
-        {/* Favorite Button */}
-        <button
-          className={`absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 ${
-            isFavorited 
-              ? 'bg-white text-red-500 shadow-md' 
-              : 'bg-black/30 text-white hover:bg-white hover:text-gray-900'
-          }`}
-          onClick={(e) => {
-            e.preventDefault();
-            setIsFavorited(!isFavorited);
-          }}
-        >
-          <Heart size={16} fill={isFavorited ? 'currentColor' : 'none'} />
-        </button>
+        <div className="absolute top-2 right-2">
+          <Badge variant="secondary" className="bg-white text-gray-800 flex items-center">
+            {vendor.category}
+          </Badge>
+        </div>
         
-        {/* Badges */}
-        {badges && badges.length > 0 && (
-          <div className="absolute top-3 left-3 flex flex-wrap gap-1">
-            {badges.map((badge, index) => (
-              <span 
-                key={index}
-                className={`px-3 py-1 backdrop-blur-sm text-xs font-medium rounded-full shadow-sm flex items-center ${getBadgeColor(badge)}`}
-              >
-                {badge === 'Top Rated' || badge === 'Verified' ? (
-                  <Award size={12} className="mr-1" />
-                ) : null}
-                {badge}
-              </span>
-            ))}
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent text-white px-4 py-3">
+          <div className="flex justify-between items-end">
+            <h3 className="font-semibold text-lg">{vendor.name}</h3>
+            <div className="flex items-center bg-white text-yellow-500 px-2 py-1 rounded text-sm font-medium">
+              <Star size={14} className="fill-yellow-500 text-yellow-500 mr-1" />
+              {vendor.rating}
+            </div>
           </div>
-        )}
+        </div>
       </div>
       
-      {/* Vendor Info */}
-      <Link to={`/vendor/${id}`} className="block p-5">
-        <div className="mb-1 flex items-center justify-between">
-          <span className="text-xs font-medium text-primary uppercase tracking-wider">{category}</span>
-          <div className="flex items-center">
-            <Star size={14} className="text-eventYellow-500 fill-eventYellow-500" />
-            <span className="ml-1 text-sm font-semibold text-gray-700">{rating}</span>
-            <span className="ml-1 text-xs text-gray-500">({reviewCount})</span>
+      <CardContent className="pt-4">
+        <div className="flex justify-between items-start mb-2">
+          <div className="flex items-center text-sm text-gray-600">
+            <MapPin size={14} className="mr-1" />
+            {location}
+          </div>
+          <div className="text-sm text-gray-600">
+            {reviewCount} reviews
           </div>
         </div>
         
-        <h3 className="font-semibold text-gray-900 group-hover:text-primary transition-colors">{name}</h3>
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+          {vendor.description}
+        </p>
         
-        <div className="mt-2 flex items-center text-sm text-gray-500">
-          <MapPin size={14} className="mr-1" />
-          <span>{location}</span>
+        {/* Trust Signals */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {vendor.responseTime && (
+            <div className="text-xs flex items-center text-gray-600">
+              <Clock size={12} className="mr-1 text-gray-400" />
+              {vendor.responseTime} response
+            </div>
+          )}
+          
+          {vendor.successRate && (
+            <div className="text-xs flex items-center text-gray-600">
+              <ThumbsUp size={12} className="mr-1 text-gray-400" />
+              {vendor.successRate}% success rate
+            </div>
+          )}
+          
+          {(vendor.rating > 4.0) && (
+            <div className="text-xs flex items-center text-gray-600">
+              <CheckCircle size={12} className="mr-1 text-green-500" />
+              Highly Rated
+            </div>
+          )}
         </div>
         
-        <div className="mt-4 flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <div>
-            <span className="font-bold text-gray-900">{price}</span>
-            <span className="text-sm text-gray-600 ml-1">starting price</span>
+            <span className="text-gray-800 font-bold">₹{vendor.price.toLocaleString()}</span>
+            <span className="text-gray-500 text-sm">/service</span>
           </div>
-          <button className="text-sm font-medium text-primary hover:text-primary/80 transition-colors flex items-center">
-            View Details
-            <svg className="ml-1 w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
+          
+          <Button asChild>
+            <Link to={`/vendor/${vendor.id}`}>View Details</Link>
+          </Button>
         </div>
-      </Link>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
