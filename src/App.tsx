@@ -17,6 +17,7 @@ import AIGuidedBookingPage from "./pages/AIGuidedBookingPage";
 import TicketingEventsPage from "./pages/TicketingEventsPage";
 import Checkout from "./pages/Checkout";
 import ServicesDemo from "./pages/ServicesDemo";
+import ChatBot from "./components/chatbot/ChatBot";
 
 // Create a new query client with custom theme colors
 const queryClient = new QueryClient({
@@ -81,6 +82,9 @@ const App = () => (
               <Route path="/services" element={<ServicesDemo />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            
+            {/* ChatBot is available globally */}
+            <ChatBot />
           </BrowserRouter>
         </div>
       </TooltipProvider>
