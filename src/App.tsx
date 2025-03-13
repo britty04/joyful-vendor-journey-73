@@ -13,6 +13,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import CustomerProfile from "./pages/CustomerProfile";
 import AIGuidedBookingPage from "./pages/AIGuidedBookingPage";
 import TicketingEventsPage from "./pages/TicketingEventsPage";
+import Checkout from "./pages/Checkout";
 
 // Create a new query client with custom theme colors
 const queryClient = new QueryClient({
@@ -58,6 +59,7 @@ const App = () => (
             <Route path="/customer/profile" element={<CustomerProfile />} />
             <Route path="/guided-booking" element={<AIGuidedBookingPage />} />
             <Route path="/events" element={<TicketingEventsPage />} />
+            <Route path="/checkout" element={<Checkout />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
