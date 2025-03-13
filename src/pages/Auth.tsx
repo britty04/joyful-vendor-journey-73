@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from '@/hooks/use-toast';
 import Layout from '../components/Layout';
+import { UserCog, Shield, User } from 'lucide-react';
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -23,7 +24,9 @@ const Auth = () => {
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [isVendor, setIsVendor] = useState(false);
+  
+  // Account type state
+  const [accountType, setAccountType] = useState('customer');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,14 +43,20 @@ const Auth = () => {
       return;
     }
     
+    // Admin credentials check (in a real app, this would be server-side)
+    const isAdmin = accountType === 'admin' && loginEmail === 'admin@example.com' && loginPassword === 'admin123';
+    const isVendor = accountType === 'vendor';
+    const isCustomer = accountType === 'customer';
+    
     // Simulate login process
     setTimeout(() => {
       // In a real app, you would validate credentials against a backend
       const userData = {
-        name: "Test User",
+        name: isAdmin ? "Admin User" : "Test User",
         email: loginEmail,
         isLoggedIn: true,
-        isVendor: isVendor,
+        isAdmin: isAdmin,
+        isVendor: isVendor && !isAdmin,
       };
       
       // Store user data in localStorage
@@ -55,14 +64,18 @@ const Auth = () => {
       
       toast({
         title: "Login Successful",
-        description: "Welcome back!",
+        description: `Welcome back${isAdmin ? ', Administrator' : ''}!`,
       });
       
       setIsLoading(false);
       
-      // Redirect to home page
-      if (isVendor) {
+      // Redirect based on account type
+      if (isAdmin) {
+        navigate('/admin/dashboard');
+      } else if (isVendor) {
         navigate('/vendor/dashboard');
+      } else if (isCustomer) {
+        navigate('/customer/profile');
       } else {
         navigate('/');
       }
@@ -101,7 +114,8 @@ const Auth = () => {
         name: registerName,
         email: registerEmail,
         isLoggedIn: true,
-        isVendor: isVendor,
+        isVendor: accountType === 'vendor',
+        isAdmin: false,
       };
       
       // Store user data in localStorage
@@ -109,16 +123,18 @@ const Auth = () => {
       
       toast({
         title: "Registration Successful",
-        description: isVendor ? "Your vendor account has been created!" : "Your account has been created!",
+        description: accountType === 'vendor' 
+          ? "Your vendor account has been created! Let's complete your profile." 
+          : "Your account has been created!",
       });
       
       setIsLoading(false);
       
-      // Redirect to home page or vendor dashboard
-      if (isVendor) {
-        navigate('/vendor/dashboard');
+      // Redirect based on account type
+      if (accountType === 'vendor') {
+        navigate('/vendor/onboarding');
       } else {
-        navigate('/');
+        navigate('/customer/profile');
       }
     }, 1000);
   };
@@ -168,18 +184,43 @@ const Auth = () => {
                       required
                     />
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="vendor-login" 
-                      checked={isVendor}
-                      onCheckedChange={(checked) => setIsVendor(checked as boolean)}
-                    />
-                    <label
-                      htmlFor="vendor-login"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      Login as Vendor
-                    </label>
+                  
+                  <div className="space-y-2">
+                    <Label>Account Type</Label>
+                    <div className="grid grid-cols-3 gap-2">
+                      <div 
+                        className={`flex flex-col items-center gap-1 p-2 border rounded-md cursor-pointer transition-all ${
+                          accountType === 'customer' ? 'border-primary bg-primary/5' : 'border-gray-200'
+                        }`}
+                        onClick={() => setAccountType('customer')}
+                      >
+                        <User className={`h-5 w-5 ${accountType === 'customer' ? 'text-primary' : 'text-gray-500'}`} />
+                        <span className="text-xs font-medium">Customer</span>
+                      </div>
+                      <div 
+                        className={`flex flex-col items-center gap-1 p-2 border rounded-md cursor-pointer transition-all ${
+                          accountType === 'vendor' ? 'border-primary bg-primary/5' : 'border-gray-200'
+                        }`}
+                        onClick={() => setAccountType('vendor')}
+                      >
+                        <UserCog className={`h-5 w-5 ${accountType === 'vendor' ? 'text-primary' : 'text-gray-500'}`} />
+                        <span className="text-xs font-medium">Vendor</span>
+                      </div>
+                      <div 
+                        className={`flex flex-col items-center gap-1 p-2 border rounded-md cursor-pointer transition-all ${
+                          accountType === 'admin' ? 'border-primary bg-primary/5' : 'border-gray-200'
+                        }`}
+                        onClick={() => setAccountType('admin')}
+                      >
+                        <Shield className={`h-5 w-5 ${accountType === 'admin' ? 'text-primary' : 'text-gray-500'}`} />
+                        <span className="text-xs font-medium">Admin</span>
+                      </div>
+                    </div>
+                    {accountType === 'admin' && (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Admin demo credentials: admin@example.com / admin123
+                      </p>
+                    )}
                   </div>
                 </CardContent>
                 <CardFooter>
@@ -242,19 +283,33 @@ const Auth = () => {
                       required
                     />
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="vendor-register" 
-                      checked={isVendor}
-                      onCheckedChange={(checked) => setIsVendor(checked as boolean)}
-                    />
-                    <label
-                      htmlFor="vendor-register"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      Register as Vendor
-                    </label>
+                  
+                  <div className="space-y-2">
+                    <Label>Account Type</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div 
+                        className={`flex flex-col items-center gap-1 p-3 border rounded-md cursor-pointer transition-all ${
+                          accountType === 'customer' ? 'border-primary bg-primary/5' : 'border-gray-200'
+                        }`}
+                        onClick={() => setAccountType('customer')}
+                      >
+                        <User className={`h-5 w-5 ${accountType === 'customer' ? 'text-primary' : 'text-gray-500'}`} />
+                        <span className="text-sm font-medium">Customer</span>
+                        <span className="text-xs text-muted-foreground text-center">Book services for events</span>
+                      </div>
+                      <div 
+                        className={`flex flex-col items-center gap-1 p-3 border rounded-md cursor-pointer transition-all ${
+                          accountType === 'vendor' ? 'border-primary bg-primary/5' : 'border-gray-200'
+                        }`}
+                        onClick={() => setAccountType('vendor')}
+                      >
+                        <UserCog className={`h-5 w-5 ${accountType === 'vendor' ? 'text-primary' : 'text-gray-500'}`} />
+                        <span className="text-sm font-medium">Vendor</span>
+                        <span className="text-xs text-muted-foreground text-center">Offer services to customers</span>
+                      </div>
+                    </div>
                   </div>
+                  
                   <div className="flex items-center space-x-2">
                     <Checkbox id="terms" required />
                     <label

@@ -10,6 +10,7 @@ import VendorList from "./pages/VendorList";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import VendorDashboard from "./pages/VendorDashboard";
+import VendorOnboarding from "./pages/VendorOnboarding";
 import AdminDashboard from "./pages/AdminDashboard";
 import CustomerProfile from "./pages/CustomerProfile";
 import AIGuidedBookingPage from "./pages/AIGuidedBookingPage";
@@ -64,6 +65,7 @@ const App = () => (
               <Route path="/vendors" element={<VendorList />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/vendor/dashboard" element={<VendorDashboard />} />
+              <Route path="/vendor/onboarding" element={<VendorOnboarding />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/customer/profile" element={<CustomerProfile />} />
               <Route path="/guided-booking" element={<AIGuidedBookingPage />} />
