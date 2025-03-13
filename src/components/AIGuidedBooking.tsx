@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bot, Sparkles, ChevronRight, CalendarDays, Check, Wand2 } from 'lucide-react';
+import { Bot, Sparkles, ChevronRight, CalendarDays, Check, Wand2, Star } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
