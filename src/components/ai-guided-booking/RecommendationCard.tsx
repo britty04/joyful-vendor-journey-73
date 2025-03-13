@@ -1,8 +1,7 @@
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Check, Star, Wand2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Check, Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export interface ServiceRecommendation {
   id: string;
@@ -16,71 +15,76 @@ export interface ServiceRecommendation {
 }
 
 interface RecommendationCardProps {
-  service: ServiceRecommendation;
+  recommendation: ServiceRecommendation;
   isSelected: boolean;
   onToggleSelection: (id: string) => void;
 }
 
-const RecommendationCard = ({ service, isSelected, onToggleSelection }: RecommendationCardProps) => {
+const RecommendationCard = ({ 
+  recommendation, 
+  isSelected, 
+  onToggleSelection 
+}: RecommendationCardProps) => {
   return (
-    <Card 
-      key={service.id}
-      className={cn(
-        "overflow-hidden transition-all duration-300",
-        isSelected 
-          ? "border-primary shadow-md" 
-          : "hover:border-primary/50"
-      )}
-    >
-      <div className="flex flex-col sm:flex-row">
-        <div className="w-full sm:w-1/3">
-          <div className="relative h-48 sm:h-full bg-gray-100">
-            <img 
-              src={service.image} 
-              alt={service.name}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute top-2 left-2 bg-black/60 text-white text-xs font-medium px-2 py-1 rounded">
-              {service.type}
-            </div>
-            <div className={cn(
-              "absolute bottom-2 left-2 text-xs font-medium px-2 py-1 rounded flex items-center",
-              "bg-gradient-to-r from-eventPurple-500 to-eventPink-500 text-white"
-            )}>
-              <Wand2 size={12} className="mr-1" />
-              {service.relevanceScore}% match
-            </div>
-          </div>
+    <div className={cn(
+      "border rounded-lg overflow-hidden transition-all duration-300 relative",
+      isSelected ? "border-primary shadow-md" : "border-gray-200 hover:border-primary/30"
+    )}>
+      {/* Relevance Badge */}
+      {recommendation.relevanceScore >= 90 && (
+        <div className="absolute top-3 left-3 bg-primary text-white px-2 py-1 rounded-full text-xs font-medium z-10">
+          Perfect Match
         </div>
-        <div className="p-4 flex-1 flex flex-col">
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="font-semibold text-lg">{service.name}</h3>
-            <div className="flex items-center">
-              <div className="flex items-center bg-eventYellow-50 text-eventYellow-700 px-2 py-1 rounded text-xs font-medium">
-                <Star size={12} className="fill-eventYellow-500 text-eventYellow-500 mr-1" />
-                {service.rating}
-              </div>
-            </div>
+      )}
+      
+      {/* Selection indicator */}
+      <div className={cn(
+        "absolute top-3 right-3 z-10 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all",
+        isSelected 
+          ? "bg-primary border-primary text-white" 
+          : "border-white bg-white/50"
+      )}>
+        {isSelected && <Check className="w-3 h-3" />}
+      </div>
+      
+      {/* Image */}
+      <div className="relative h-48 overflow-hidden">
+        <img 
+          src={recommendation.image} 
+          alt={recommendation.name}
+          className={cn(
+            "w-full h-full object-cover transition-transform duration-500",
+            "group-hover:scale-105"
+          )}
+        />
+      </div>
+      
+      {/* Content */}
+      <div className="p-4">
+        <h3 className="font-semibold text-lg mb-1">{recommendation.name}</h3>
+        
+        {/* Rating */}
+        <div className="flex items-center mb-2">
+          <div className="flex items-center text-amber-500 mr-1">
+            <Star className="w-4 h-4 fill-current" />
           </div>
-          <p className="text-gray-600 text-sm mb-4">{service.description}</p>
-          <div className="flex items-center justify-between mt-auto">
-            <span className="font-bold">{service.price}</span>
-            <Button
-              variant={isSelected ? "default" : "outline"}
-              className={isSelected ? "bg-primary" : ""}
-              onClick={() => onToggleSelection(service.id)}
-            >
-              {isSelected ? (
-                <>
-                  <Check size={16} />
-                  Selected
-                </>
-              ) : "Select"}
-            </Button>
-          </div>
+          <span className="text-sm font-medium">{recommendation.rating}</span>
+        </div>
+        
+        <p className="text-gray-600 text-sm mb-3">{recommendation.description}</p>
+        
+        <div className="flex items-center justify-between">
+          <span className="font-bold text-gray-900">{recommendation.price}</span>
+          <Button 
+            variant={isSelected ? "outline" : "default"}
+            size="sm"
+            onClick={() => onToggleSelection(recommendation.id)}
+          >
+            {isSelected ? "Remove" : "Add"}
+          </Button>
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
 

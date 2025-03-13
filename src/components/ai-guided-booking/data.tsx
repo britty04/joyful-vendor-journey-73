@@ -1,187 +1,124 @@
 
 import React from 'react';
-import { EventType } from './EventTypeSelector';
-import { Cake, Heart, Briefcase, Baby, Calendar, GraduationCap, Star, PartyPopper, Gift } from 'lucide-react';
+import { 
+  Cake, Gift, Briefcase, HeartHandshake, GraduationCap, 
+  Building, Church, PartyPopper, Users, Sparkles
+} from 'lucide-react';
 
-// Define the service interface
-export interface Service {
-  id: string;
-  name: string;
-  icon: string;
-  price?: string; // Add price property
-  image?: string; // Add image property
-}
-
-// Event types with enhanced visual styling
-export const eventTypes: EventType[] = [
-  { 
+export const eventTypes = [
+  {
     id: 'birthday',
-    name: 'Birthday Party', 
-    description: 'Celebrate another trip around the sun!',
-    icon: <div className="text-pink-500">
-      <Cake size={32} className="stroke-2" />
-    </div>,
-    theme: {
-      gradient: "bg-gradient-to-r from-pink-400 to-yellow-400",
-      textColor: "text-gray-800",
-      borderColor: "border-pink-300",
-      iconBackground: "bg-white/30"
-    }
+    name: 'Birthday Party',
+    description: 'Celebration of another trip around the sun',
+    icon: <Cake className="w-8 h-8" />
   },
-  { 
+  {
     id: 'wedding',
-    name: 'Wedding', 
-    description: 'Make your special day unforgettable',
-    icon: <div className="text-purple-500">
-      <Heart size={32} className="stroke-2" />
-    </div>,
-    theme: {
-      gradient: "bg-gradient-to-r from-purple-400 to-pink-300",
-      textColor: "text-gray-800",
-      borderColor: "border-purple-200",
-      iconBackground: "bg-white/30"
-    }
+    name: 'Wedding',
+    description: 'The most special day of your life',
+    icon: <HeartHandshake className="w-8 h-8" />
   },
-  { 
+  {
     id: 'corporate',
-    name: 'Corporate Event', 
-    description: 'Impress your colleagues and clients',
-    icon: <div className="text-blue-500">
-      <Briefcase size={32} className="stroke-2" />
-    </div>,
-    theme: {
-      gradient: "bg-gradient-to-r from-blue-600 to-cyan-500",
-      textColor: "text-white",
-      borderColor: "border-blue-400",
-      iconBackground: "bg-white/20"
-    }
+    name: 'Corporate Event',
+    description: 'Professional gatherings that leave an impression',
+    icon: <Briefcase className="w-8 h-8" />
   },
-  { 
-    id: 'baby-shower',
-    name: 'Baby Shower', 
-    description: 'Welcome the little one with love',
-    icon: <div className="text-blue-300">
-      <Baby size={32} className="stroke-2" />
-    </div>,
-    theme: {
-      gradient: "bg-gradient-to-r from-blue-300 to-pink-300",
-      textColor: "text-gray-800",
-      borderColor: "border-blue-200",
-      iconBackground: "bg-white/30"
-    }
-  },
-  { 
-    id: 'anniversary',
-    name: 'Anniversary', 
-    description: 'Celebrate years of togetherness',
-    icon: <div className="text-red-500">
-      <Calendar size={32} className="stroke-2" />
-    </div>,
-    theme: {
-      gradient: "bg-gradient-to-r from-red-400 to-pink-300",
-      textColor: "text-gray-800",
-      borderColor: "border-red-200",
-      iconBackground: "bg-white/30"
-    }
-  },
-  { 
+  {
     id: 'graduation',
-    name: 'Graduation', 
+    name: 'Graduation',
     description: 'Celebrate academic achievements',
-    icon: <div className="text-blue-500">
-      <GraduationCap size={32} className="stroke-2" />
-    </div>,
-    theme: {
-      gradient: "bg-gradient-to-r from-blue-500 to-green-400",
-      textColor: "text-white",
-      borderColor: "border-blue-300",
-      iconBackground: "bg-white/20"
-    }
+    icon: <GraduationCap className="w-8 h-8" />
   },
-  { 
+  {
     id: 'religious',
-    name: 'Religious Ceremony', 
-    description: 'Honor faith and traditions',
-    icon: <div className="text-amber-500">
-      <Star size={32} className="stroke-2" />
-    </div>,
-    theme: {
-      gradient: "bg-gradient-to-r from-amber-400 to-yellow-300",
-      textColor: "text-gray-800",
-      borderColor: "border-amber-300",
-      iconBackground: "bg-white/30"
-    }
+    name: 'Religious Ceremony',
+    description: 'Sacred moments of spiritual significance',
+    icon: <Church className="w-8 h-8" />
   },
-  { 
-    id: 'other',
-    name: 'Other Event', 
-    description: 'Create a custom event experience',
-    icon: <div className="text-gray-600">
-      <PartyPopper size={32} className="stroke-2" />
-    </div>,
-    theme: {
-      gradient: "bg-gradient-to-r from-gray-300 to-gray-400",
-      textColor: "text-gray-800",
-      borderColor: "border-gray-300",
-      iconBackground: "bg-white/30"
-    }
+  {
+    id: 'anniversary',
+    name: 'Anniversary',
+    description: 'Commemorate your special milestones',
+    icon: <Gift className="w-8 h-8" />
+  },
+  {
+    id: 'social',
+    name: 'Social Gathering',
+    description: 'Bringing people together for fun and connection',
+    icon: <Users className="w-8 h-8" />
+  },
+  {
+    id: 'baby-shower',
+    name: 'Baby Shower',
+    description: 'Welcome the newest addition to your family',
+    icon: <PartyPopper className="w-8 h-8" />
   }
 ];
 
-// Primary services for birthday events
-export const birthdayPrimaryServices: Service[] = [
-  { id: 'magician', name: 'Magician', icon: '🎩', price: '₹6,000', image: 'https://images.unsplash.com/photo-1589123053646-9fa2a86a6e8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
-  { id: 'clown', name: 'Clown', icon: '🤡', price: '₹4,500', image: 'https://images.unsplash.com/photo-1573747806413-2aef4c8542fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
-  { id: 'catering', name: 'Catering', icon: '🍰', price: '₹12,000', image: 'https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
-  { id: 'venue', name: 'Venue', icon: '🏰', price: '₹25,000', image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
-  { id: 'photographer', name: 'Photographer', icon: '📷', price: '₹8,000', image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
-  { id: 'decorator', name: 'Decorator', icon: '🎈', price: '₹10,000', image: 'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
-  { id: 'games', name: 'Game Host', icon: '🎮', price: '₹5,000', image: 'https://images.unsplash.com/photo-1559181567-c3190ca9959b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
-  { id: 'music', name: 'DJ / Music', icon: '🎵', price: '₹7,500', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' }
-];
-
-// Primary services for wedding events (expanded with WedMeGood inspiration)
-export const weddingPrimaryServices: Service[] = [
-  { id: 'venue', name: 'Venue', icon: '🏰' },
-  { id: 'catering', name: 'Catering', icon: '🍽️' },
-  { id: 'photographer', name: 'Photographer', icon: '📷' },
-  { id: 'florist', name: 'Florist', icon: '💐' },
-  { id: 'music', name: 'DJ / Band', icon: '🎵' },
-  { id: 'decor', name: 'Decorator', icon: '✨' },
-  { id: 'cake', name: 'Cake Designer', icon: '🍰' },
-  { id: 'transport', name: 'Transportation', icon: '🚗' },
-  { id: 'makeup', name: 'Bridal Makeup', icon: '💄' },
-  { id: 'mehendi', name: 'Mehendi Artist', icon: '🌿' },
-  { id: 'jewelry', name: 'Jewelry', icon: '💎' },
-  { id: 'choreographer', name: 'Choreographer', icon: '💃' },
-  { id: 'invitation', name: 'Invitations', icon: '✉️' },
-  { id: 'priest', name: 'Priest/Officiant', icon: '🙏' }
-];
-
-// Primary services for corporate events
-export const corporatePrimaryServices: Service[] = [
-  { id: 'venue', name: 'Venue', icon: '🏢' },
-  { id: 'catering', name: 'Catering', icon: '🍽️' },
-  { id: 'av', name: 'AV Equipment', icon: '🎛️' },
-  { id: 'speaker', name: 'Speaker/Presenter', icon: '🎤' },
-  { id: 'decor', name: 'Decorator', icon: '✨' },
-  { id: 'photographer', name: 'Photographer', icon: '📷' },
-  { id: 'transport', name: 'Transportation', icon: '🚗' },
-  { id: 'staffing', name: 'Event Staff', icon: '👥' },
-  { id: 'gifts', name: 'Corporate Gifts', icon: '🎁' },
-  { id: 'stalls', name: 'Exhibition Stalls', icon: '🏠' },
-  { id: 'app', name: 'Event App', icon: '📱' },
-  { id: 'security', name: 'Security Services', icon: '🔒' }
-];
-
-// Primary services for ticketed events
-export const ticketedEventsPrimaryServices: Service[] = [
-  { id: 'venue', name: 'Event Venue', icon: '🏟️' },
-  { id: 'artist', name: 'Artists/Performers', icon: '🎭' },
-  { id: 'sound', name: 'Sound & Lighting', icon: '🔊' },
-  { id: 'ticketing', name: 'Ticketing Platform', icon: '🎟️' },
-  { id: 'security', name: 'Security', icon: '💂' },
-  { id: 'catering', name: 'Food & Beverage', icon: '🍔' },
-  { id: 'marketing', name: 'Event Marketing', icon: '📣' },
-  { id: 'sponsor', name: 'Sponsorships', icon: '🤝' }
+export const birthdayPrimaryServices = [
+  {
+    id: 'magician',
+    name: 'Magician',
+    icon: '🎩',
+    description: 'Mesmerize your guests with amazing tricks',
+    price: '₹8,000',
+    image: 'https://images.unsplash.com/photo-1525388482443-d42ddb04196e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'dj',
+    name: 'DJ',
+    icon: '🎧',
+    description: 'Keep the party going with great music',
+    price: '₹12,000',
+    image: 'https://images.unsplash.com/photo-1571266028253-6c868a7f9d78?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'catering',
+    name: 'Catering',
+    icon: '🍽️',
+    description: 'Delicious food for all your guests',
+    price: '₹350/person',
+    image: 'https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'venue',
+    name: 'Venue',
+    icon: '🏨',
+    description: 'Beautiful spaces for your celebration',
+    price: '₹25,000',
+    image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'decoration',
+    name: 'Decoration',
+    icon: '🎈',
+    description: 'Transform any space into a party zone',
+    price: '₹15,000',
+    image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'photographer',
+    name: 'Photographer',
+    icon: '📸',
+    description: 'Capture memories that last forever',
+    price: '₹10,000',
+    image: 'https://images.unsplash.com/photo-1552334823-a04707f8943d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'cake',
+    name: 'Cake',
+    icon: '🍰',
+    description: 'Custom cakes for your special occasion',
+    price: '₹2,000',
+    image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'host',
+    name: 'Event Host',
+    icon: '🎤',
+    description: 'Professional MCs to guide your event',
+    price: '₹7,000',
+    image: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  }
 ];
