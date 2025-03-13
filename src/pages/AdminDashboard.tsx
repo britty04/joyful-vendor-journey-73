@@ -18,10 +18,11 @@ const AdminDashboard = () => {
         <Tabs defaultValue="analytics">
           <TabsList className="mb-6">
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
-            <TabsTrigger value="vendors">Vendors</TabsTrigger>
+            <TabsTrigger value="vendors">Vendor Applications</TabsTrigger>
             <TabsTrigger value="vendorManagement">Vendor Management</TabsTrigger>
             <TabsTrigger value="locations">Locations</TabsTrigger>
             <TabsTrigger value="photos">Photos</TabsTrigger>
+            <TabsTrigger value="events">Events</TabsTrigger>
           </TabsList>
           
           <TabsContent value="analytics">
@@ -49,6 +50,19 @@ const AdminDashboard = () => {
           <TabsContent value="photos">
             <Card className="p-6">
               <AdminPhotosReview />
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="events">
+            <Card className="p-6">
+              <h2 className="text-2xl font-bold mb-4">Event Management</h2>
+              <p className="text-muted-foreground mb-6">Review and manage upcoming events.</p>
+              
+              <iframe 
+                src="/events" 
+                className="w-full h-[600px] border rounded-lg"
+                title="Events Preview"
+              />
             </Card>
           </TabsContent>
         </Tabs>

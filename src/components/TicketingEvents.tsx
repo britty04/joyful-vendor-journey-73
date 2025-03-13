@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -156,14 +155,12 @@ const TicketingEvents = () => {
   };
   
   const handleBuyTicket = (event: Event) => {
-    // In a real app, this would redirect to the ticket purchase page
     toast({
       title: "Redirecting to checkout",
       description: `You're purchasing tickets for ${event.title}`,
     });
   };
   
-  // Filter events based on category and search query
   const filteredEvents = events.filter(event => {
     const matchesCategory = filter === "all" || event.category === filter;
     const matchesSearch = searchQuery === "" || 
@@ -173,12 +170,75 @@ const TicketingEvents = () => {
     return matchesCategory && matchesSearch;
   });
   
-  // Featured events
   const featuredEvents = events.filter(event => event.isFeatured);
+  
+  const isFullPage = window.location.pathname.includes('events');
+  
+  if (!isFullPage) {
+    return (
+      <div className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="mb-8 flex justify-between items-center">
+          <h2 className="text-2xl font-bold">Upcoming Events</h2>
+          <Button variant="outline" size="sm" as="a" href="/events">
+            View All <ChevronRight className="ml-1 h-4 w-4" />
+          </Button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {events.slice(0, 3).map(event => (
+            <Card key={event.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group">
+              <div className="relative aspect-[3/2] overflow-hidden">
+                <img
+                  src={event.image}
+                  alt={event.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <button
+                  className={`absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 ${
+                    favorites.includes(event.id) 
+                      ? 'bg-white text-red-500 shadow-md' 
+                      : 'bg-black/30 text-white hover:bg-white hover:text-gray-900'
+                  }`}
+                  onClick={() => toggleFavorite(event.id)}
+                >
+                  <Heart size={16} fill={favorites.includes(event.id) ? 'currentColor' : 'none'} />
+                </button>
+              </div>
+              
+              <CardHeader className="py-4">
+                <CardTitle className="text-lg group-hover:text-primary transition-colors">
+                  {event.title}
+                </CardTitle>
+              </CardHeader>
+              
+              <CardContent className="pb-4 pt-0">
+                <div className="space-y-2">
+                  <div className="flex items-center text-gray-600">
+                    <CalendarDays className="h-4 w-4 mr-2 text-gray-400" />
+                    <span>{event.date}</span>
+                  </div>
+                  <div className="flex items-center text-gray-600">
+                    <MapPin className="h-4 w-4 mr-2 text-gray-400" />
+                    <span className="truncate">{event.venue}</span>
+                  </div>
+                </div>
+              </CardContent>
+              
+              <CardFooter className="pt-0 pb-4 flex justify-between items-center">
+                <div className="font-bold text-lg text-primary">{event.price}</div>
+                <Button onClick={() => handleBuyTicket(event)}>
+                  Buy Tickets
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-eventPurple-50/50 to-white">
-      {/* Hero Section */}
       <div className="relative rounded-2xl overflow-hidden mb-12 shadow-xl">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-eventPink-600/90 mix-blend-multiply"></div>
         <div 
@@ -212,86 +272,82 @@ const TicketingEvents = () => {
         </div>
       </div>
       
-      {/* Featured Events */}
-      {featuredEvents.length > 0 && (
-        <div className="mb-12">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Featured Events</h2>
-            <Button variant="outline" size="sm">
-              View All <ChevronRight className="ml-1 h-4 w-4" />
-            </Button>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {featuredEvents.map(event => (
-              <Card key={event.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group playful-card hover:playful-shadow">
-                <div className="relative aspect-[2/1] overflow-hidden">
-                  <img
-                    src={event.image}
-                    alt={event.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div className="absolute bottom-4 left-4 right-4 text-white">
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center">
-                        <div className="bg-primary/90 backdrop-blur-sm p-2 rounded-full mr-2">
-                          {getCategoryIcon(event.category)}
-                        </div>
-                        <span className="text-sm font-medium capitalize">{event.category}</span>
+      <div className="mb-12">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">Featured Events</h2>
+          <Button variant="outline" size="sm">
+            View All <ChevronRight className="ml-1 h-4 w-4" />
+          </Button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {featuredEvents.map(event => (
+            <Card key={event.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group playful-card hover:playful-shadow">
+              <div className="relative aspect-[2/1] overflow-hidden">
+                <img
+                  src={event.image}
+                  alt={event.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div className="absolute bottom-4 left-4 right-4 text-white">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center">
+                      <div className="bg-primary/90 backdrop-blur-sm p-2 rounded-full mr-2">
+                        {getCategoryIcon(event.category)}
                       </div>
-                      <div className="flex items-center bg-black/40 backdrop-blur-sm px-2 py-1 rounded text-sm">
-                        <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 mr-1" />
-                        <span>{event.rating}</span>
-                      </div>
+                      <span className="text-sm font-medium capitalize">{event.category}</span>
+                    </div>
+                    <div className="flex items-center bg-black/40 backdrop-blur-sm px-2 py-1 rounded text-sm">
+                      <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 mr-1" />
+                      <span>{event.rating}</span>
                     </div>
                   </div>
-                  
-                  <button
-                    className={`absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 ${
-                      favorites.includes(event.id) 
-                        ? 'bg-white text-red-500 shadow-md' 
-                        : 'bg-black/30 text-white hover:bg-white hover:text-gray-900'
-                    }`}
-                    onClick={() => toggleFavorite(event.id)}
-                  >
-                    <Heart size={16} fill={favorites.includes(event.id) ? 'currentColor' : 'none'} />
-                  </button>
                 </div>
                 
-                <CardContent className="pt-6">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-bold text-lg text-gray-900 group-hover:text-primary transition-colors">{event.title}</h3>
-                    <div className="font-bold text-primary">{event.price}</div>
-                  </div>
-                  
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center text-gray-600">
-                      <CalendarDays className="h-4 w-4 mr-2 text-gray-400" />
-                      <span>{event.date}</span>
-                      <span className="mx-2">•</span>
-                      <Clock className="h-4 w-4 mr-2 text-gray-400" />
-                      <span>{event.time}</span>
-                    </div>
-                    <div className="flex items-center text-gray-600">
-                      <MapPin className="h-4 w-4 mr-2 text-gray-400" />
-                      <span>{event.venue}, {event.location}</span>
-                    </div>
-                  </div>
-                </CardContent>
+                <button
+                  className={`absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 ${
+                    favorites.includes(event.id) 
+                      ? 'bg-white text-red-500 shadow-md' 
+                      : 'bg-black/30 text-white hover:bg-white hover:text-gray-900'
+                  }`}
+                  onClick={() => toggleFavorite(event.id)}
+                >
+                  <Heart size={16} fill={favorites.includes(event.id) ? 'currentColor' : 'none'} />
+                </button>
+              </div>
+              
+              <CardContent className="pt-6">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-bold text-lg text-gray-900 group-hover:text-primary transition-colors">{event.title}</h3>
+                  <div className="font-bold text-primary">{event.price}</div>
+                </div>
                 
-                <CardFooter className="pt-0">
-                  <Button className="w-full" onClick={() => handleBuyTicket(event)}>
-                    Buy Tickets
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center text-gray-600">
+                    <CalendarDays className="h-4 w-4 mr-2 text-gray-400" />
+                    <span>{event.date}</span>
+                    <span className="mx-2">•</span>
+                    <Clock className="h-4 w-4 mr-2 text-gray-400" />
+                    <span>{event.time}</span>
+                  </div>
+                  <div className="flex items-center text-gray-600">
+                    <MapPin className="h-4 w-4 mr-2 text-gray-400" />
+                    <span>{event.venue}, {event.location}</span>
+                  </div>
+                </div>
+              </CardContent>
+              
+              <CardFooter className="pt-0">
+                <Button className="w-full" onClick={() => handleBuyTicket(event)}>
+                  Buy Tickets
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
         </div>
-      )}
+      </div>
       
-      {/* Categories */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Browse by Category</h2>
         <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
@@ -356,7 +412,6 @@ const TicketingEvents = () => {
         </div>
       </div>
       
-      {/* All Events */}
       <div>
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900">All Events</h2>
