@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, DollarSign, Users, Clock, Bell } from 'lucide-react';
+import { Calendar, DollarSign, Users, Clock, Bell, User, BanknoteIcon } from 'lucide-react';
 import BookingsList from '@/components/dashboard/BookingsList';
 import EarningsOverview from '@/components/dashboard/EarningsOverview';
 import { toast } from '@/hooks/use-toast';
+import TransferEarnings from '@/components/dashboard/TransferEarnings';
+import VendorProfile from '@/components/dashboard/VendorProfile';
 
 const VendorDashboard = () => {
   const [isVendor, setIsVendor] = useState(false);
@@ -90,7 +92,7 @@ const VendorDashboard = () => {
         
         {/* Dashboard Tabs */}
         <Tabs defaultValue="bookings" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
+          <TabsList className="grid w-full grid-cols-4 lg:w-[600px]">
             <TabsTrigger value="bookings" className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               <span>Bookings</span>
@@ -104,6 +106,14 @@ const VendorDashboard = () => {
               <DollarSign className="h-4 w-4" />
               <span>Earnings</span>
             </TabsTrigger>
+            <TabsTrigger value="transfer" className="flex items-center gap-2">
+              <BanknoteIcon className="h-4 w-4" />
+              <span>Transfer</span>
+            </TabsTrigger>
+            <TabsTrigger value="profile" className="flex items-center gap-2">
+              <User className="h-4 w-4" />
+              <span>Profile</span>
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="bookings" className="space-y-4">
@@ -112,6 +122,14 @@ const VendorDashboard = () => {
           
           <TabsContent value="earnings" className="space-y-4">
             <EarningsOverview />
+          </TabsContent>
+
+          <TabsContent value="transfer" className="space-y-4">
+            <TransferEarnings />
+          </TabsContent>
+
+          <TabsContent value="profile" className="space-y-4">
+            <VendorProfile />
           </TabsContent>
         </Tabs>
       </div>
