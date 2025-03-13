@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -46,13 +47,23 @@ const Auth = () => {
     if (authType === "login") {
       // For simplicity, just check if the email and password are not empty
       if (email && password) {
+        // Store user data in localStorage for future reference
+        const userData = {
+          name: email.split('@')[0], // Using part of email as name for logged in users
+          email,
+          isLoggedIn: true,
+          isVendor: role === 'vendor',
+          isAdmin: role === 'admin'
+        };
+        localStorage.setItem('user', JSON.stringify(userData));
+        
         toast({
           title: "Login successful",
           description: `Welcome back, ${email}!`,
         });
-        // Redirect based on role (replace with actual role-based routing)
+        // Redirect based on role
         if (role === "admin") {
-          navigate("/admin");
+          navigate("/admin/dashboard");
         } else if (role === "vendor") {
           navigate("/vendor-dashboard");
         } else {
@@ -77,11 +88,29 @@ const Auth = () => {
       }
 
       // For simplicity, assume registration is always successful
+      // Store user data in localStorage
+      const userData = {
+        name,
+        email,
+        isLoggedIn: true,
+        isVendor: role === 'vendor',
+        isAdmin: role === 'admin'
+      };
+      localStorage.setItem('user', JSON.stringify(userData));
+      
       toast({
         title: "Registration successful",
-        description: `Welcome, ${name}! Please log in.`,
+        description: `Welcome, ${name}!`,
       });
-      setAuthType("login"); // Switch to login tab after successful registration
+      
+      // Redirect based on role after registration
+      if (role === "admin") {
+        navigate("/admin/dashboard");
+      } else if (role === "vendor") {
+        navigate("/vendor-dashboard");
+      } else {
+        navigate("/");
+      }
     }
   };
 
@@ -128,6 +157,22 @@ const Auth = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="login-role">Role</Label>
+                    <Select onValueChange={setRole} defaultValue={role}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Role</SelectLabel>
+                          <SelectItem value="customer">Customer</SelectItem>
+                          <SelectItem value="vendor">Vendor</SelectItem>
+                          <SelectItem value="admin">Admin</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="flex justify-end">
                     <Button type="submit">Log In</Button>
@@ -177,6 +222,7 @@ const Auth = () => {
                           <SelectLabel>Role</SelectLabel>
                           <SelectItem value="customer">Customer</SelectItem>
                           <SelectItem value="vendor">Vendor</SelectItem>
+                          <SelectItem value="admin">Admin</SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
