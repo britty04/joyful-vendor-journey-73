@@ -18,6 +18,7 @@ import TicketingEventsPage from "./pages/TicketingEventsPage";
 import Checkout from "./pages/Checkout";
 import BookingSuccess from "./pages/BookingSuccess";
 import ServicesDemo from "./pages/ServicesDemo";
+import SearchPage from "./pages/SearchPage";
 import ChatBot from "./components/chatbot/ChatBot";
 
 // Create a new query client with custom theme colors
@@ -71,7 +72,8 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/vendors" element={<VendorList />} />
+              <Route path="/vendors" element={<SearchPage />} />
+              <Route path="/vendors/list" element={<VendorList />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/vendor/dashboard" element={<VendorDashboard />} />
               <Route path="/vendor/onboarding" element={<VendorOnboarding />} />

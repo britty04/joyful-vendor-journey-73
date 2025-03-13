@@ -1,11 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Search, Sparkles, Calendar, Zap, Star, ChevronRight } from 'lucide-react';
+import { Sparkles, Calendar, Zap, Star, ChevronRight } from 'lucide-react';
+import SearchBar from '@/components/search/SearchBar';
 
 const Hero = () => {
+  const navigate = useNavigate();
+  
   // Animation variants for staggered children
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -27,44 +29,9 @@ const Hero = () => {
     }
   };
 
-  // For the search bar animation
-  const [searchPlaceholder, setSearchPlaceholder] = useState('');
-  const placeholders = [
-    "Find a birthday magician...",
-    "Search for wedding photographers...",
-    "Looking for a cake baker...",
-    "Need a DJ for your party..."
-  ];
-  const [currentPlaceholderIndex, setCurrentPlaceholderIndex] = useState(0);
-  const [currentCharIndex, setCurrentCharIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  // Create the typewriter effect
-  useEffect(() => {
-    const currentText = placeholders[currentPlaceholderIndex];
-    
-    const timeout = setTimeout(() => {
-      if (!isDeleting) {
-        setSearchPlaceholder(currentText.substring(0, currentCharIndex + 1));
-        setCurrentCharIndex(currentCharIndex + 1);
-        
-        if (currentCharIndex === currentText.length) {
-          // Wait a bit at the end of the text before deleting
-          setTimeout(() => setIsDeleting(true), 2000);
-        }
-      } else {
-        setSearchPlaceholder(currentText.substring(0, currentCharIndex - 1));
-        setCurrentCharIndex(currentCharIndex - 1);
-        
-        if (currentCharIndex === 0) {
-          setIsDeleting(false);
-          setCurrentPlaceholderIndex((currentPlaceholderIndex + 1) % placeholders.length);
-        }
-      }
-    }, isDeleting ? 50 : 100);
-    
-    return () => clearTimeout(timeout);
-  }, [currentCharIndex, currentPlaceholderIndex, isDeleting, placeholders]);
+  const handleSearch = (query: string) => {
+    navigate(`/vendors?search=${encodeURIComponent(query)}`);
+  };
 
   return (
     <section className="relative overflow-hidden pt-20 pb-32">
@@ -116,21 +83,11 @@ const Hero = () => {
             From birthdays and weddings to corporate events - we've got you covered!
           </motion.p>
           
-          <motion.div 
-            variants={itemVariants}
-            className="bg-white rounded-xl shadow-lg p-2 mb-8 max-w-3xl mx-auto flex items-center playful-shadow"
-          >
-            <div className="bg-eventPurple-100 p-3 rounded-lg text-eventPurple-600 mx-2">
-              <Search className="w-5 h-5" />
-            </div>
-            <input 
-              type="text" 
-              placeholder={searchPlaceholder} 
-              className="flex-1 py-3 px-4 bg-transparent border-none focus:outline-none text-gray-700"
+          <motion.div variants={itemVariants} className="mb-8 max-w-3xl mx-auto">
+            <SearchBar 
+              animatePlaceholder={true} 
+              onSearch={handleSearch} 
             />
-            <Button size="lg" className="bg-eventPurple-600 hover:bg-eventPurple-700 text-white rounded-lg shadow-md ml-2">
-              Search
-            </Button>
           </motion.div>
           
           <motion.div 
