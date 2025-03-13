@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -6,16 +5,34 @@ import Layout from '@/components/Layout';
 import VendorCard from '@/components/VendorCard';
 import { Filter, AlertCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import VendorAvailabilityBadge from '@/components/VendorAvailabilityBadge';
+import VendorTrustSignals from '@/components/VendorTrustSignals';
 
 // Define a type for the vendor availability to match the expected values
 type VendorAvailability = 'available' | 'limited' | 'booked';
+
+// Define a type for a vendor
+export interface Vendor {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  image: string;
+  rating: number;
+  price: number;
+  eventTypes: string[];
+  verified: boolean;
+  responseTime: string;
+  successRate: number;
+  availability: VendorAvailability;
+}
 
 const VendorList = () => {
   const [searchParams] = useSearchParams();
   const categoryParam = searchParams.get('category');
   const eventParam = searchParams.get('event');
 
-  const [allVendors] = useState([
+  const [allVendors] = useState<Vendor[]>([
     {
       id: '1',
       name: 'Photography Pro',
@@ -162,7 +179,7 @@ const VendorList = () => {
   };
 
   // Generate appropriate badges for each vendor
-  const getVendorBadges = (vendor: any) => {
+  const getVendorBadges = (vendor: Vendor) => {
     const badges = [];
     
     // Top rated vendors
