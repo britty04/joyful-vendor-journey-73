@@ -59,7 +59,7 @@ const Index = () => {
           <div className="text-center mb-12">
             <h2 className="font-bold text-gray-900 mb-4">What Parents Say</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Join thousands of happy parents who found the perfect vendors for their children's events.
+              Join thousands of happy parents who found the perfect vendors for their children&apos;s events.
             </p>
           </div>
           
@@ -69,13 +69,13 @@ const Index = () => {
                 name: 'Priya Shah',
                 role: 'Parent of 6-year-old',
                 image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80',
-                quote: 'Found an amazing magician for my son's birthday with just a few clicks. The kids were thrilled and I didn't have to stress about planning!'
+                quote: 'Found an amazing magician for my son\'s birthday with just a few clicks. The kids were thrilled and I didn\'t have to stress about planning!'
               },
               {
                 name: 'Rahul Mehta',
                 role: 'Father of twins',
                 image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80',
-                quote: 'The AI recommendations helped me find vendors within my budget. Everything was perfect for my twins' 5th birthday celebration.'
+                quote: 'The AI recommendations helped me find vendors within my budget. Everything was perfect for my twins\' 5th birthday celebration.'
               },
               {
                 name: 'Anita Desai',
@@ -103,7 +103,7 @@ const Index = () => {
                     />
                   ))}
                 </div>
-                <p className="text-gray-600 italic">"{testimonial.quote}"</p>
+                <p className="text-gray-600 italic">&quot;{testimonial.quote}&quot;</p>
               </div>
             ))}
           </div>
