@@ -4,13 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, DollarSign, Users, Clock } from 'lucide-react';
+import { Calendar, DollarSign, Users, Clock, Bell } from 'lucide-react';
 import BookingsList from '@/components/dashboard/BookingsList';
 import EarningsOverview from '@/components/dashboard/EarningsOverview';
 import { toast } from '@/hooks/use-toast';
 
 const VendorDashboard = () => {
   const [isVendor, setIsVendor] = useState(false);
+  const [hasPendingBookings, setHasPendingBookings] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -89,10 +90,15 @@ const VendorDashboard = () => {
         
         {/* Dashboard Tabs */}
         <Tabs defaultValue="bookings" className="space-y-4">
-          <TabsList>
+          <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
             <TabsTrigger value="bookings" className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               <span>Bookings</span>
+              {hasPendingBookings && (
+                <span className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
+                  2
+                </span>
+              )}
             </TabsTrigger>
             <TabsTrigger value="earnings" className="flex items-center gap-2">
               <DollarSign className="h-4 w-4" />

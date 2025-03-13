@@ -5,8 +5,8 @@ import {
   ChartTooltip, 
   ChartTooltipContent 
 } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip, Legend, LineChart, Line } from "recharts";
-import { CalendarIcon, DownloadIcon, FilterIcon } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip, Legend, LineChart, Line, PieChart, Pie, Cell } from "recharts";
+import { CalendarIcon, DownloadIcon, FilterIcon, TrendingUpIcon, ActivityIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 // Mock earnings data
@@ -33,15 +33,32 @@ const RECENT_TRANSACTIONS = [
 ];
 
 const EVENT_TYPE_DATA = [
-  { name: 'Kids Events', value: 35 },
-  { name: 'Corporate', value: 25 },
-  { name: 'Weddings', value: 40 },
+  { name: 'Kids Events', value: 35, color: '#3b82f6' },
+  { name: 'Corporate', value: 25, color: '#10b981' },
+  { name: 'Weddings', value: 40, color: '#f59e0b' },
+];
+
+const BOOKING_TREND_DATA = [
+  { month: 'Jan', completed: 5, canceled: 1 },
+  { month: 'Feb', completed: 7, canceled: 2 },
+  { month: 'Mar', completed: 10, canceled: 1 },
+  { month: 'Apr', completed: 8, canceled: 2 },
+  { month: 'May', completed: 12, canceled: 3 },
+  { month: 'Jun', completed: 15, canceled: 2 },
 ];
 
 const CHART_CONFIG = {
   earnings: {
     label: "Earnings",
     theme: { light: "#7c3aed", dark: "#a78bfa" },
+  },
+  completed: {
+    label: "Completed",
+    theme: { light: "#10b981", dark: "#34d399" },
+  },
+  canceled: {
+    label: "Canceled",
+    theme: { light: "#ef4444", dark: "#f87171" },
   }
 };
 
@@ -125,120 +142,143 @@ const EarningsOverview = () => {
         </Card>
       </div>
 
-      {/* Earnings Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Monthly Earnings</CardTitle>
-          <CardDescription>
-            Revenue breakdown by month
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="h-80">
-            <ChartContainer config={CHART_CONFIG}>
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={MONTHLY_DATA}
-                  margin={{
-                    top: 20,
-                    right: 30,
-                    left: 20,
-                    bottom: 20,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="earnings" name="earnings" fill="var(--color-earnings)" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Dashboard Insights Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Earnings Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Monthly Earnings</CardTitle>
+            <CardDescription>
+              Revenue breakdown by month
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-80">
+              <ChartContainer config={CHART_CONFIG}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={MONTHLY_DATA}
+                    margin={{
+                      top: 20,
+                      right: 30,
+                      left: 20,
+                      bottom: 20,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Bar dataKey="earnings" name="earnings" fill="var(--color-earnings)" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </div>
+          </CardContent>
+        </Card>
 
-      {/* Latest Transactions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Transactions</CardTitle>
-          <CardDescription>
-            Your most recent bookings and payments
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-8">
-            {RECENT_TRANSACTIONS.map((transaction) => (
-              <div key={transaction.id} className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium">{transaction.customerName}</p>
-                  <p className="text-xs text-gray-500">{transaction.service}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-bold">${transaction.amount}</p>
-                  <p className="text-xs text-gray-500">
-                    {new Date(transaction.date).toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Event Type Breakdown */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Event Type Distribution</CardTitle>
-          <CardDescription>
-            Breakdown of bookings by event type
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="h-64">
-            <ChartContainer config={CHART_CONFIG_PIE}>
+        {/* Event Type Distribution */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Event Type Distribution</CardTitle>
+            <CardDescription>
+              Breakdown of bookings by event type
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={[
-                    { month: 'Jan', kids: 8, corporate: 5, weddings: 6 },
-                    { month: 'Feb', kids: 10, corporate: 7, weddings: 8 },
-                    { month: 'Mar', kids: 12, corporate: 9, weddings: 10 },
-                    { month: 'Apr', kids: 15, corporate: 10, weddings: 12 },
-                    { month: 'May', kids: 18, corporate: 12, weddings: 15 },
-                    { month: 'Jun', kids: 20, corporate: 15, weddings: 18 },
-                  ]}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="kids"
-                    name="Kids Events"
-                    stroke="var(--color-kids)"
-                    activeDot={{ r: 8 }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="corporate"
-                    name="Corporate"
-                    stroke="var(--color-corporate)"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="weddings"
-                    name="Weddings"
-                    stroke="var(--color-weddings)"
-                  />
-                </LineChart>
+                <PieChart>
+                  <Pie
+                    data={EVENT_TYPE_DATA}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {EVENT_TYPE_DATA.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
+                </PieChart>
               </ResponsiveContainer>
-            </ChartContainer>
-          </div>
-        </CardContent>
-      </Card>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Booking Trends */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Booking Trends</CardTitle>
+            <CardDescription>
+              Completed vs canceled bookings
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-80">
+              <ChartContainer config={CHART_CONFIG}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={BOOKING_TREND_DATA}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey="completed"
+                      name="completed"
+                      stroke="var(--color-completed)"
+                      activeDot={{ r: 8 }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="canceled"
+                      name="canceled"
+                      stroke="var(--color-canceled)"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Latest Transactions */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Transactions</CardTitle>
+            <CardDescription>
+              Your most recent bookings and payments
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-8">
+              {RECENT_TRANSACTIONS.map((transaction) => (
+                <div key={transaction.id} className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium">{transaction.customerName}</p>
+                    <p className="text-xs text-gray-500">{transaction.service}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold">${transaction.amount}</p>
+                    <p className="text-xs text-gray-500">
+                      {new Date(transaction.date).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
