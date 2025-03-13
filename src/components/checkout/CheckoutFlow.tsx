@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -11,8 +10,8 @@ import Policies from './Policies';
 import OrderSummary from './OrderSummary';
 import LastMinuteRecommendations from './LastMinuteRecommendations';
 import CheckoutSteps from './CheckoutSteps';
+import CartSection from './CartSection';
 
-// Sample checkout data that would normally come from a cart or context
 const initialCheckoutData = {
   services: [
     {
@@ -21,6 +20,7 @@ const initialCheckoutData = {
       price: 25000,
       date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       image: 'https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      quantity: 1,
     },
     {
       id: '2',
@@ -28,6 +28,7 @@ const initialCheckoutData = {
       price: 35000,
       date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       image: 'https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      quantity: 1,
     }
   ],
   totalPrice: 60000,
@@ -42,6 +43,40 @@ const CheckoutFlow = () => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
   const [agreedToPolicies, setAgreedToPolicies] = useState(false);
+  
+  const handleUpdateQuantity = (serviceId: string, newQuantity: number) => {
+    const updatedServices = checkoutData.services.map(service => 
+      service.id === serviceId ? { ...service, quantity: newQuantity } : service
+    );
+    
+    const newTotalPrice = updatedServices.reduce(
+      (total, service) => total + (service.price * service.quantity), 0
+    );
+    
+    setCheckoutData({
+      ...checkoutData,
+      services: updatedServices,
+      totalPrice: newTotalPrice,
+      discountedPrice: newTotalPrice - checkoutData.discountAmount
+    });
+  };
+  
+  const handleRemoveService = (serviceId: string) => {
+    const updatedServices = checkoutData.services.filter(service => 
+      service.id !== serviceId
+    );
+    
+    const newTotalPrice = updatedServices.reduce(
+      (total, service) => total + (service.price * service.quantity), 0
+    );
+    
+    setCheckoutData({
+      ...checkoutData,
+      services: updatedServices,
+      totalPrice: newTotalPrice,
+      discountedPrice: newTotalPrice - checkoutData.discountAmount
+    });
+  };
   
   const handleApplyDiscount = (code: string, amount: number) => {
     setCheckoutData({
@@ -79,18 +114,27 @@ const CheckoutFlow = () => {
   };
 
   const canProceedToNext = () => {
-    if (currentStep === 1) return true; // Service review
-    if (currentStep === 2) return !!selectedAddress; // Address selection
-    if (currentStep === 3) return true; // Date review
-    if (currentStep === 4) return !!selectedPaymentMethod && agreedToPolicies; // Payment & Policies
+    if (currentStep === 1) return checkoutData.services.length > 0;
+    if (currentStep === 2) return !!selectedAddress;
+    if (currentStep === 3) return true;
+    if (currentStep === 4) return !!selectedPaymentMethod && agreedToPolicies;
     return true;
   };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2 space-y-6">
-        {/* Steps progress */}
         <CheckoutSteps currentStep={currentStep} />
+        
+        {currentStep < 5 && (
+          <CartSection 
+            services={checkoutData.services}
+            onUpdateQuantity={handleUpdateQuantity}
+            onRemoveService={handleRemoveService}
+            onSelectPaymentMethod={handleSelectPaymentMethod}
+            selectedMethod={selectedPaymentMethod}
+          />
+        )}
         
         <Card>
           <CardContent className="pt-6">
@@ -155,7 +199,6 @@ const CheckoutFlow = () => {
               </div>
             )}
             
-            {/* Navigation buttons */}
             {currentStep < 5 ? (
               <div className="flex justify-between mt-8">
                 {currentStep > 1 ? (
@@ -187,7 +230,6 @@ const CheckoutFlow = () => {
         </Card>
       </div>
       
-      {/* Order summary sidebar */}
       <div className="lg:col-span-1">
         <div className="sticky top-6">
           <OrderSummary 

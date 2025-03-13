@@ -10,6 +10,7 @@ interface Service {
   price: number;
   date: Date;
   image: string;
+  quantity?: number; // Added quantity as optional
 }
 
 interface OrderSummaryProps {
@@ -40,8 +41,11 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         <div className="space-y-3">
           {services.map((service) => (
             <div key={service.id} className="flex justify-between">
-              <span className="text-gray-600">{service.name}</span>
-              <span>₹{service.price.toLocaleString()}</span>
+              <span className="text-gray-600">
+                {service.name}
+                {(service.quantity && service.quantity > 1) ? ` (x${service.quantity})` : ''}
+              </span>
+              <span>₹{(service.price * (service.quantity || 1)).toLocaleString()}</span>
             </div>
           ))}
           

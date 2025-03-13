@@ -9,6 +9,7 @@ interface Service {
   price: number;
   date: Date;
   image: string;
+  quantity?: number; // Added quantity as optional
 }
 
 interface ServiceSummaryProps {
@@ -36,6 +37,9 @@ const ServiceSummary: React.FC<ServiceSummaryProps> = ({ services }) => {
                 </p>
                 <div className="mt-2 flex justify-between items-center">
                   <p className="text-lg font-semibold">₹{service.price.toLocaleString()}</p>
+                  {service.quantity && service.quantity > 1 && (
+                    <p className="text-gray-600">Quantity: {service.quantity}</p>
+                  )}
                 </div>
               </div>
             </div>
