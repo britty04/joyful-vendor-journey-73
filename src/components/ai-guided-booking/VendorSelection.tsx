@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -72,8 +71,7 @@ const VendorSelection = ({
         image: selectedVendor.image,
         date: selectedDate, // Use the selected date
         time: selectedTime,  // Add time
-        location: selectedCity, // Add location
-        quantity: 1
+        location: selectedCity // Add location
       });
       
       toast({

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Check, ShoppingBag, Sparkles, MapPin, Calendar, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -50,8 +49,7 @@ const RecommendationsSection = ({
           image: recommendation.image,
           date: selectedDate,
           time: selectedTime,
-          location: selectedCity,
-          quantity: 1
+          location: selectedCity
         });
       }
     });
