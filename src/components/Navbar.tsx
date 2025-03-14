@@ -1,9 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, Search, MapPin, HelpCircle } from 'lucide-react';
 import UserAuthNav from './UserAuthNav';
 import CartIcon from './cart/CartIcon';
+import Logo from './Logo';
 import { 
   NavigationMenu,
   NavigationMenuList,
@@ -44,14 +44,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link 
-            to="/" 
-            className="flex items-center"
-          >
-            <span className="text-2xl font-bold bg-gradient-to-r from-eventBlue-600 to-eventPurple-600 bg-clip-text text-transparent">
-              EventHive
-            </span>
-          </Link>
+          <Logo size="md" />
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
