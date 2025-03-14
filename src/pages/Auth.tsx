@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import Layout from '../components/Layout';
+import { User, Store, ShieldCheck } from 'lucide-react';
 
 const Auth = () => {
   const [authType, setAuthType] = useState("login");
@@ -167,9 +168,18 @@ const Auth = () => {
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Role</SelectLabel>
-                          <SelectItem value="customer">Customer</SelectItem>
-                          <SelectItem value="vendor">Vendor</SelectItem>
-                          <SelectItem value="admin">Admin</SelectItem>
+                          <SelectItem value="customer" className="flex items-center gap-2">
+                            <User className="h-4 w-4" />
+                            <span>Customer</span>
+                          </SelectItem>
+                          <SelectItem value="vendor" className="flex items-center gap-2">
+                            <Store className="h-4 w-4" />
+                            <span>Vendor</span>
+                          </SelectItem>
+                          <SelectItem value="admin" className="flex items-center gap-2">
+                            <ShieldCheck className="h-4 w-4" />
+                            <span>Admin</span>
+                          </SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -220,9 +230,18 @@ const Auth = () => {
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Role</SelectLabel>
-                          <SelectItem value="customer">Customer</SelectItem>
-                          <SelectItem value="vendor">Vendor</SelectItem>
-                          <SelectItem value="admin">Admin</SelectItem>
+                          <SelectItem value="customer" className="flex items-center gap-2">
+                            <User className="h-4 w-4" />
+                            <span>Customer</span>
+                          </SelectItem>
+                          <SelectItem value="vendor" className="flex items-center gap-2">
+                            <Store className="h-4 w-4" />
+                            <span>Vendor</span>
+                          </SelectItem>
+                          <SelectItem value="admin" className="flex items-center gap-2">
+                            <ShieldCheck className="h-4 w-4" />
+                            <span>Admin</span>
+                          </SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
