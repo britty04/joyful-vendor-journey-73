@@ -1,9 +1,11 @@
+
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, Search, MapPin, HelpCircle } from 'lucide-react';
 import UserAuthNav from './UserAuthNav';
 import CartIcon from './cart/CartIcon';
 import Logo from './Logo';
+import { Button } from '@/components/ui/button';
 import { 
   NavigationMenu,
   NavigationMenuList,
@@ -43,8 +45,22 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo */}
-          <Logo size="md" />
+          {/* Logo and Become Vendor Button (Desktop) */}
+          <div className="flex items-center gap-4">
+            <Logo size="md" />
+            <Link 
+              to="/vendor/onboarding" 
+              className="hidden md:block"
+            >
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="bg-white/80 hover:bg-white border-eventPurple-300 text-eventPurple-700 hover:text-eventPurple-900 hover:border-eventPurple-500 transition-all"
+              >
+                Become a Vendor
+              </Button>
+            </Link>
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
@@ -257,9 +273,6 @@ const Navbar = () => {
               <HelpCircle className="h-5 w-5" />
             </Link>
             <UserAuthNav />
-            <Link to="/vendor/onboarding" className="rounded-full bg-primary text-white px-4 py-2 font-medium transition-all hover:bg-primary/90 active:scale-95">
-              Become a Vendor
-            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -444,10 +457,14 @@ const Navbar = () => {
             <div className="pt-4 border-t border-gray-200">
               <Link 
                 to="/vendor/onboarding"
-                className="w-full rounded-full bg-primary text-white px-4 py-2 font-medium transition-all hover:bg-primary/90 active:scale-95 block text-center"
+                className="w-full block text-center"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Become a Vendor
+                <Button 
+                  className="w-full bg-gradient-to-r from-eventBlue-600 to-eventPurple-600 text-white hover:from-eventBlue-700 hover:to-eventPurple-700"
+                >
+                  Become a Vendor
+                </Button>
               </Link>
             </div>
           </div>
