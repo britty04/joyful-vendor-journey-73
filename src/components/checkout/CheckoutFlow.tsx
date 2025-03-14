@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CartSection from './CartSection';
 import OrderSummary from './OrderSummary';
@@ -8,6 +8,7 @@ import CheckoutSteps from './CheckoutSteps';
 import CheckoutStepContent from './CheckoutStepContent';
 import { useCheckoutState } from '@/hooks/useCheckoutState';
 import { generateBookingDetails } from '@/utils/bookingUtils';
+import { toast } from '@/hooks/use-toast';
 
 interface CheckoutFlowProps {
   onOrderComplete?: () => void;
@@ -16,27 +17,49 @@ interface CheckoutFlowProps {
 const CheckoutFlow: React.FC<CheckoutFlowProps> = ({ onOrderComplete }) => {
   const navigate = useNavigate();
   const { checkoutState, handlers } = useCheckoutState();
+  const [isProcessingOrder, setIsProcessingOrder] = useState(false);
   
   const handleCompleteBooking = () => {
-    // Create booking data
-    const bookingDetails = generateBookingDetails(
-      checkoutState.checkoutData.services,
-      checkoutState.checkoutData.discountedPrice,
-      checkoutState.paymentDetails,
-      checkoutState.selectedPaymentMethod
-    );
+    setIsProcessingOrder(true);
     
-    // Save to localStorage for persistence
-    localStorage.setItem('lastBooking', JSON.stringify(bookingDetails));
-    
-    // Clear cart
-    if (onOrderComplete) {
-      onOrderComplete();
-    }
-    handlers.clearCart();
-    
-    // Navigate to success page
-    navigate('/booking/success', { state: { bookingDetails } });
+    // Simulate API call with a timeout
+    setTimeout(() => {
+      try {
+        // Create booking data
+        const bookingDetails = generateBookingDetails(
+          checkoutState.checkoutData.services,
+          checkoutState.checkoutData.discountedPrice,
+          checkoutState.paymentDetails,
+          checkoutState.selectedPaymentMethod
+        );
+        
+        // Save to localStorage for persistence
+        localStorage.setItem('lastBooking', JSON.stringify(bookingDetails));
+        
+        // Show success toast
+        toast({
+          title: "Booking Successful",
+          description: "Your booking has been confirmed!",
+        });
+        
+        // Clear cart
+        if (onOrderComplete) {
+          onOrderComplete();
+        }
+        handlers.clearCart();
+        
+        // Navigate to success page
+        navigate('/booking/success', { state: { bookingDetails } });
+      } catch (error) {
+        console.error("Error processing booking:", error);
+        toast({
+          title: "Error",
+          description: "There was an error processing your booking. Please try again.",
+          variant: "destructive",
+        });
+        setIsProcessingOrder(false);
+      }
+    }, 2000);
   };
 
   // Override the next step function for the final step
@@ -73,7 +96,7 @@ const CheckoutFlow: React.FC<CheckoutFlowProps> = ({ onOrderComplete }) => {
           checkoutData={checkoutState.checkoutData}
           selectedAddress={checkoutState.selectedAddress}
           selectedPaymentMethod={checkoutState.selectedPaymentMethod}
-          isProcessingPayment={checkoutState.isProcessingPayment}
+          isProcessingPayment={checkoutState.isProcessingPayment || isProcessingOrder}
           agreedToPolicies={checkoutState.agreedToPolicies}
           handlers={enhancedHandlers}
         />
@@ -88,6 +111,9 @@ const CheckoutFlow: React.FC<CheckoutFlowProps> = ({ onOrderComplete }) => {
             discountedPrice={checkoutState.checkoutData.discountedPrice}
             discountCode={checkoutState.checkoutData.discountCode}
           />
+          {checkoutState.currentStep < 4 && (
+            <LastMinuteRecommendations />
+          )}
         </div>
       </div>
     </div>

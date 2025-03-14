@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from '@/components/ui/card';
 import Layout from '../components/Layout';
@@ -9,21 +9,32 @@ import { AdminLocationManager } from '@/components/admin/AdminLocationManager';
 import { AdminPhotosReview } from '@/components/admin/AdminPhotosReview';
 import AdminVendorManager from '@/components/admin/AdminVendorManager';
 import AdminSupportTickets from '@/components/admin/AdminSupportTickets';
+import { Badge } from '@/components/ui/badge';
 
 const AdminDashboard = () => {
+  const [activeTab, setActiveTab] = useState('analytics');
+  const pendingTickets = 3; // This would come from an API in a real app
+  
   return (
     <Layout>
       <div className="container mx-auto py-10 px-4">
         <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
         
-        <Tabs defaultValue="analytics">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="mb-6">
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="vendors">Vendor Applications</TabsTrigger>
             <TabsTrigger value="vendorManagement">Vendor Management</TabsTrigger>
             <TabsTrigger value="locations">Locations</TabsTrigger>
             <TabsTrigger value="photos">Photos</TabsTrigger>
-            <TabsTrigger value="support">Support Tickets</TabsTrigger>
+            <TabsTrigger value="support" className="relative">
+              Support Tickets
+              {pendingTickets > 0 && (
+                <Badge variant="destructive" className="ml-2">
+                  {pendingTickets}
+                </Badge>
+              )}
+            </TabsTrigger>
             <TabsTrigger value="events">Events</TabsTrigger>
           </TabsList>
           

@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 interface Service {
   id: string;
@@ -55,7 +56,9 @@ const PopularServices = () => {
               <h3 className="font-semibold text-base mb-2">{service.name}</h3>
               <div className="flex items-center justify-between">
                 <span className="text-lg font-bold">${service.price}</span>
-                <Button size="sm">Book Now</Button>
+                <Link to={`/checkout?service=${service.id}`}>
+                  <Button size="sm">Book Now</Button>
+                </Link>
               </div>
             </div>
           </div>
