@@ -8,6 +8,7 @@ import { AdminVendorList } from '@/components/admin/AdminVendorList';
 import { AdminLocationManager } from '@/components/admin/AdminLocationManager';
 import { AdminPhotosReview } from '@/components/admin/AdminPhotosReview';
 import AdminVendorManager from '@/components/admin/AdminVendorManager';
+import AdminSupportTickets from '@/components/admin/AdminSupportTickets';
 
 const AdminDashboard = () => {
   return (
@@ -22,6 +23,7 @@ const AdminDashboard = () => {
             <TabsTrigger value="vendorManagement">Vendor Management</TabsTrigger>
             <TabsTrigger value="locations">Locations</TabsTrigger>
             <TabsTrigger value="photos">Photos</TabsTrigger>
+            <TabsTrigger value="support">Support Tickets</TabsTrigger>
             <TabsTrigger value="events">Events</TabsTrigger>
           </TabsList>
           
@@ -50,6 +52,12 @@ const AdminDashboard = () => {
           <TabsContent value="photos">
             <Card className="p-6">
               <AdminPhotosReview />
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="support">
+            <Card className="p-6">
+              <AdminSupportTickets />
             </Card>
           </TabsContent>
           

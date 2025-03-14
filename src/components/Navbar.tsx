@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, Search, MapPin } from 'lucide-react';
+import { Menu, X, Search, MapPin, HelpCircle } from 'lucide-react';
 import UserAuthNav from './UserAuthNav';
 import CartIcon from './cart/CartIcon';
 import { 
@@ -227,6 +227,13 @@ const Navbar = () => {
                     All Vendors
                   </Link>
                 </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <Link to="/support/tickets" className="text-sm font-medium text-gray-700 hover:text-primary transition-colors flex items-center">
+                    <HelpCircle className="h-4 w-4 mr-1" />
+                    Support
+                  </Link>
+                </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
           </nav>
@@ -414,6 +421,16 @@ const Navbar = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 All Vendors
+              </Link>
+              <Link 
+                to="/support/tickets" 
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <div className="flex items-center">
+                  <HelpCircle className="h-4 w-4 mr-2" />
+                  Support
+                </div>
               </Link>
               <Link 
                 to="/guided-booking" 
