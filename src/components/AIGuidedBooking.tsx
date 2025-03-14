@@ -1,9 +1,10 @@
 
 import { useState } from 'react';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Calendar, Clock, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 import { useCart } from '@/contexts/CartContext';
+import { format } from 'date-fns';
 
 import { eventTypes, birthdayPrimaryServices } from './ai-guided-booking/data';
 import EventTypeSelector, { EventType } from './ai-guided-booking/EventTypeSelector';
@@ -12,6 +13,37 @@ import VendorSelection from './ai-guided-booking/VendorSelection';
 import RecommendationsSection from './ai-guided-booking/RecommendationsSection';
 import ProgressSteps from './ai-guided-booking/ProgressSteps';
 import { ServiceRecommendation } from './ai-guided-booking/RecommendationCard';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+// Sample city data
+const cities = [
+  { id: 'delhi', name: 'Delhi' },
+  { id: 'mumbai', name: 'Mumbai' },
+  { id: 'bangalore', name: 'Bangalore' },
+  { id: 'hyderabad', name: 'Hyderabad' },
+  { id: 'chennai', name: 'Chennai' },
+  { id: 'kolkata', name: 'Kolkata' },
+  { id: 'pune', name: 'Pune' },
+  { id: 'ahmedabad', name: 'Ahmedabad' }
+];
+
+// Generate time slots from 9 AM to 9 PM
+const generateTimeSlots = () => {
+  const slots = [];
+  for (let hour = 9; hour <= 21; hour++) {
+    const hourFormatted = hour % 12 === 0 ? 12 : hour % 12;
+    const ampm = hour < 12 ? 'AM' : 'PM';
+    slots.push(`${hourFormatted}:00 ${ampm}`);
+    slots.push(`${hourFormatted}:30 ${ampm}`);
+  }
+  return slots;
+};
+
+const timeSlots = generateTimeSlots();
 
 // Sample vendor data for each primary service
 const mockVendors = {
@@ -197,10 +229,21 @@ const AIGuidedBooking = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [recommendations, setRecommendations] = useState<ServiceRecommendation[]>([]);
   
+  // New state for city, date, and time
+  const [selectedCity, setSelectedCity] = useState(cities[0].id);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedTime, setSelectedTime] = useState(timeSlots[8]); // Default to 1:00 PM
+  
   // Function to get vendors for the selected primary service
   const getVendorsForService = (serviceId: string) => {
     if (serviceId && mockVendors[serviceId as keyof typeof mockVendors]) {
-      return mockVendors[serviceId as keyof typeof mockVendors];
+      // Filter vendors based on availability in the selected city on the selected date
+      return mockVendors[serviceId as keyof typeof mockVendors].filter(vendor => {
+        // In a real app, you would check the vendor's availability based on city, date, and time
+        // For now, we'll just randomly make some vendors available and others not
+        const random = Math.random();
+        return random > 0.3; // 70% of vendors are available
+      });
     }
     return [];
   };
@@ -339,13 +382,82 @@ const AIGuidedBooking = () => {
     return birthdayPrimaryServices.find(s => s.id === primaryService)?.name;
   };
   
-  // Updated progress steps
+  // Updated progress steps to include city/date/time
   const progressSteps = [
     { id: 1, name: "Event Type" },
     { id: 2, name: "Primary Service" },
     { id: 3, name: "Vendor Selection" },
     { id: 4, name: "Add-ons" }
   ];
+
+  // Render city, date, and time selector
+  const renderDateTimeLocation = () => {
+    if (step < 2) return null;
+    
+    return (
+      <div className="mb-8 bg-white p-4 rounded-lg shadow-sm">
+        <h3 className="font-medium text-gray-700 mb-3">Event Details</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
+            <Select value={selectedCity} onValueChange={setSelectedCity}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select city" />
+              </SelectTrigger>
+              <SelectContent>
+                {cities.map(city => (
+                  <SelectItem key={city.id} value={city.id}>
+                    {city.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start text-left font-normal"
+                >
+                  <Calendar className="mr-2 h-4 w-4" />
+                  {selectedDate ? format(selectedDate, 'PPP') : <span>Pick a date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarComponent
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={(date) => date && setSelectedDate(date)}
+                  disabled={(date) => date < new Date()}
+                  initialFocus
+                  className="p-3 pointer-events-auto"
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Time</label>
+            <Select value={selectedTime} onValueChange={setSelectedTime}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select time" />
+              </SelectTrigger>
+              <SelectContent>
+                {timeSlots.map(time => (
+                  <SelectItem key={time} value={time}>
+                    {time}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 relative">
@@ -406,6 +518,9 @@ const AIGuidedBooking = () => {
           </ol>
         </div>
         
+        {/* City, Date, and Time Selector */}
+        {renderDateTimeLocation()}
+        
         {/* Step 1: Select Event Type */}
         {step === 1 && (
           <EventTypeSelector 
@@ -435,6 +550,9 @@ const AIGuidedBooking = () => {
             onSelectVendor={handleSelectVendor}
             onBack={handleBack}
             onContinue={handleVendorContinue}
+            selectedCity={cities.find(city => city.id === selectedCity)?.name || ''}
+            selectedDate={selectedDate}
+            selectedTime={selectedTime}
           />
         )}
         
@@ -449,6 +567,9 @@ const AIGuidedBooking = () => {
             eventName={selectedEvent?.name}
             onBack={handleBack}
             onSubmit={handleSubmit}
+            selectedCity={cities.find(city => city.id === selectedCity)?.name || ''}
+            selectedDate={selectedDate}
+            selectedTime={selectedTime}
           />
         )}
       </div>

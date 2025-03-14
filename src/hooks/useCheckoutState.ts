@@ -17,6 +17,11 @@ export interface CheckoutState {
   paymentDetails: PaymentDetails | null;
   isProcessingPayment: boolean;
   agreedToPolicies: boolean;
+  eventDetails: {
+    city: string | null;
+    date: Date | null;
+    time: string | null;
+  };
 }
 
 export function useCheckoutState() {
@@ -34,6 +39,11 @@ export function useCheckoutState() {
   const [paymentDetails, setPaymentDetails] = useState<PaymentDetails | null>(null);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [agreedToPolicies, setAgreedToPolicies] = useState(false);
+  const [eventDetails, setEventDetails] = useState({
+    city: null as string | null,
+    date: null as Date | null,
+    time: null as string | null,
+  });
 
   // Update checkout data when cart items change
   useEffect(() => {
@@ -43,6 +53,15 @@ export function useCheckoutState() {
       totalPrice: subtotal,
       discountedPrice: subtotal - prev.discountAmount,
     }));
+    
+    // Extract event details from cart items if available
+    if (cartItems.length > 0 && cartItems[0].location) {
+      setEventDetails({
+        city: cartItems[0].location,
+        date: cartItems[0].date || null,
+        time: cartItems[0].time || null,
+      });
+    }
   }, [cartItems, subtotal]);
 
   const handleUpdateQuantity = (serviceId: string, newQuantity: number) => {
@@ -72,6 +91,17 @@ export function useCheckoutState() {
 
   const handlePolicyAgreement = (agreed: boolean) => {
     setAgreedToPolicies(agreed);
+  };
+
+  const handleUpdateEventDetails = (details: {
+    city?: string | null;
+    date?: Date | null;
+    time?: string | null;
+  }) => {
+    setEventDetails(prev => ({
+      ...prev,
+      ...details
+    }));
   };
 
   const handleProcessPayment = (details: PaymentDetails) => {
@@ -120,7 +150,8 @@ export function useCheckoutState() {
       selectedPaymentMethod,
       paymentDetails,
       isProcessingPayment,
-      agreedToPolicies
+      agreedToPolicies,
+      eventDetails
     },
     handlers: {
       handleUpdateQuantity,
@@ -130,6 +161,7 @@ export function useCheckoutState() {
       handleSelectPaymentMethod,
       handlePolicyAgreement,
       handleProcessPayment,
+      handleUpdateEventDetails,
       nextStep,
       prevStep,
       canProceedToNext,
