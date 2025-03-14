@@ -227,13 +227,6 @@ const Navbar = () => {
                     All Vendors
                   </Link>
                 </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <Link to="/support/tickets" className="text-sm font-medium text-gray-700 hover:text-primary transition-colors flex items-center">
-                    <HelpCircle className="h-4 w-4 mr-1" />
-                    Support
-                  </Link>
-                </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
           </nav>
@@ -263,6 +256,13 @@ const Navbar = () => {
               <Search size={20} />
             </button>
             <CartIcon />
+            <Link 
+              to="/support/tickets" 
+              className="text-gray-500 hover:text-primary transition-colors" 
+              title="Support"
+            >
+              <HelpCircle className="h-5 w-5" />
+            </Link>
             <UserAuthNav />
             <Link to="/vendor/onboarding" className="rounded-full bg-primary text-white px-4 py-2 font-medium transition-all hover:bg-primary/90 active:scale-95">
               Become a Vendor
