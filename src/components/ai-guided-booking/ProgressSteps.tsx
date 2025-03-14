@@ -2,24 +2,32 @@
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 
-interface ProgressStepsProps {
-  currentStep: number;
+interface Step {
+  id: number;
+  name: string;
 }
 
-const ProgressSteps = ({ currentStep }: ProgressStepsProps) => {
-  const steps = [
+interface ProgressStepsProps {
+  currentStep: number;
+  steps?: Step[];
+}
+
+const ProgressSteps = ({ currentStep, steps }: ProgressStepsProps) => {
+  const defaultSteps = [
     { id: 1, name: "Event Type" },
     { id: 2, name: "Primary Service" },
     { id: 3, name: "Recommendations" }
   ];
+  
+  const displaySteps = steps || defaultSteps;
 
   return (
     <div className="mb-10">
       <ol className="flex items-center w-full">
-        {steps.map((step, i) => (
+        {displaySteps.map((step, i) => (
           <li key={step.id} className={cn(
             "flex items-center relative",
-            i < steps.length - 1 ? "w-full" : ""
+            i < displaySteps.length - 1 ? "w-full" : ""
           )}>
             <div className={cn(
               "flex items-center justify-center w-8 h-8 rounded-full shrink-0 z-10 transition-all",
@@ -43,7 +51,7 @@ const ProgressSteps = ({ currentStep }: ProgressStepsProps) => {
             </span>
             
             {/* Connector line */}
-            {i < steps.length - 1 && (
+            {i < displaySteps.length - 1 && (
               <div className={cn(
                 "w-full h-0.5 mx-4 transition-colors",
                 currentStep > step.id ? "bg-primary" : "bg-gray-200"

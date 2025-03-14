@@ -31,6 +31,24 @@ const RecommendationsSection = ({
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [currentCategory, setCurrentCategory] = useState<string | null>(null);
+
+  // Group recommendations by type
+  const groupedRecommendations = recommendations.reduce((acc, recommendation) => {
+    if (!acc[recommendation.type]) {
+      acc[recommendation.type] = [];
+    }
+    acc[recommendation.type].push(recommendation);
+    return acc;
+  }, {} as Record<string, ServiceRecommendation[]>);
+
+  // Get unique categories
+  const categories = Object.keys(groupedRecommendations);
+
+  // Initialize current category if not set
+  if (categories.length > 0 && !currentCategory) {
+    setCurrentCategory(categories[0]);
+  }
 
   const handleComplete = () => {
     setIsProcessing(true);
@@ -67,6 +85,18 @@ const RecommendationsSection = ({
     }, 1000);
   };
 
+  const getCategoryTitle = (category: string) => {
+    switch(category) {
+      case 'mascot': return 'Character Mascots';
+      case 'cake': return 'Custom Cakes';
+      case 'photographer': return 'Photography';
+      case 'decorator': return 'Decorations';
+      case 'catering': return 'Catering Services';
+      case 'games': return 'Games & Activities';
+      default: return category.charAt(0).toUpperCase() + category.slice(1);
+    }
+  };
+
   return (
     <div className="animate-fade-in">
       <div className="mb-6">
@@ -76,10 +106,10 @@ const RecommendationsSection = ({
           </div>
         </div>
         <h2 className="text-xl font-semibold text-gray-800 mb-2 text-center">
-          AI-Recommended Services
+          Complementary Services
         </h2>
         <p className="text-center text-gray-600 mb-2">
-          Based on your {eventName?.toLowerCase()} with {primaryServiceName}, we recommend:
+          Based on your {eventName?.toLowerCase()} with {primaryServiceName}, we recommend these additional services:
         </p>
       </div>
       
@@ -90,16 +120,43 @@ const RecommendationsSection = ({
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {recommendations.map((recommendation) => (
-              <RecommendationCard
-                key={recommendation.id}
-                recommendation={recommendation}
-                isSelected={selectedServices.includes(recommendation.id)}
-                onToggleSelection={onToggleSelection}
-              />
-            ))}
-          </div>
+          {/* Category tabs */}
+          {categories.length > 1 && (
+            <div className="flex overflow-x-auto pb-2 mb-6">
+              {categories.map(category => (
+                <button
+                  key={category}
+                  onClick={() => setCurrentCategory(category)}
+                  className={`px-4 py-2 whitespace-nowrap mx-1 rounded-full transition-all ${
+                    currentCategory === category 
+                      ? 'bg-primary text-white' 
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {getCategoryTitle(category)}
+                </button>
+              ))}
+            </div>
+          )}
+          
+          {/* Current category recommendations */}
+          {currentCategory && (
+            <>
+              <h3 className="text-lg font-medium text-gray-800 mb-4">
+                {getCategoryTitle(currentCategory)}
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                {groupedRecommendations[currentCategory]?.map((recommendation) => (
+                  <RecommendationCard
+                    key={recommendation.id}
+                    recommendation={recommendation}
+                    isSelected={selectedServices.includes(recommendation.id)}
+                    onToggleSelection={onToggleSelection}
+                  />
+                ))}
+              </div>
+            </>
+          )}
           
           <div className="flex justify-between items-center">
             <Button variant="outline" onClick={onBack}>

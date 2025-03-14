@@ -8,9 +8,183 @@ import { useCart } from '@/contexts/CartContext';
 import { eventTypes, birthdayPrimaryServices } from './ai-guided-booking/data';
 import EventTypeSelector, { EventType } from './ai-guided-booking/EventTypeSelector';
 import PrimaryServiceSelector from './ai-guided-booking/PrimaryServiceSelector';
+import VendorSelection from './ai-guided-booking/VendorSelection';
 import RecommendationsSection from './ai-guided-booking/RecommendationsSection';
 import ProgressSteps from './ai-guided-booking/ProgressSteps';
 import { ServiceRecommendation } from './ai-guided-booking/RecommendationCard';
+
+// Sample vendor data for each primary service
+const mockVendors = {
+  magician: [
+    {
+      id: 'v-mag-1',
+      name: 'Magic Mike',
+      description: 'Professional magician with 10+ years of experience in birthday parties.',
+      image: 'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.9,
+      price: 8500,
+      responseTime: 'Under 1 hour'
+    },
+    {
+      id: 'v-mag-2',
+      name: 'Mystic Mandy',
+      description: 'Specializing in close-up magic and mind-reading performances.',
+      image: 'https://images.unsplash.com/photo-1551269901-5c5e14c25df7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.7,
+      price: 7500,
+      responseTime: '2 hours'
+    },
+    {
+      id: 'v-mag-3',
+      name: 'Wizard Wonders',
+      description: 'Family-friendly magic shows with audience participation and humor.',
+      image: 'https://images.unsplash.com/photo-1543157144-f636a331e10c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.8,
+      price: 9000,
+      responseTime: 'Under 3 hours'
+    }
+  ],
+  dj: [
+    {
+      id: 'v-dj-1',
+      name: 'Beats Master',
+      description: 'DJ with extensive music collection perfect for children\'s parties.',
+      image: 'https://images.unsplash.com/photo-1571266028253-6c868a7f9d78?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.8,
+      price: 12000,
+      responseTime: 'Under 2 hours'
+    },
+    {
+      id: 'v-dj-2',
+      name: 'Groove Central',
+      description: 'High-energy DJ service with lighting and special effects.',
+      image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.9,
+      price: 15000,
+      responseTime: '1 hour'
+    }
+  ],
+  catering: [
+    {
+      id: 'v-cat-1',
+      name: 'Delicious Delights',
+      description: 'Kid-friendly catering with colorful and tasty menu options.',
+      image: 'https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.7,
+      price: 350,
+      responseTime: 'Under 3 hours'
+    },
+    {
+      id: 'v-cat-2',
+      name: 'Party Platters',
+      description: 'Customizable menu options for all dietary preferences.',
+      image: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.6,
+      price: 400,
+      responseTime: '2 hours'
+    }
+  ],
+  venue: [
+    {
+      id: 'v-ven-1',
+      name: 'Wonder Palace',
+      description: 'Indoor venue with themed rooms and play areas for children.',
+      image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.8,
+      price: 25000,
+      responseTime: 'Under 4 hours'
+    },
+    {
+      id: 'v-ven-2',
+      name: 'Garden Celebrations',
+      description: 'Beautiful outdoor venue with covered areas and play equipment.',
+      image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.9,
+      price: 30000,
+      responseTime: '1 hour'
+    }
+  ],
+  decoration: [
+    {
+      id: 'v-dec-1',
+      name: 'Balloon Wonderland',
+      description: 'Specializing in elaborate balloon decorations and arches.',
+      image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.7,
+      price: 15000,
+      responseTime: 'Under 2 hours'
+    },
+    {
+      id: 'v-dec-2',
+      name: 'Theme Masters',
+      description: 'Custom theme decorations for any party concept.',
+      image: 'https://images.unsplash.com/photo-1623091453747-f2bb67b9b814?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.8,
+      price: 18000,
+      responseTime: '3 hours'
+    }
+  ],
+  photographer: [
+    {
+      id: 'v-photo-1',
+      name: 'Candid Captures',
+      description: 'Specialized in photographing children and family events.',
+      image: 'https://images.unsplash.com/photo-1552334823-a04707f8943d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.9,
+      price: 10000,
+      responseTime: 'Under 1 hour'
+    },
+    {
+      id: 'v-photo-2',
+      name: 'Memory Makers',
+      description: 'Photography and video services for all special moments.',
+      image: 'https://images.unsplash.com/photo-1599902981319-2afdcb292386?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.8,
+      price: 12000,
+      responseTime: '2 hours'
+    }
+  ],
+  cake: [
+    {
+      id: 'v-cake-1',
+      name: 'Sweet Creations',
+      description: 'Custom-designed cakes for any theme or character.',
+      image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.9,
+      price: 2000,
+      responseTime: '1 hour'
+    },
+    {
+      id: 'v-cake-2',
+      name: 'Fondant Fantasy',
+      description: 'Artistically crafted cakes with premium ingredients.',
+      image: 'https://images.unsplash.com/photo-1621303837174-89787a7d4729?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.8,
+      price: 2500,
+      responseTime: 'Under 2 hours'
+    }
+  ],
+  host: [
+    {
+      id: 'v-host-1',
+      name: 'Fun Facilitator',
+      description: 'Engaging MC who keeps the party flowing with games and activities.',
+      image: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.7,
+      price: 7000,
+      responseTime: 'Under 3 hours'
+    },
+    {
+      id: 'v-host-2',
+      name: 'Party Pro',
+      description: 'Professional host with experience in managing children\'s events.',
+      image: 'https://images.unsplash.com/photo-1530023367847-a683933f4172?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      rating: 4.8,
+      price: 8000,
+      responseTime: '2 hours'
+    }
+  ]
+};
 
 const AIGuidedBooking = () => {
   const navigate = useNavigate();
@@ -18,9 +192,18 @@ const AIGuidedBooking = () => {
   const [step, setStep] = useState(1);
   const [selectedEvent, setSelectedEvent] = useState<EventType | null>(null);
   const [primaryService, setPrimaryService] = useState<string | null>(null);
+  const [selectedVendorId, setSelectedVendorId] = useState<string | null>(null);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [recommendations, setRecommendations] = useState<ServiceRecommendation[]>([]);
+  
+  // Function to get vendors for the selected primary service
+  const getVendorsForService = (serviceId: string) => {
+    if (serviceId && mockVendors[serviceId as keyof typeof mockVendors]) {
+      return mockVendors[serviceId as keyof typeof mockVendors];
+    }
+    return [];
+  };
   
   // Mock function to get recommendations based on event type and primary service
   const fetchRecommendations = async (eventType: string, primaryService: string) => {
@@ -109,26 +292,16 @@ const AIGuidedBooking = () => {
 
   const handleSelectPrimaryService = (serviceId: string) => {
     setPrimaryService(serviceId);
-    
-    // Also add the primary service to cart
-    const service = birthdayPrimaryServices.find(s => s.id === serviceId);
-    if (service) {
-      addToCart({
-        id: service.id,
-        name: service.name,
-        price: parseFloat(service.price.replace(/[₹,]/g, '')),
-        image: service.image,
-        date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // Event date a week from now
-      });
-      
-      toast({
-        title: "Primary service added to cart",
-        description: `${service.name} has been added to your cart.`,
-      });
-    }
-    
-    fetchRecommendations(selectedEvent?.id || '', serviceId);
     setStep(3);
+  };
+  
+  const handleSelectVendor = (vendorId: string) => {
+    setSelectedVendorId(vendorId);
+  };
+  
+  const handleVendorContinue = () => {
+    fetchRecommendations(selectedEvent?.id || '', primaryService || '');
+    setStep(4);
   };
 
   const toggleServiceSelection = (serviceId: string) => {
@@ -150,12 +323,29 @@ const AIGuidedBooking = () => {
   const handleBack = () => {
     if (step > 1) {
       setStep(step - 1);
+      
+      // Reset relevant state when going back
+      if (step === 4) {
+        setSelectedServices([]);
+      } else if (step === 3) {
+        setSelectedVendorId(null);
+      } else if (step === 2) {
+        setPrimaryService(null);
+      }
     }
   };
 
   const getPrimaryServiceName = () => {
     return birthdayPrimaryServices.find(s => s.id === primaryService)?.name;
   };
+  
+  // Updated progress steps
+  const progressSteps = [
+    { id: 1, name: "Event Type" },
+    { id: 2, name: "Primary Service" },
+    { id: 3, name: "Vendor Selection" },
+    { id: 4, name: "Add-ons" }
+  ];
 
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 relative">
@@ -178,7 +368,43 @@ const AIGuidedBooking = () => {
         </div>
         
         {/* Progress Steps */}
-        <ProgressSteps currentStep={step} />
+        <div className="mb-10">
+          <ol className="flex items-center w-full">
+            {progressSteps.map((progressStep, i) => (
+              <li key={progressStep.id} className={`flex items-center relative ${
+                i < progressSteps.length - 1 ? "w-full" : ""
+              }`}>
+                <div className={`flex items-center justify-center w-8 h-8 rounded-full shrink-0 z-10 transition-all ${
+                  step > progressStep.id 
+                    ? "bg-primary text-white" 
+                    : step === progressStep.id 
+                      ? "bg-primary/20 text-primary border-2 border-primary" 
+                      : "bg-gray-100 text-gray-500 border-2 border-gray-200"
+                }`}>
+                  {step > progressStep.id ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  ) : (
+                    <span className="text-sm font-semibold">{progressStep.id}</span>
+                  )}
+                </div>
+                <span className={`ml-2 text-sm font-medium transition-colors ${
+                  step >= progressStep.id ? "text-primary" : "text-gray-500"
+                }`}>
+                  {progressStep.name}
+                </span>
+                
+                {/* Connector line */}
+                {i < progressSteps.length - 1 && (
+                  <div className={`w-full h-0.5 mx-4 transition-colors ${
+                    step > progressStep.id ? "bg-primary" : "bg-gray-200"
+                  }`} />
+                )}
+              </li>
+            ))}
+          </ol>
+        </div>
         
         {/* Step 1: Select Event Type */}
         {step === 1 && (
@@ -199,8 +425,21 @@ const AIGuidedBooking = () => {
           />
         )}
         
-        {/* Step 3: Recommendations */}
-        {step === 3 && primaryService && (
+        {/* Step 3: Vendor Selection */}
+        {step === 3 && primaryService && selectedEvent && (
+          <VendorSelection
+            primaryServiceName={getPrimaryServiceName() || ''}
+            primaryServiceId={primaryService}
+            vendors={getVendorsForService(primaryService)}
+            selectedVendorId={selectedVendorId}
+            onSelectVendor={handleSelectVendor}
+            onBack={handleBack}
+            onContinue={handleVendorContinue}
+          />
+        )}
+        
+        {/* Step 4: Recommendations for complementary services */}
+        {step === 4 && primaryService && (
           <RecommendationsSection
             isLoading={isLoading}
             recommendations={recommendations}
