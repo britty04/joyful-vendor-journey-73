@@ -39,23 +39,23 @@ const PopularServices = () => {
   ];
 
   return (
-    <div className="py-12">
-      <h2 className="text-3xl font-bold mb-8">Popular Services</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div>
+      <h2 className="text-2xl font-bold mb-6">Popular Services</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {services.map((service) => (
           <div key={service.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="h-48 overflow-hidden">
+            <div className="h-40 overflow-hidden">
               <img 
                 src={service.image} 
                 alt={service.name} 
                 className="w-full h-full object-cover transition-transform hover:scale-105"
               />
             </div>
-            <div className="p-4">
-              <h3 className="font-semibold text-lg mb-2">{service.name}</h3>
+            <div className="p-3">
+              <h3 className="font-semibold text-base mb-2">{service.name}</h3>
               <div className="flex items-center justify-between">
-                <span className="text-xl font-bold">${service.price}</span>
-                <Button>Book Now</Button>
+                <span className="text-lg font-bold">${service.price}</span>
+                <Button size="sm">Book Now</Button>
               </div>
             </div>
           </div>

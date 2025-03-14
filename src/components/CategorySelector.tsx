@@ -81,27 +81,24 @@ const CategorySelector = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   
   return (
-    <section className="py-20 relative overflow-hidden">
+    <section className="py-12 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-purple-50/50 -z-10"></div>
       <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-white to-transparent -z-10"></div>
       <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent -z-10"></div>
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center px-4 py-2 mb-5 bg-purple-100 rounded-full text-purple-700">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center px-4 py-2 mb-3 bg-purple-100 rounded-full text-purple-700">
             <Sparkles size={16} className="mr-2 text-eventPurple-500" />
             <span className="text-sm font-medium">Find what you need</span>
           </div>
-          <h2 className="font-bold text-gray-900 mb-4 text-3xl md:text-4xl">
+          <h2 className="font-bold text-gray-900 mb-2 text-2xl md:text-3xl">
             <span className="gradient-text-purple">Browse By Category</span>
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Find the perfect vendor for your next special event. We've curated the best vendors across all categories.
-          </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
           {categories.map((category) => (
             <Link
               key={category.id}
@@ -111,7 +108,7 @@ const CategorySelector = () => {
               onMouseEnter={() => setSelectedCategory(category.id)}
               onMouseLeave={() => setSelectedCategory(null)}
             >
-              <div className="relative rounded-2xl overflow-hidden aspect-square transition-all duration-300 group-hover:scale-105 shadow-md group-hover:shadow-lg">
+              <div className="relative rounded-xl overflow-hidden aspect-square transition-all duration-300 group-hover:scale-105 shadow-md group-hover:shadow-lg">
                 {/* Category Background Image */}
                 <img 
                   src={category.icon} 
@@ -128,8 +125,8 @@ const CategorySelector = () => {
                 </div>
                 
                 {/* Category Name */}
-                <div className="absolute inset-x-0 bottom-0 text-white p-4 bg-gradient-to-t from-black/60 to-transparent">
-                  <span className="font-semibold text-center block">{category.name}</span>
+                <div className="absolute inset-x-0 bottom-0 text-white p-3 bg-gradient-to-t from-black/60 to-transparent">
+                  <span className="font-semibold text-center text-sm block">{category.name}</span>
                 </div>
                 
                 {/* Hover Effect */}
@@ -141,7 +138,7 @@ const CategorySelector = () => {
                     transition={{ duration: 0.2 }}
                   >
                     <motion.span 
-                      className="bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-medium shadow-md"
+                      className="bg-white text-gray-900 px-3 py-1 rounded-full text-xs font-medium shadow-md"
                       initial={{ y: 10, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ duration: 0.3, delay: 0.1 }}

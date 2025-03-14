@@ -4,8 +4,6 @@ import Hero from '../components/Hero';
 import CategorySelector from '../components/CategorySelector';
 import PopularServices from '../components/PopularServices';
 import FeaturedVendors from '../components/FeaturedVendors';
-import TicketingEvents from '../components/TicketingEvents';
-import FooterSection from '../components/FooterSection';
 import Layout from '../components/Layout';
 import AIRecommendation from '../components/AIRecommendation';
 import EventPlanningAssistant from '../components/EventPlanningAssistant';
@@ -19,14 +17,16 @@ const Index = () => {
       <Hero />
       <div className="relative">
         <CategorySelector />
-        <div className="container mx-auto px-4 mb-16 mt-4 flex justify-center">
+        <div className="container mx-auto px-4 mb-10 mt-2 flex justify-center">
           <AIAssistantButton onClick={() => setShowAssistant(true)} />
         </div>
-        <PopularServices />
+        <div className="py-10 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <PopularServices />
+          </div>
+        </div>
         <AIRecommendation />
         <FeaturedVendors />
-        <TicketingEvents />
-        <FooterSection />
       </div>
       {showAssistant && <EventPlanningAssistant />}
     </Layout>
