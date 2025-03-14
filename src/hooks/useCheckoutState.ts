@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { PaymentDetails } from '@/components/checkout/PaymentForm';
@@ -57,7 +56,7 @@ export function useCheckoutState() {
     // Extract event details from cart items if available
     if (cartItems.length > 0 && cartItems[0].location) {
       setEventDetails({
-        city: cartItems[0].location,
+        city: cartItems[0].location || null,
         date: cartItems[0].date || null,
         time: cartItems[0].time || null,
       });

@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export interface CartItem {
@@ -6,6 +7,8 @@ export interface CartItem {
   price: number;
   image: string;
   date: Date;
+  time?: string;
+  location?: string;
   quantity: number;
 }
 

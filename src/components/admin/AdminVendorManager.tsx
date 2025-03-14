@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -31,6 +30,7 @@ import { format } from 'date-fns';
 import { toast } from '@/hooks/use-toast';
 import { Check, X, Edit, Pencil, Calendar as CalendarIcon, Percent, Tag } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
 
 // Mock vendor data
 const mockVendors = [
