@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, Search, MapPin, HelpCircle } from 'lucide-react';
@@ -45,22 +44,8 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo and Become Vendor Button (Desktop) */}
-          <div className="flex items-center gap-4">
-            <Logo size="md" />
-            <Link 
-              to="/vendor/onboarding" 
-              className="hidden md:block"
-            >
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="bg-white/80 hover:bg-white border-eventPurple-300 text-eventPurple-700 hover:text-eventPurple-900 hover:border-eventPurple-500 transition-all"
-              >
-                Become a Vendor
-              </Button>
-            </Link>
-          </div>
+          {/* Logo (without the vendor button) */}
+          <Logo size="md" />
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
@@ -259,7 +244,7 @@ const Navbar = () => {
             </select>
           </div>
 
-          {/* Desktop Actions */}
+          {/* Desktop Actions with Vendor Button */}
           <div className="hidden md:flex items-center space-x-4">
             <button className="rounded-full p-2 text-gray-500 hover:text-primary hover:bg-gray-100 transition-colors">
               <Search size={20} />
@@ -273,6 +258,14 @@ const Navbar = () => {
               <HelpCircle className="h-5 w-5" />
             </Link>
             <UserAuthNav />
+            <Link to="/vendor/onboarding">
+              <Button 
+                className="bg-gradient-to-r from-eventBlue-600 to-eventPurple-600 text-white hover:from-eventBlue-700 hover:to-eventPurple-700 shadow-sm hover:shadow transition-all"
+                size="sm"
+              >
+                Become a Vendor
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -292,13 +285,25 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white shadow-lg animate-fade-in">
           <div className="px-4 pt-2 pb-4 space-y-2">
-            <Link 
-              to="/" 
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Home
-            </Link>
+            {/* Mobile menu top action buttons */}
+            <div className="flex items-center justify-between py-2 mb-2 border-b border-gray-100">
+              <Link 
+                to="/" 
+                className="font-medium text-gray-700"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link to="/vendor/onboarding" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="bg-white border-eventPurple-300 text-eventPurple-700 hover:text-eventPurple-900 hover:border-eventPurple-500 transition-all"
+                >
+                  Become a Vendor
+                </Button>
+              </Link>
+            </div>
             
             {/* Location selector (mobile) */}
             <div className="flex items-center px-3 py-2">
