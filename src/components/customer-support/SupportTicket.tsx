@@ -1,177 +1,115 @@
 
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import {
+import { 
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { toast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
 
-const formSchema = z.object({
-  ticketId: z.string().optional(),
-  subject: z.string().min(5, 'Subject must be at least 5 characters'),
-  category: z.string().min(1, 'Please select a category'),
-  priority: z.string().min(1, 'Please select a priority'),
-  description: z.string().min(20, 'Description must be at least 20 characters'),
-  attachments: z.any().optional(),
-});
+interface SupportTicketProps {
+  onTicketCreated?: () => void;
+}
 
-type FormValues = z.infer<typeof formSchema>;
-
-const SupportTicket = () => {
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      subject: '',
-      category: '',
-      priority: 'medium',
-      description: '',
-    },
-  });
-
-  const onSubmit = (data: FormValues) => {
-    console.log('Ticket submitted:', data);
+const SupportTicket: React.FC<SupportTicketProps> = ({ onTicketCreated }) => {
+  const [subject, setSubject] = useState('');
+  const [category, setCategory] = useState('');
+  const [description, setDescription] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
     
-    // Generate a random ticket ID
-    const ticketId = `TKT-${Math.floor(100000 + Math.random() * 900000)}`;
-    
-    toast({
-      title: "Ticket Created",
-      description: `Your ticket #${ticketId} has been created successfully. We'll get back to you soon.`,
-    });
-    
-    form.reset();
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubmitting(false);
+      
+      // Reset form
+      setSubject('');
+      setCategory('');
+      setDescription('');
+      
+      // Call the callback if provided
+      if (onTicketCreated) {
+        onTicketCreated();
+      }
+    }, 1500);
   };
-
+  
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-      <h2 className="text-2xl font-bold mb-6">Submit a Support Ticket</h2>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="subject"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Subject</FormLabel>
-                <FormControl>
-                  <Input placeholder="Brief description of your issue" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+    <div className="bg-white p-6 rounded-lg shadow">
+      <h2 className="text-xl font-semibold mb-6">Create New Support Ticket</h2>
+      
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label htmlFor="subject" className="block text-sm font-medium mb-1">
+            Subject
+          </label>
+          <Input
+            id="subject"
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            placeholder="Brief summary of your issue"
+            required
           />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Category</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a category" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="booking">Booking Issue</SelectItem>
-                      <SelectItem value="payment">Payment Problem</SelectItem>
-                      <SelectItem value="vendor">Vendor Complaint</SelectItem>
-                      <SelectItem value="refund">Refund Request</SelectItem>
-                      <SelectItem value="technical">Technical Support</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="priority"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Priority</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select priority" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="low">Low</SelectItem>
-                      <SelectItem value="medium">Medium</SelectItem>
-                      <SelectItem value="high">High</SelectItem>
-                      <SelectItem value="urgent">Urgent</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Please describe your issue in detail..."
-                    className="min-h-[150px]"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+        </div>
+        
+        <div>
+          <label htmlFor="category" className="block text-sm font-medium mb-1">
+            Category
+          </label>
+          <Select
+            value={category}
+            onValueChange={setCategory}
+          >
+            <SelectTrigger id="category">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="booking">Booking Issues</SelectItem>
+              <SelectItem value="vendor">Vendor Related</SelectItem>
+              <SelectItem value="payment">Payment Problems</SelectItem>
+              <SelectItem value="technical">Technical Support</SelectItem>
+              <SelectItem value="other">Other Issues</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        
+        <div>
+          <label htmlFor="description" className="block text-sm font-medium mb-1">
+            Description
+          </label>
+          <Textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Please provide details about your issue..."
+            rows={6}
+            required
           />
-
-          <FormField
-            control={form.control}
-            name="attachments"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Attachments (Optional)</FormLabel>
-                <FormControl>
-                  <Input 
-                    type="file" 
-                    multiple 
-                    className="cursor-pointer"
-                    onChange={(e) => {
-                      field.onChange(e.target.files);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button type="submit">Submit Ticket</Button>
-        </form>
-      </Form>
+        </div>
+        
+        <Button 
+          type="submit" 
+          className="w-full"
+          disabled={isSubmitting || !subject || !category || !description}
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Submitting...
+            </>
+          ) : (
+            'Submit Ticket'
+          )}
+        </Button>
+      </form>
     </div>
   );
 };

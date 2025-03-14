@@ -12,6 +12,10 @@ interface Message {
   timestamp: Date;
 }
 
+interface EventPlanningAssistantProps {
+  onClose?: () => void;
+}
+
 const initialMessages: Message[] = [
   {
     id: '1',
@@ -28,7 +32,7 @@ const suggestedQueries = [
   "Recommend venues for a corporate event"
 ];
 
-const EventPlanningAssistant = () => {
+const EventPlanningAssistant = ({ onClose }: EventPlanningAssistantProps) => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [inputValue, setInputValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);
@@ -88,6 +92,14 @@ const EventPlanningAssistant = () => {
     setInputValue(query);
   };
 
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      setIsOpen(false);
+    }
+  };
+
   // Function to format message bubbles
   const MessageBubble = ({ message }: { message: Message }) => {
     const isUser = message.role === 'user';
@@ -145,7 +157,11 @@ const EventPlanningAssistant = () => {
           className="h-8 w-8 text-white hover:bg-white/20 rounded-full"
           onClick={(e) => {
             e.stopPropagation();
-            setIsOpen(!isOpen);
+            if (!isOpen) {
+              setIsOpen(true);
+            } else {
+              handleClose();
+            }
           }}
         >
           {isOpen ? <X className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}

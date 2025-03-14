@@ -42,7 +42,7 @@ const Index = () => {
           </Link>
         </div>
       </div>
-      {showAssistant && <EventPlanningAssistant onClose={() => setShowAssistant(false)} />}
+      {showAssistant && <EventPlanningAssistant />}
     </Layout>
   );
 };

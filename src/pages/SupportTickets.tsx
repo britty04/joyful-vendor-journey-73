@@ -55,7 +55,7 @@ const SupportTickets = () => {
               <TicketsList />
             </TabsContent>
             <TabsContent value="new-ticket">
-              <SupportTicket onTicketCreated={handleTicketCreated} />
+              <SupportTicket />
             </TabsContent>
           </Tabs>
         </div>

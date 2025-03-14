@@ -112,7 +112,7 @@ const CheckoutFlow: React.FC<CheckoutFlowProps> = ({ onOrderComplete }) => {
             discountCode={checkoutState.checkoutData.discountCode}
           />
           {checkoutState.currentStep < 4 && (
-            <LastMinuteRecommendations />
+            <LastMinuteRecommendations eventType="wedding" />
           )}
         </div>
       </div>
